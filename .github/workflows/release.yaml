@@ -1,0 +1,42 @@
+name: Create Release
+'on':
+  push:
+    tags:
+    - v*
+permissions:
+  contents: write
+run-name: 'Create Release: ${{ github.event.repository.name }}-${{ github.ref_name
+  }}'
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - name: Assert running on head of main
+      run: git fetch origin main --depth=1; main_sha=$(git rev-parse origin/main);
+        if [ "$GITHUB_SHA" != "$main_sha" ]; then echo "Tag commit is not the latest
+        commit on main."; exit 1; fi
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: 3.x
+    - name: Install Poetry
+      run: curl -sSL https://install.python-poetry.org | python3 -
+    - name: Install Dependencies
+      run: poetry install
+    - name: Run Pre-commit Hooks
+      run: poetry run pre-commit run --all-files
+    - name: Build Changelog
+      id: build_changelog
+      uses: mikepenz/release-changelog-builder-action@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create GitHub Release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ github.ref_name }}
+        name: ${{ github.event.repository.name }}-${{ github.ref_name }}
+        body: ${{ steps.build_changelog.outputs.changelog }}
