@@ -35,7 +35,7 @@ jobs:
       env:
         REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
     - name: Run Hooks
-      run: poetry run pre-commit run --all-files --verbose
+      run: xvfb-run -a poetry run pre-commit run --all-files --verbose
     - name: Commit added changes
       run: 'git commit --no-verify -m ''[skip ci] CI/CD: Committing possible added
         changes (e.g.: pyproject.toml and poetry.lock)'''
