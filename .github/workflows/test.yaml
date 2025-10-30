@@ -25,7 +25,7 @@ jobs:
     - name: Install Dependencies
       run: poetry install
     - name: Install PySide6 System Dependencies
-      run: sudo apt-get update && sudo apt-get install -y libegl1 libxrender1 libxext6 libgl1-mesa-glx libgl1-mesa-dev libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libxkbcommon-x11-0 libx11-xcb1
+      run: sudo apt-get update && sudo apt-get install -y libegl1
     - name: Create Tests
       run: poetry run python -m winipedia_utils.testing.create_tests
     - name: Run Tests
