@@ -65,7 +65,7 @@ class HealthCheckWorkflow(PySide6WorkflowMixin, WinipediaHealthCheckWorkflow):
     """
 
 
-class ReleaseWorkflow(PySide6WorkflowMixin, WinipediaReleaseWorkflow):
+class ReleaseWorkflow(HealthCheckWorkflow, WinipediaReleaseWorkflow):
     """Release workflow.
 
     Extends winipedia_utils release workflow to add additional steps.
