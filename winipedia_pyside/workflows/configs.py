@@ -51,6 +51,7 @@ class PySide6WorkflowMixin(WinipediaWorkflow):
             {
                 "name": "Install PySide6 System Dependencies",
                 "run": "sudo apt-get update && sudo apt-get install -y libegl1 libpulse0",  # noqa: E501
+                "if": "runner.os == 'Linux'",
             }
         )
         return steps

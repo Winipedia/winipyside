@@ -48,6 +48,7 @@ jobs:
         from keyrings.alt.file import PlaintextKeyring; keyring.set_keyring(PlaintextKeyring());"
     - name: Install PySide6 System Dependencies
       run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
+      if: runner.os == 'Linux'
     - name: Protect Repository
       run: poetry run python -m winipedia_utils.git.github.repo.protect
       env:
@@ -91,6 +92,7 @@ jobs:
         from keyrings.alt.file import PlaintextKeyring; keyring.set_keyring(PlaintextKeyring());"
     - name: Install PySide6 System Dependencies
       run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
+      if: runner.os == 'Linux'
     - name: Run Hooks
       run: poetry run pre-commit run --all-files --verbose
       env:
