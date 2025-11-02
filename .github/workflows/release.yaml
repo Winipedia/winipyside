@@ -49,16 +49,14 @@ jobs:
     - name: Install Python Dependencies
       id: install_python_dependencies
       run: poetry install
-    - name: Install Pyside System Dependencies
-      id: install_pyside_system_dependencies
-      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
-      if: runner.os == 'Linux'
     - name: Setup Keyring
       id: setup_keyring
       run: poetry run pip install keyrings.alt && poetry run python -c "import keyring;
         from keyrings.alt.file import PlaintextKeyring; keyring.set_keyring(PlaintextKeyring());"
-      env:
-        REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+    - name: Install Pyside System Dependencies
+      id: install_pyside_system_dependencies
+      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
+      if: runner.os == 'Linux'
     - name: Protect Repository
       id: protect_repository
       run: poetry run python -m winipedia_utils.git.github.repo.protect
@@ -122,14 +120,14 @@ jobs:
       id: install_pyside_system_dependencies
       run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
       if: runner.os == 'Linux'
-    - name: Setup Git
-      id: setup_git
-      run: git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        && git config --global user.name "github-actions[bot]"
     - name: Setup Keyring
       id: setup_keyring
       run: poetry run pip install keyrings.alt && poetry run python -c "import keyring;
         from keyrings.alt.file import PlaintextKeyring; keyring.set_keyring(PlaintextKeyring());"
+    - name: Setup Git
+      id: setup_git
+      run: git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        && git config --global user.name "github-actions[bot]"
     - name: Run Pre Commit Hooks
       id: run_pre_commit_hooks
       run: poetry version patch && git add pyproject.toml && poetry run pre-commit
