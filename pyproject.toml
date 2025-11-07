@@ -9,6 +9,7 @@ license = "MIT"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 dynamic = ["dependencies"]
+dependencies = ["winipedia-utils", "pyqt-toast-notification", "pyside6"]
 
 
 [build-system]
@@ -17,12 +18,6 @@ build-backend = "poetry.core.masonry.api"
 
 [[tool.poetry.packages]]
 include = "winipedia_pyside"
-
-[tool.poetry.dependencies]
-winipedia-utils = "*"
-pyside6 = "*"
-pyqt-toast-notification = "*"
-
 
 [tool.poetry.group.dev.dependencies]
 pytest-qt = "*"
@@ -36,6 +31,7 @@ types-tqdm = "*"
 pre-commit = "*"
 types-setuptools = "*"
 bandit = "*"
+types-networkx = "*"
 
 [tool.ruff]
 exclude = [".*", "**/migrations/*.py"]
