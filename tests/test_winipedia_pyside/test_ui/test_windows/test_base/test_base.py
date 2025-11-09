@@ -3,7 +3,7 @@
 from typing import final
 
 from pytest_mock import MockFixture
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.ui.pages.base.base import Base as BasePage
 from winipedia_pyside.ui.windows.base.base import Base

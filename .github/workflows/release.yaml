@@ -59,7 +59,7 @@ jobs:
       if: runner.os == 'Linux'
     - name: Protect Repository
       id: protect_repository
-      run: poetry run python -m winipedia_utils.git.github.repo.protect
+      run: poetry run python -m winipedia_utils.dev.git.github.repo.protect
       env:
         REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
     - name: Run Pre Commit Hooks

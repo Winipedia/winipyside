@@ -5,7 +5,7 @@ from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QWidget
 from pytest_mock import MockFixture
 from pytestqt.qtbot import QtBot
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.ui.widgets.clickable_widget import (
     ClickableVideoWidget,

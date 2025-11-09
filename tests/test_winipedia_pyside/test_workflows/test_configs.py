@@ -1,6 +1,6 @@
 """module."""
 
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.workflows.configs import HealthCheckWorkflow, ReleaseWorkflow
 

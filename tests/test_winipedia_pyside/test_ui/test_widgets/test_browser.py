@@ -7,7 +7,7 @@ from PySide6.QtCore import QUrl
 from PySide6.QtWidgets import QLineEdit, QSizePolicy, QVBoxLayout, QWidget
 from pytest_mock import MockFixture
 from pytestqt.qtbot import QtBot
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.ui.widgets.browser import Browser
 

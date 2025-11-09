@@ -10,13 +10,13 @@ from typing import TYPE_CHECKING, Any, Self, cast
 from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QStackedWidget
-from winipedia_utils.modules.class_ import (
+from winipedia_utils.utils.data.structures.text.string import split_on_uppercase
+from winipedia_utils.utils.modules.class_ import (
     get_all_nonabstract_subclasses,
 )
-from winipedia_utils.modules.package import get_main_package, walk_package
-from winipedia_utils.oop.mixins.meta import ABCLoggingMeta
-from winipedia_utils.resources.svgs.svg import get_svg_path
-from winipedia_utils.text.string import split_on_uppercase
+from winipedia_utils.utils.modules.package import get_main_package, walk_package
+from winipedia_utils.utils.oop.mixins.meta import ABCLoggingMeta
+from winipedia_utils.utils.resources.svgs.svg import get_svg_path
 
 # Avoid circular import
 if TYPE_CHECKING:

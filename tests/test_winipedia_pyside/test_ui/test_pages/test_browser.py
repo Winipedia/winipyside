@@ -2,7 +2,7 @@
 
 from PySide6.QtWidgets import QVBoxLayout
 from pytest_mock import MockerFixture
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.ui.pages.browser import Browser
 

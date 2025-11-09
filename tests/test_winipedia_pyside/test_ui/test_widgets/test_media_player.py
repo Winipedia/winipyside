@@ -6,7 +6,7 @@ from PySide6.QtCore import QUrl
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QVBoxLayout
 from pytest_mock import MockFixture
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.ui.widgets.media_player import MediaPlayer
 

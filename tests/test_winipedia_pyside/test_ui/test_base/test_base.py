@@ -5,7 +5,7 @@ from typing import final
 
 from PySide6.QtCore import QObject
 from pytest_mock import MockerFixture
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.ui.base.base import Base, QABCLoggingMeta
 

@@ -2,11 +2,13 @@
 
 from typing import Any
 
-from winipedia_utils.git.github.workflows.base.base import Workflow as WinipediaWorkflow
-from winipedia_utils.git.github.workflows.health_check import (
+from winipedia_utils.dev.configs.workflows.base.base import (
+    Workflow as WinipediaWorkflow,
+)
+from winipedia_utils.dev.configs.workflows.health_check import (
     HealthCheckWorkflow as WinipediaHealthCheckWorkflow,
 )
-from winipedia_utils.git.github.workflows.release import (
+from winipedia_utils.dev.configs.workflows.release import (
     ReleaseWorkflow as WinipediaReleaseWorkflow,
 )
 

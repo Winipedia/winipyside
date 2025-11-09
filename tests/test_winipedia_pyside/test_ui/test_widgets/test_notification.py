@@ -2,7 +2,7 @@
 
 from pyqttoast import ToastIcon  # type: ignore[import-untyped]
 from pytest_mock import MockFixture
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.ui.widgets.notification import Notification
 

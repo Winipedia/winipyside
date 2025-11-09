@@ -5,7 +5,7 @@ from pathlib import Path
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from PySide6.QtCore import QIODevice
 from pytest_mock import MockerFixture
-from winipedia_utils.testing.assertions import assert_with_msg
+from winipedia_utils.utils.testing.assertions import assert_with_msg
 
 from winipedia_pyside.core.py_qiodevice import (
     EncryptedPyQFile,
