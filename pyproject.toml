@@ -31,7 +31,8 @@ pre-commit = "*"
 types-setuptools = "*"
 bandit = "*"
 types-networkx = "*"
-
+types-pyinstaller = "*"
+pyinstaller = {version = "*", python = "<3.15"}
 
 [tool.poetry.dependencies]
 pyqt-toast-notification = "*"
