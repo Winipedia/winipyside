@@ -55,6 +55,12 @@ jobs:
       id: setup_keyring
       run: poetry run pip install keyrings.alt && poetry run python -c "import keyring;
         from keyrings.alt.file import PlaintextKeyring; keyring.set_keyring(PlaintextKeyring());"
+    - name: Install Pyside System Dependencies
+      id: install_pyside_system_dependencies
+      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
+      env:
+        REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+      if: runner.os == 'Linux'
     - name: Protect Repository
       id: protect_repository
       run: poetry run python -m winipedia_utils.dev.git.github.repo.protect
@@ -66,6 +72,11 @@ jobs:
     - name: Run Tests
       id: run_tests
       run: poetry run pytest --log-cli-level=INFO
+      env:
+        QT_QPA_PLATFORM: offscreen
+        QTWEBENGINE_DISABLE_SANDBOX: '1'
+        QTWEBENGINE_CHROMIUM_FLAGS: --no-sandbox --disable-gpu --disable-software-rasterizer
+          --disable-dev-shm-usage
   health_check:
     needs:
     - health_check_matrix
