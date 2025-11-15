@@ -1,9 +1,45 @@
 repos:
 - repo: local
   hooks:
-  - id: winipedia-utils
-    name: winipedia-utils
-    entry: poetry run python -m winipedia_utils.dev.git.pre_commit.run_hooks
+  - id: update-package-manager
+    name: update-package-manager
+    entry: poetry self update
+    language: system
+    always_run: true
+    pass_filenames: false
+  - id: update-dependencies
+    name: update-dependencies
+    entry: poetry update --with dev
+    language: system
+    always_run: true
+    pass_filenames: false
+  - id: check-package-manager-config
+    name: check-package-manager-config
+    entry: poetry check --strict
+    language: system
+    always_run: true
+    pass_filenames: false
+  - id: lint-code
+    name: lint-code
+    entry: poetry run ruff check --fix
+    language: system
+    always_run: true
+    pass_filenames: false
+  - id: format-code
+    name: format-code
+    entry: poetry run ruff format
+    language: system
+    always_run: true
+    pass_filenames: false
+  - id: check-static-types
+    name: check-static-types
+    entry: poetry run mypy --exclude-gitignore
+    language: system
+    always_run: true
+    pass_filenames: false
+  - id: check-security
+    name: check-security
+    entry: poetry run bandit -c pyproject.toml -r .
     language: system
     always_run: true
     pass_filenames: false
