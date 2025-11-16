@@ -7,15 +7,15 @@ repos:
     language: system
     always_run: true
     pass_filenames: false
-  - id: update-dependencies
-    name: update-dependencies
-    entry: poetry update --with dev
-    language: system
-    always_run: true
-    pass_filenames: false
   - id: check-package-manager-config
     name: check-package-manager-config
     entry: poetry check --strict
+    language: system
+    always_run: true
+    pass_filenames: false
+  - id: create-root
+    name: create-root
+    entry: poetry run winipedia-utils create-root
     language: system
     always_run: true
     pass_filenames: false
