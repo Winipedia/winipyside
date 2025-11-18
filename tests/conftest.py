@@ -7,4 +7,4 @@ It also import custom plugins from tests/base/scopes.
 This file should not be modified manually.
 """
 
-pytest_plugins = ["winipedia_utils.dev.testing.tests.conftest"]
+pytest_plugins = ["pyrig.dev.tests.conftest"]

@@ -51,10 +51,6 @@ jobs:
     - name: Add Dependency Updates To Git
       id: add_dependency_updates_to_git
       run: git add pyproject.toml poetry.lock
-    - name: Setup Keyring
-      id: setup_keyring
-      run: poetry run pip install keyrings.alt && poetry run python -c "import keyring;
-        from keyrings.alt.file import PlaintextKeyring; keyring.set_keyring(PlaintextKeyring());"
     - name: Install Pyside System Dependencies
       id: install_pyside_system_dependencies
       run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
@@ -63,7 +59,7 @@ jobs:
       if: runner.os == 'Linux'
     - name: Protect Repository
       id: protect_repository
-      run: poetry run winipedia-utils protect-repo
+      run: poetry run pyrig protect-repo
       env:
         REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
     - name: Run Pre Commit Hooks
