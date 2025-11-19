@@ -2,7 +2,7 @@
 
 from pyrig.src.testing.assertions import assert_with_msg
 
-from winipyside.dev.configs.configs import HealthCheckWorkflow, ReleaseWorkflow
+from winipyside.dev.configs.configs import HealthCheckWorkflow
 
 
 class TestPySideWorkflowMixin:
@@ -17,10 +17,14 @@ class TestPySideWorkflowMixin:
             "QT_QPA_PLATFORM should be offscreen",
         )
 
-    def test_steps_core_matrix_setup(self) -> None:
+    def test_steps_core_installed_setup(self) -> None:
         """Test method for steps_core_matrix_setup."""
-        steps = HealthCheckWorkflow.steps_core_matrix_setup()
+        steps = HealthCheckWorkflow.steps_core_installed_setup()
         assert_with_msg(isinstance(steps, list), "Steps should be a list")
+        # assert last step is the pyside6 dependencies step
+        assert (
+            steps[-1] == HealthCheckWorkflow.step_install_pyside_system_dependencies()
+        ), "Last step should be pyside6 dependencies step"
 
     def test_step_install_pyside_system_dependencies(self) -> None:
         """Test method for step_install_pyside_system_dependencies."""
@@ -34,8 +38,3 @@ class TestHealthCheckWorkflow:
 
 class TestReleaseWorkflow:
     """Test class for ReleaseWorkflow."""
-
-    def test_steps_release(self) -> None:
-        """Test method for steps_release."""
-        steps = ReleaseWorkflow.steps_release()
-        assert_with_msg(isinstance(steps, list), "Steps should be a list")

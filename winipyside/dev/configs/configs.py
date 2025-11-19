@@ -45,14 +45,16 @@ class PySideWorkflowMixin(WinipediaWorkflow):
         return step
 
     @classmethod
-    def steps_core_matrix_setup(
+    def steps_core_installed_setup(
         cls, python_version: str | None = None, *, repo_token: bool = False
     ) -> list[dict[str, Any]]:
         """Get the poetry setup steps.
 
         We need to install additional system dependencies for pyside6.
         """
-        steps = super().steps_core_matrix_setup(python_version, repo_token=repo_token)
+        steps = super().steps_core_installed_setup(
+            python_version, repo_token=repo_token
+        )
 
         steps.append(
             cls.step_install_pyside_system_dependencies(),
@@ -85,21 +87,3 @@ class ReleaseWorkflow(HealthCheckWorkflow, WinipediaReleaseWorkflow):
     This is necessary to make pyside6 work on github actions which is a headless linux
     environment.
     """
-
-    @classmethod
-    def steps_release(cls) -> list[dict[str, Any]]:
-        """Get the release steps."""
-        steps = super().steps_release()
-        # find the index of the cls.step_install_python_dependencies step and insert
-        # the pyside6 dependencies step after it
-        index = (
-            next(
-                i
-                for i, step in enumerate(steps)
-                if step["id"]
-                == cls.make_id_from_func(cls.step_install_python_dependencies)
-            )
-            + 1
-        )
-        steps.insert(index, cls.step_install_pyside_system_dependencies())
-        return steps
