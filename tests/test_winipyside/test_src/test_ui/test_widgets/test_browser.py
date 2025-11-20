@@ -182,11 +182,11 @@ class TestBrowser:
         mocker.patch.object(Browser, "connect_signals")
         mocker.patch.object(Browser, "load_first_url")
 
-        # Mock the loadFinished signal's connect method
-        mock_load_finished = mocker.MagicMock()
-        Browser.loadFinished = mock_load_finished
-
         browser = Browser(parent_layout)
+
+        # Mock the loadFinished signal's connect method on the instance
+        mock_load_finished = mocker.MagicMock()
+        mocker.patch.object(browser, "loadFinished", mock_load_finished)
 
         browser.connect_load_finished_signal()
 
