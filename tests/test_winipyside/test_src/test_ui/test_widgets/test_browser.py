@@ -40,15 +40,23 @@ class TestBrowser:
         mock_load_first_url.assert_called_once()
 
     def test_make_address_bar(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self, parent_layout: QVBoxLayout, mocker: MockFixture, qtbot: QtBot
     ) -> None:
         """Test method for make_address_bar."""
         mocker.patch.object(Browser, "make_widget")
         mocker.patch.object(Browser, "connect_signals")
         mocker.patch.object(Browser, "load_first_url")
+        # Mock the navigate_to_url, back, and forward methods
+        # to prevent signal connection issues
+        mocker.patch.object(Browser, "navigate_to_url")
+        mocker.patch.object(Browser, "back")
+        mocker.patch.object(Browser, "forward")
 
         browser = Browser(parent_layout)
-        browser.browser_layout = QVBoxLayout()
+        # Create a proper widget parent for the layout
+        browser.browser_widget = QWidget()
+        qtbot.addWidget(browser.browser_widget)
+        browser.browser_layout = QVBoxLayout(browser.browser_widget)
         browser.make_address_bar()
 
         assert_with_msg(
@@ -104,6 +112,10 @@ class TestBrowser:
 
         mocker.patch.object(Browser, "connect_signals")
         mocker.patch.object(Browser, "load_first_url")
+        # Mock the methods that are connected to signals to prevent segfaults
+        mocker.patch.object(Browser, "navigate_to_url")
+        mocker.patch.object(Browser, "back")
+        mocker.patch.object(Browser, "forward")
         # Don't mock these methods, let them run to test make_widget functionality
 
         browser = Browser(parent_layout)
@@ -170,18 +182,15 @@ class TestBrowser:
         mocker.patch.object(Browser, "connect_signals")
         mocker.patch.object(Browser, "load_first_url")
 
-        browser = Browser(parent_layout)
-        # Test that the method runs without error (Qt signals can't be easily mocked)
-        try:
-            browser.connect_load_finished_signal()
-            method_ran_successfully = True
-        except (AttributeError, RuntimeError, TypeError):
-            method_ran_successfully = False
+        # Mock the loadFinished signal's connect method
+        mock_load_finished = mocker.MagicMock()
+        Browser.loadFinished = mock_load_finished
 
-        assert_with_msg(
-            method_ran_successfully,
-            "connect_load_finished_signal should run without error",
-        )
+        browser = Browser(parent_layout)
+
+        browser.connect_load_finished_signal()
+
+        mock_load_finished.connect.assert_called_once_with(browser.on_load_finished)
 
     def test_on_load_finished(
         self, parent_layout: QVBoxLayout, mocker: MockFixture

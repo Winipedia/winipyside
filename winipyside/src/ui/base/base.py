@@ -7,6 +7,7 @@ from abc import abstractmethod
 from types import ModuleType
 from typing import TYPE_CHECKING, Any, Self, cast
 
+from pyrig.dev.artifacts.resources.resource import get_resource_path
 from pyrig.src.modules.class_ import (
     get_all_nonabstract_subclasses,
 )
@@ -16,7 +17,8 @@ from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QStackedWidget
 from winiutils.src.oop.mixins.meta import ABCLoggingMeta
-from winiutils.src.resources.svgs.svg import get_svg_path
+
+from winipyside.dev.artifacts import resources
 
 # Avoid circular import
 if TYPE_CHECKING:
@@ -158,7 +160,12 @@ class Base(metaclass=QABCLoggingMeta):
         Returns:
             A QIcon created from the SVG file.
         """
-        return QIcon(str(get_svg_path(svg_name, package=package)))
+        if package is None:
+            package = resources
+        if not svg_name.endswith(".svg"):
+            svg_name = f"{svg_name}.svg"
+
+        return QIcon(str(get_resource_path(svg_name, package=package)))
 
     @classmethod
     def get_page_static[T: "BasePage"](cls, page_cls: type[T]) -> T:
