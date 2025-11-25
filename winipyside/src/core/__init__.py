@@ -1,1 +1,1 @@
-"""__init__ module for winipedia_pyside6.core."""
+"""__init__ module for winipyside6.core."""

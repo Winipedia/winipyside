@@ -2,7 +2,7 @@
 
 from pyrig.src.testing.assertions import assert_with_msg
 
-from winipyside.dev.configs.configs import HealthCheckWorkflow
+from winipyside.dev.configs.configs import HealthCheckWorkflow, PyprojectConfigFile
 
 
 class TestPySideWorkflowMixin:
@@ -38,3 +38,17 @@ class TestHealthCheckWorkflow:
 
 class TestReleaseWorkflow:
     """Test class for ReleaseWorkflow."""
+
+
+class TestPyprojectConfigFile:
+    """Test class."""
+
+    def test_get_standard_dev_dependencies(self) -> None:
+        """Test method."""
+        dev_dependencies = PyprojectConfigFile.get_standard_dev_dependencies()
+
+        assert isinstance(dev_dependencies, dict), "Dev dependencies should be a dict"
+
+        assert "pytest-qt" in dev_dependencies, (
+            "Dev dependencies should include pytest-qt"
+        )

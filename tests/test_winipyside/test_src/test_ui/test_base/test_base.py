@@ -1,4 +1,4 @@
-"""Tests for winipedia_pyside.ui.base.base module."""
+"""Tests for winipyside.ui.base.base module."""
 
 from abc import abstractmethod
 from typing import final

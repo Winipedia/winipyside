@@ -1,4 +1,4 @@
-"""Tests for winipedia_pyside.ui.pages.browser module."""
+"""Tests for winipyside.ui.pages.browser module."""
 
 from pyrig.src.modules.module import make_obj_importpath
 from pyrig.src.testing.assertions import assert_with_msg

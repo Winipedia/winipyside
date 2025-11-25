@@ -1,4 +1,4 @@
-"""Tests for winipedia_pyside.core.py_qiodevice module."""
+"""Tests for winipyside.core.py_qiodevice module."""
 
 from pathlib import Path
 

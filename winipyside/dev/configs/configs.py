@@ -5,18 +5,35 @@ All subclasses of ConfigFile in the configs package are automatically called.
 
 from typing import Any
 
+from pyrig.dev.configs.pyproject import (
+    PyprojectConfigFile as PyrigPyprojectConfigFile,
+)
 from pyrig.dev.configs.workflows.base.base import (
-    Workflow as WinipediaWorkflow,
+    Workflow as PyrigWorkflow,
 )
 from pyrig.dev.configs.workflows.health_check import (
-    HealthCheckWorkflow as WinipediaHealthCheckWorkflow,
+    HealthCheckWorkflow as PyrigHealthCheckWorkflow,
 )
 from pyrig.dev.configs.workflows.release import (
-    ReleaseWorkflow as WinipediaReleaseWorkflow,
+    ReleaseWorkflow as PyrigReleaseWorkflow,
 )
 
 
-class PySideWorkflowMixin(WinipediaWorkflow):
+class PyprojectConfigFile(PyrigPyprojectConfigFile):
+    """Pyproject config file.
+
+    Extends winiutils pyproject config file to add additional config.
+    """
+
+    @classmethod
+    def get_standard_dev_dependencies(cls) -> dict[str, str | dict[str, str]]:
+        """Get the standard dev dependencies."""
+        standard_dev_dependencies = super().get_standard_dev_dependencies()
+        standard_dev_dependencies["pytest-qt"] = "*"
+        return standard_dev_dependencies
+
+
+class PySideWorkflowMixin(PyrigWorkflow):
     """Mixin to add PySide6-specific workflow steps.
 
     This mixin provides common overrides for PySide6 workflows to work on
@@ -71,7 +88,7 @@ class PySideWorkflowMixin(WinipediaWorkflow):
         )
 
 
-class HealthCheckWorkflow(PySideWorkflowMixin, WinipediaHealthCheckWorkflow):
+class HealthCheckWorkflow(PySideWorkflowMixin, PyrigHealthCheckWorkflow):
     """Health check workflow.
 
     Extends winiutils health check workflow to add additional steps.
@@ -80,7 +97,7 @@ class HealthCheckWorkflow(PySideWorkflowMixin, WinipediaHealthCheckWorkflow):
     """
 
 
-class ReleaseWorkflow(HealthCheckWorkflow, WinipediaReleaseWorkflow):
+class ReleaseWorkflow(HealthCheckWorkflow, PyrigReleaseWorkflow):
     """Release workflow.
 
     Extends winiutils release workflow to add additional steps.

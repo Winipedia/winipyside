@@ -41,6 +41,7 @@ pyinstaller = {version = "*", python = "<3.15"}
 pyqt-toast-notification = "*"
 pyside6 = "*"
 winiutils = "*"
+
 [tool.ruff]
 exclude = [".*", "**/migrations/*.py"]
 

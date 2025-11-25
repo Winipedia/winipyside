@@ -1,4 +1,4 @@
-"""Tests for winipedia_pyside.ui.pages.player module."""
+"""Tests for winipyside.ui.pages.player module."""
 
 from pathlib import Path
 
