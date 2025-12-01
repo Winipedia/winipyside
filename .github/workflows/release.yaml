@@ -6,11 +6,6 @@ name: Release Workflow
     - main
   schedule:
   - cron: 0 6 * * 2
-  pull_request:
-    types:
-    - opened
-    - synchronize
-    - reopened
 permissions:
   contents: write
 run-name: Release Workflow
@@ -41,19 +36,19 @@ jobs:
       uses: astral-sh/setup-uv@main
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Patch Version
-      id: patch_version
-      run: uv version --bump patch && git add pyproject.toml
     - name: Install Python Dependencies
       id: install_python_dependencies
       run: uv sync
+    - name: Patch Version
+      id: patch_version
+      run: uv version --bump patch && git add pyproject.toml
     - name: Setup Keyring
       id: setup_keyring
       run: uv run python -c "import keyring; from keyrings.alt.file import PlaintextKeyring;
         keyring.set_keyring(PlaintextKeyring());"
     - name: Update Dependencies
       id: update_dependencies
-      run: uv lock --upgrade
+      run: uv lock --upgrade && uv sync
     - name: Add Dependency Updates To Git
       id: add_dependency_updates_to_git
       run: git add pyproject.toml uv.lock
@@ -72,6 +67,11 @@ jobs:
     - name: Run Tests
       id: run_tests
       run: uv run pytest --log-cli-level=INFO
+      env:
+        QT_QPA_PLATFORM: offscreen
+        QTWEBENGINE_DISABLE_SANDBOX: '1'
+        QTWEBENGINE_CHROMIUM_FLAGS: --no-sandbox --disable-gpu --disable-software-rasterizer
+          --disable-dev-shm-usage
   health_check:
     needs:
     - health_check_matrix
@@ -110,19 +110,19 @@ jobs:
       uses: astral-sh/setup-uv@main
       with:
         python-version: '3.13'
-    - name: Patch Version
-      id: patch_version
-      run: uv version --bump patch && git add pyproject.toml
     - name: Install Python Dependencies
       id: install_python_dependencies
       run: uv sync
+    - name: Patch Version
+      id: patch_version
+      run: uv version --bump patch && git add pyproject.toml
     - name: Setup Keyring
       id: setup_keyring
       run: uv run python -c "import keyring; from keyrings.alt.file import PlaintextKeyring;
         keyring.set_keyring(PlaintextKeyring());"
     - name: Update Dependencies
       id: update_dependencies
-      run: uv lock --upgrade
+      run: uv lock --upgrade && uv sync
     - name: Add Dependency Updates To Git
       id: add_dependency_updates_to_git
       run: git add pyproject.toml uv.lock
