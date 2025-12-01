@@ -26,10 +26,14 @@ class PyprojectConfigFile(PyrigPyprojectConfigFile):
     """
 
     @classmethod
-    def get_standard_dev_dependencies(cls) -> dict[str, str | dict[str, str]]:
+    def get_standard_dev_dependencies(cls) -> list[str]:
         """Get the standard dev dependencies."""
         standard_dev_dependencies = super().get_standard_dev_dependencies()
-        standard_dev_dependencies["pytest-qt"] = "*"
+        standard_dev_dependencies.extend(
+            [
+                "pytest-qt",
+            ]
+        )
         return standard_dev_dependencies
 
 
@@ -65,7 +69,7 @@ class PySideWorkflowMixin(PyrigWorkflow):
     def steps_core_installed_setup(
         cls, python_version: str | None = None, *, repo_token: bool = False
     ) -> list[dict[str, Any]]:
-        """Get the poetry setup steps.
+        """Get the core installed setup steps.
 
         We need to install additional system dependencies for pyside6.
         """

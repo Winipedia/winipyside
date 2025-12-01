@@ -1,60 +1,61 @@
 [project]
 name = "winipyside"
-version = "1.0.11"
+version = "2.0.0"
 description = "A package for pyside utils"
 authors = [
-    {name = "Winipedia",email = "win.steveker@gmx.de"}
+    {name = "Winipedia",email = "win.steveker@gmx.de"},
 ]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
-dynamic = ["dependencies"]
-
+dependencies = [
+    "pyqt-toast-notification",
+    "pyside6",
+    "winiutils",
+]
 
 [project.scripts]
 winipedia-pyside = "pyrig.dev.cli.cli:main"
 winipyside = "pyrig.dev.cli.cli:main"
+
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = [
+    "uv_build",
+]
+build-backend = "uv_build"
 
-[[tool.poetry.packages]]
-include = "winipyside"
-
-[tool.poetry.group.dev.dependencies]
-pytest-qt = "*"
-types-pyyaml = "*"
-pytest = "*"
-ruff = "*"
-types-defusedxml = "*"
-mypy = "*"
-pytest-mock = "*"
-types-tqdm = "*"
-pre-commit = "*"
-types-setuptools = "*"
-bandit = "*"
-types-networkx = "*"
-types-pyinstaller = "*"
-pyinstaller = {version = "*", python = "<3.15"}
-
-[tool.poetry.dependencies]
-pyqt-toast-notification = "*"
-pyside6 = "*"
-winiutils = "*"
+[tool.uv.build-backend]
+module-name = "winipyside"
+module-root = ""
 
 [tool.ruff]
-exclude = [".*", "**/migrations/*.py"]
+exclude = [
+    ".*",
+    "**/migrations/*.py",
+]
 
 [tool.ruff.lint]
-select = ["ALL"]
-ignore = ["D203", "D213", "COM812", "ANN401"]
-fixable = ["ALL"]
+select = [
+    "ALL",
+]
+ignore = [
+    "D203",
+    "D213",
+    "COM812",
+    "ANN401",
+]
+fixable = [
+    "ALL",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["S101"]
 [tool.mypy]
 strict = true
 warn_unreachable = true
@@ -62,10 +63,36 @@ show_error_codes = true
 files = "."
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = [
+    "tests",
+]
 
 [tool.bandit]
-exclude_dirs = ["./experiment.py"]
+exclude_dirs = [
+    "./experiment.py",
+    ".*",
+]
 
 [tool.bandit.assert_used]
-skips = ["*test_*.py"]
+skips = [
+    "*test_*.py",
+]
+
+[dependency-groups]
+dev = [
+    "bandit",
+    "keyrings.alt",
+    "mypy",
+    "pre-commit",
+    "pyinstaller",
+    "pytest",
+    "pytest-mock",
+    "pytest-qt",
+    "ruff",
+    "types-defusedxml",
+    "types-networkx",
+    "types-pyinstaller",
+    "types-pyyaml",
+    "types-setuptools",
+    "types-tqdm",
+]
