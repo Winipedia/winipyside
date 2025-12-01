@@ -101,7 +101,7 @@ class HealthCheckWorkflow(PySideWorkflowMixin, PyrigHealthCheckWorkflow):
     """
 
 
-class ReleaseWorkflow(HealthCheckWorkflow, PyrigReleaseWorkflow):
+class ReleaseWorkflow(PySideWorkflowMixin, PyrigReleaseWorkflow):
     """Release workflow.
 
     Extends winiutils release workflow to add additional steps.

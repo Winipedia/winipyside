@@ -53,6 +53,12 @@ jobs:
     - name: Add Dependency Updates To Git
       id: add_dependency_updates_to_git
       run: git add pyproject.toml uv.lock
+    - name: Install Pyside System Dependencies
+      id: install_pyside_system_dependencies
+      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
+      env:
+        REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+      if: runner.os == 'Linux'
     - name: Protect Repository
       id: protect_repository
       run: uv run pyrig protect-repo
@@ -64,6 +70,11 @@ jobs:
     - name: Run Tests
       id: run_tests
       run: uv run pytest --log-cli-level=INFO
+      env:
+        QT_QPA_PLATFORM: offscreen
+        QTWEBENGINE_DISABLE_SANDBOX: '1'
+        QTWEBENGINE_CHROMIUM_FLAGS: --no-sandbox --disable-gpu --disable-software-rasterizer
+          --disable-dev-shm-usage
   health_check:
     needs:
     - health_check_matrix
