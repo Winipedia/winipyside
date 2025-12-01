@@ -19,6 +19,24 @@ dependencies = [
 winipedia-pyside = "pyrig.dev.cli.cli:main"
 winipyside = "pyrig.dev.cli.cli:main"
 
+[dependency-groups]
+dev = [
+    "bandit",
+    "mypy",
+    "pre-commit",
+    "pyinstaller",
+    "pytest",
+    "pytest-mock",
+    "pytest-qt",
+    "ruff",
+    "types-defusedxml",
+    "types-networkx",
+    "types-pyinstaller",
+    "types-pyyaml",
+    "types-setuptools",
+    "types-tqdm",
+]
+
 [build-system]
 requires = [
     "uv_build",
@@ -77,23 +95,4 @@ exclude_dirs = [
 [tool.bandit.assert_used]
 skips = [
     "*test_*.py",
-]
-
-[dependency-groups]
-dev = [
-    "bandit",
-    "keyrings.alt",
-    "mypy",
-    "pre-commit",
-    "pyinstaller",
-    "pytest",
-    "pytest-mock",
-    "pytest-qt",
-    "ruff",
-    "types-defusedxml",
-    "types-networkx",
-    "types-pyinstaller",
-    "types-pyyaml",
-    "types-setuptools",
-    "types-tqdm",
 ]
