@@ -72,11 +72,6 @@ jobs:
     - name: Run Tests
       id: run_tests
       run: uv run pytest --log-cli-level=INFO
-      env:
-        QT_QPA_PLATFORM: offscreen
-        QTWEBENGINE_DISABLE_SANDBOX: '1'
-        QTWEBENGINE_CHROMIUM_FLAGS: --no-sandbox --disable-gpu --disable-software-rasterizer
-          --disable-dev-shm-usage
   health_check:
     needs:
     - health_check_matrix
