@@ -7,11 +7,11 @@ from abc import abstractmethod
 from types import ModuleType
 from typing import TYPE_CHECKING, Any, Self, cast
 
-from pyrig.dev.artifacts.resources.resource import get_resource_path
 from pyrig.src.modules.class_ import (
     get_all_nonabstract_subclasses,
 )
 from pyrig.src.modules.package import get_main_package, walk_package
+from pyrig.src.resource import get_resource_path
 from pyrig.src.string import split_on_uppercase
 from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
