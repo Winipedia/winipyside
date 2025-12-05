@@ -1,4 +1,4 @@
-# Winipyside Documentation
+# winipyside Documentation
 
 Welcome to the comprehensive documentation for **Winipyside**, a PySide6 utilities package for building modern Qt desktop applications.
 
