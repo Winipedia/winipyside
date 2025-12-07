@@ -1097,7 +1097,7 @@ wheels = [
 
 [[package]]
 name = "winipyside"
-version = "2.1.17"
+version = "2.1.18"
 source = { editable = "." }
 dependencies = [
     { name = "pyqt-toast-notification" },
@@ -1148,7 +1148,7 @@ dev = [
 
 [[package]]
 name = "winiutils"
-version = "2.2.30"
+version = "2.2.31"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
@@ -1159,7 +1159,7 @@ dependencies = [
     { name = "pyrig" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c8/91/b299085727746bc313d0263a4abb16cffa99c718ff51165b7c26ab81e216/winiutils-2.2.30.tar.gz", hash = "sha256:3f59129655434767c6d9aaafd3c1822bb0afee7cb7ad30401a367f2a52f15779", size = 24290, upload-time = "2025-12-07T03:24:49.682Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/03/39/9c93ad4da8cf3bf4994f014d0a3f780d37f3fb798dfe9cb4de875bcdaf8a/winiutils-2.2.31.tar.gz", hash = "sha256:6abfd2d77fefc15d8b56d0f89b8cd62c32692924a3f56bf2cb067d68e6a52588", size = 24295, upload-time = "2025-12-07T04:09:04.342Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/62/8c/3ecdfcbca9af0953bef4655ba936797139e0f677be88889c6230d0f43976/winiutils-2.2.30-py3-none-any.whl", hash = "sha256:0117c659c499458741c76c7b796180b13b5d83eb4d87eebe4dffa2405d31f80f", size = 37373, upload-time = "2025-12-07T03:24:50.651Z" },
+    { url = "https://files.pythonhosted.org/packages/d8/45/98647c8b3412b4f81dae4a3a2182f0184a2283b3c693b0793021cd96daab/winiutils-2.2.31-py3-none-any.whl", hash = "sha256:8d4a0e7d8bd8c70f16fe0d781289d27b1cfa3e5fe814ac1d35544178daf090ca", size = 37374, upload-time = "2025-12-07T04:09:03.288Z" },
 ]
