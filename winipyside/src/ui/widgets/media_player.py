@@ -1,6 +1,6 @@
-"""Media player module.
+"""Media player widget module.
 
-This module contains the media player class.
+This module contains the MediaPlayer widget class with full playback controls.
 """
 
 import time
@@ -32,15 +32,36 @@ from winipyside.src.ui.widgets.clickable_widget import ClickableVideoWidget
 
 
 class MediaPlayer(QMediaPlayer):
-    """Media player class."""
+    """Full-featured video player widget.
+
+    A complete media player implementation
+    with UI controls for play/pause, speed selection,
+    volume control, progress seeking, and fullscreen mode. Supports both regular and
+    AES-GCM encrypted video files with transparent decryption during playback.
+
+    The player automatically manages IO device lifecycle and provides throttled slider
+    updates to prevent excessive position changes during scrubbing.
+
+    Attributes:
+        video_widget: ClickableVideoWidget displaying the video.
+        audio_output: QAudioOutput for volume control.
+        progress_slider: QSlider for playback position control.
+        volume_slider: QSlider for volume adjustment (0-100).
+        playback_button: Play/pause toggle button.
+        speed_button: Playback speed selector button.
+        fullscreen_button: Fullscreen mode toggle button.
+    """
 
     def __init__(self, parent_layout: QLayout, *args: Any, **kwargs: Any) -> None:
-        """Initialize the media player.
+        """Initialize the media player and create its UI.
+
+        Creates the complete player widget with video display and control bars
+        (above and below the video) and adds it to the parent layout.
 
         Args:
-            parent_layout: The parent layout to add the media player widget to.
-            *args: Additional positional arguments passed to parent constructor.
-            **kwargs: Additional keyword arguments passed to parent constructor.
+            parent_layout: The parent layout to add the complete player widget to.
+            *args: Additional positional arguments passed to parent QMediaPlayer.
+            **kwargs: Additional keyword arguments passed to parent QMediaPlayer.
         """
         super().__init__(*args, **kwargs)
         self.parent_layout = parent_layout
@@ -48,10 +69,16 @@ class MediaPlayer(QMediaPlayer):
         self.make_widget()
 
     def make_widget(self) -> None:
-        """Make the widget.
+        """Create the complete media player widget structure.
 
-        Creates the main media player widget with vertical layout, adds media controls
-        above and below the video widget, and creates the video widget itself.
+        Builds the visual hierarchy:
+        - QWidget container (media_player_widget)
+          - QVBoxLayout
+            - Control bar (above) with play, speed, volume, fullscreen buttons
+            - ClickableVideoWidget (video display)
+            - Control bar (below) with progress slider
+
+        The structure allows for hiding/showing control bars independently.
         """
         self.media_player_widget = QWidget()
         self.media_player_layout = QVBoxLayout(self.media_player_widget)
@@ -61,10 +88,11 @@ class MediaPlayer(QMediaPlayer):
         self.add_media_controls_below()
 
     def make_video_widget(self) -> None:
-        """Make the video widget.
+        """Create the video display widget with audio output configuration.
 
-        Creates a clickable video widget with expanding size policy, sets up
-        audio output, and connects the click signal to toggle media controls.
+        Creates a ClickableVideoWidget,
+            connects its click signal for fullscreen toggling,
+        sets it to expand and fill available space, and configures audio output.
         """
         self.video_widget = ClickableVideoWidget()
         self.video_widget.clicked.connect(self.on_video_clicked)
@@ -79,9 +107,10 @@ class MediaPlayer(QMediaPlayer):
         self.media_player_layout.addWidget(self.video_widget)
 
     def on_video_clicked(self) -> None:
-        """Handle video widget click.
+        """Toggle visibility of all media control bars when video is clicked.
 
-        Toggles the visibility of media controls when the video widget is clicked.
+        Provides a common media player pattern where clicking the video hides
+        controls for a cleaner viewing experience, and clicking again shows them.
         """
         if self.media_controls_widget_above.isVisible():
             self.hide_media_controls()
@@ -89,26 +118,25 @@ class MediaPlayer(QMediaPlayer):
         self.show_media_controls()
 
     def show_media_controls(self) -> None:
-        """Show media controls.
-
-        Makes both the above and below media control widgets visible.
-        """
+        """Make both top and bottom control bars visible."""
         self.media_controls_widget_above.show()
         self.media_controls_widget_below.show()
 
     def hide_media_controls(self) -> None:
-        """Hide media controls.
-
-        Hides both the above and below media control widgets.
-        """
+        """Make both top and bottom control bars invisible."""
         self.media_controls_widget_above.hide()
         self.media_controls_widget_below.hide()
 
     def add_media_controls_above(self) -> None:
-        """Add media controls above the video.
+        """Create the top control bar with organized button sections.
 
-        Creates the top control bar with left, center, and right sections,
-        then adds speed, volume, playback, and fullscreen controls.
+        Creates a horizontal layout divided into left, center, and right sections,
+        then populates each with appropriate controls:
+        - Left: Speed control
+        - Center: Play/pause button
+        - Right: Volume control and fullscreen button
+
+        This layout pattern allows flexible positioning of controls.
         """
         # main above widget
         self.media_controls_widget_above = QWidget()
@@ -138,9 +166,10 @@ class MediaPlayer(QMediaPlayer):
         self.add_fullscreen_control()
 
     def add_media_controls_below(self) -> None:
-        """Add media controls below the video.
+        """Create the bottom control bar with the progress slider.
 
-        Creates the bottom control bar and adds the progress control slider.
+        Creates a horizontal layout for the bottom controls and adds the
+        seekable progress slider for playback position control.
         """
         self.media_controls_widget_below = QWidget()
         self.media_controls_layout_below = QHBoxLayout(self.media_controls_widget_below)
@@ -148,10 +177,10 @@ class MediaPlayer(QMediaPlayer):
         self.add_progress_control()
 
     def add_playback_control(self) -> None:
-        """Add playback control.
+        """Create a play/pause toggle button in the center control area.
 
-        Creates a play/pause button with appropriate icons and connects it
-        to the toggle_playback method. Adds the button to the center controls.
+        Creates a button with play/pause icons that toggles between playing and
+        paused states. The button is placed in the center control section.
         """
         self.play_icon = BaseUI.get_svg_icon("play_icon")
         self.pause_icon = BaseUI.get_svg_icon("pause_icon")
@@ -163,10 +192,10 @@ class MediaPlayer(QMediaPlayer):
         self.center_controls_layout.addWidget(self.playback_button)
 
     def toggle_playback(self) -> None:
-        """Toggle playback.
+        """Toggle between play and pause states and update the button icon.
 
-        Switches between play and pause states, updating the button icon
-        accordingly based on the current playback state.
+        If currently playing, pauses and shows the play icon. If paused or stopped,
+        starts playback and shows the pause icon.
         """
         if self.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             self.pause()
@@ -176,10 +205,11 @@ class MediaPlayer(QMediaPlayer):
             self.playback_button.setIcon(self.pause_icon)
 
     def add_speed_control(self) -> None:
-        """Add speed control.
+        """Create a speed selector button with dropdown menu.
 
-        Creates a button in the top left that shows a dropdown menu to select
-        playback speed from predefined options (0.2x to 5x).
+        Creates a button showing the current playback speed (default 1.0x) with a
+        dropdown menu listing predefined speed options (0.2x to 5x). Placed in the
+        left control section.
         """
         self.default_speed = 1
         self.speed_options = [0.2, 0.5, self.default_speed, 1.5, 2, 3, 4, 5]
@@ -193,19 +223,19 @@ class MediaPlayer(QMediaPlayer):
         self.left_controls_layout.addWidget(self.speed_button)
 
     def change_speed(self, speed: float) -> None:
-        """Change playback speed.
+        """Set the playback speed multiplier and update the speed button label.
 
         Args:
-            speed: The new playback speed multiplier.
+            speed: The new playback speed multiplier (e.g., 1.0 for normal, 2.0 for 2x).
         """
         self.setPlaybackRate(speed)
         self.speed_button.setText(f"{speed}x")
 
     def add_volume_control(self) -> None:
-        """Add volume control.
+        """Create a horizontal volume slider with 0-100 range.
 
-        Creates a horizontal slider for volume control with range 0-100
-        and connects it to the volume change handler.
+        Creates a slider for user volume adjustment and connects it to the
+        volume change handler. Placed in the left control section.
         """
         self.volume_slider = QSlider(Qt.Orientation.Horizontal)
         self.volume_slider.setRange(0, 100)
@@ -213,19 +243,23 @@ class MediaPlayer(QMediaPlayer):
         self.left_controls_layout.addWidget(self.volume_slider)
 
     def on_volume_changed(self, value: int) -> None:
-        """Handle volume slider value change.
+        """Update audio output volume based on slider value.
+
+        Converts the slider value (0-100) to audio volume range (0.0-1.0) and
+        applies it to the audio output.
 
         Args:
-            value: The new volume value from 0-100.
+            value: The slider value from 0-100.
         """
         volume = value / 100.0  # Convert to 0.0-1.0 range
         self.audio_output.setVolume(volume)
 
     def add_fullscreen_control(self) -> None:
-        """Add fullscreen control.
+        """Create a fullscreen toggle button and discover sibling widgets to hide.
 
-        Creates a fullscreen toggle button with appropriate icons and determines
-        which widgets to hide/show when entering/exiting fullscreen mode.
+        Creates a button with fullscreen/exit-fullscreen icons and discovers which
+        other widgets in the window should be hidden when entering fullscreen mode.
+        Placed in the right control section.
         """
         self.fullscreen_icon = BaseUI.get_svg_icon("fullscreen_icon")
         self.exit_fullscreen_icon = BaseUI.get_svg_icon("exit_fullscreen_icon")
@@ -247,10 +281,10 @@ class MediaPlayer(QMediaPlayer):
         self.right_controls_layout.addWidget(self.fullscreen_button)
 
     def toggle_fullscreen(self) -> None:
-        """Toggle fullscreen mode.
+        """Toggle between fullscreen and windowed mode.
 
-        Switches between fullscreen and windowed mode, hiding/showing other
-        widgets and updating the button icon accordingly.
+        Switches the window to fullscreen (hiding sibling widgets and controls) or back
+        to windowed mode (showing everything). Updates the button icon accordingly.
         """
         # Get the main window
         main_window = self.media_player_widget.window()
@@ -267,10 +301,11 @@ class MediaPlayer(QMediaPlayer):
             self.fullscreen_button.setIcon(self.exit_fullscreen_icon)
 
     def add_progress_control(self) -> None:
-        """Add progress control.
+        """Create the seekable progress slider and connect position signals.
 
-        Creates a horizontal progress slider and connects it to media player
-        signals for position updates and user interaction handling.
+        Creates a horizontal slider for playback position and establishes connections
+        between the media player's position/duration signals and the slider, with
+        throttled updates to prevent excessive updates during scrubbing.
         """
         self.progress_slider = QSlider(Qt.Orientation.Horizontal)
         self.media_controls_layout_below.addWidget(self.progress_slider)
@@ -286,7 +321,10 @@ class MediaPlayer(QMediaPlayer):
         self.progress_slider.sliderReleased.connect(self.on_slider_released)
 
     def update_slider_position(self, position: int) -> None:
-        """Update the progress slider position.
+        """Update the progress slider to reflect current playback position.
+
+        Only updates the slider if the user is not currently dragging it,
+        preventing jumpy behavior during manual seeking.
 
         Args:
             position: The current media position in milliseconds.
@@ -296,7 +334,7 @@ class MediaPlayer(QMediaPlayer):
             self.progress_slider.setValue(position)
 
     def set_slider_range(self, duration: int) -> None:
-        """Set the progress slider range based on media duration.
+        """Set the progress slider range to match media duration.
 
         Args:
             duration: The total media duration in milliseconds.
@@ -304,10 +342,11 @@ class MediaPlayer(QMediaPlayer):
         self.progress_slider.setRange(0, duration)
 
     def on_slider_moved(self, position: int) -> None:
-        """Set the media position when slider is moved.
+        """Handle slider movement with throttled position updates.
 
-        Implements throttling to prevent excessive position updates during
-        slider dragging for better performance.
+        Implements throttling (minimum 100ms between updates) to prevent excessive
+        seeking during fast slider drags, improving performance and reducing
+        audio stuttering.
 
         Args:
             position: The new position from the slider in milliseconds.
@@ -321,9 +360,9 @@ class MediaPlayer(QMediaPlayer):
             self.last_slider_moved_update = current_time
 
     def on_slider_released(self) -> None:
-        """Handle slider release event.
+        """Seek to the slider position when the user releases it.
 
-        Sets the final media position when the user releases the slider.
+        Ensures the final position is set even if the last move event was throttled.
         """
         self.setPosition(self.progress_slider.value())
 
@@ -333,15 +372,17 @@ class MediaPlayer(QMediaPlayer):
         source_url: QUrl,
         position: int = 0,
     ) -> None:
-        """Play the video.
+        """Start playback of a video from the specified IO device.
 
-        Stops current playback and starts a new video using the provided
-        source function with a delay to prevent freezing.
+        Stops any current playback, sets up the new source, and starts playing.
+        Uses a timer to delay playback start, preventing freezing when switching
+        between videos. Automatically resumes to the specified position once media
+        is buffered.
 
         Args:
             io_device: The PyQIODevice to use as the media source.
-            source_url: The QUrl representing the source location.
-            position: The position to start playback from in milliseconds.
+            source_url: The QUrl representing the source location for error reporting.
+            position: The position to resume playback from in milliseconds (default 0).
         """
         self.stop_and_close_io_device()
 
@@ -357,7 +398,11 @@ class MediaPlayer(QMediaPlayer):
         )
 
     def stop_and_close_io_device(self) -> None:
-        """Stop playback and close the IO device."""
+        """Stop playback and close the current IO device.
+
+        Safely closes any previously opened IO device to release resources
+        and prevent memory leaks.
+        """
         self.stop()
         if self.io_device is not None:
             self.io_device.close()
@@ -365,11 +410,15 @@ class MediaPlayer(QMediaPlayer):
     def resume_to_position(
         self, status: QMediaPlayer.MediaStatus, position: int
     ) -> None:
-        """Resume playback to a position.
+        """Seek to the target position once media is buffered and ready.
+
+        Called when media status changes. Once the media reaches BufferedMedia status
+        (fully buffered and ready to play), seeks to the specified position and
+        disconnects this handler to avoid repeated seeking.
 
         Args:
             status: The current media status.
-            position: The position to resume playback from in milliseconds.
+            position: The target position to seek to in milliseconds.
         """
         if status == QMediaPlayer.MediaStatus.BufferedMedia:
             self.setPosition(position)
@@ -380,7 +429,10 @@ class MediaPlayer(QMediaPlayer):
         io_device: PyQIODevice,
         source_url: QUrl,
     ) -> None:
-        """Set the source and play the video.
+        """Set the media source and start playback.
+
+        Called via timer to delay playback start and prevent freezing.
+        Configures the IO device as the source and begins playback.
 
         Args:
             io_device: The PyQIODevice to use as the media source.
@@ -390,22 +442,25 @@ class MediaPlayer(QMediaPlayer):
         self.play()
 
     def set_source_device(self, io_device: PyQIODevice, source_url: QUrl) -> None:
-        """Set the source device for playback.
+        """Configure the media source from an IO device.
 
         Args:
             io_device: The PyQIODevice to use as the media source.
-            source_url: The QUrl representing the source location.
+            source_url: The QUrl representing the source location for error reporting.
         """
         self.source_url = source_url
         self.io_device = io_device
         self.setSourceDevice(self.io_device, self.source_url)
 
     def play_file(self, path: Path, position: int = 0) -> None:
-        """Play a regular video file.
+        """Play a regular (unencrypted) video file.
+
+        Opens the file at the given path and starts playback. The file must be
+        in a format supported by the system's media engine (MP4, WebM, MKV, etc.).
 
         Args:
             path: The file path to the video file to play.
-            position: The position to start playback from in milliseconds.
+            position: The position to start playback from in milliseconds (default 0).
         """
         self.play_video(
             position=position,
@@ -416,12 +471,16 @@ class MediaPlayer(QMediaPlayer):
     def play_encrypted_file(
         self, path: Path, aes_gcm: AESGCM, position: int = 0
     ) -> None:
-        """Play an encrypted video file.
+        """Play an AES-GCM encrypted video file with transparent decryption.
+
+        Opens an encrypted video file and decrypts it on-the-fly during playback.
+        No temporary files are created; decryption happens in memory as needed.
+        Supports seeking without decrypting the entire file first.
 
         Args:
             path: The file path to the encrypted video file to play.
-            aes_gcm: The AES-GCM cipher instance for decryption.
-            position: The position to start playback from in milliseconds.
+            aes_gcm: The AES-GCM cipher instance initialized with the correct key.
+            position: The position to start playback from in milliseconds (default 0).
         """
         self.play_video(
             position=position,

@@ -1,7 +1,7 @@
 """Clickable widget module.
 
-This module contains clickable widget classes that emit signals when clicked.
-Provides both regular QWidget and QVideoWidget variants with click functionality.
+This module provides custom Qt widgets
+that emit clicked signals for interactive UI elements.
 """
 
 from typing import Any
@@ -12,22 +12,26 @@ from PySide6.QtWidgets import QWidget
 
 
 class ClickableWidget(QWidget):
-    """Widget that can be clicked.
+    """Regular QWidget that emits a clicked signal on left mouse button press.
 
-    A QWidget subclass that emits a clicked signal when the left mouse
-    button is pressed on the widget.
+    A simple extension of QWidget that makes it interactive by emitting a custom
+    clicked signal when the user clicks on it. Useful for creating custom button-like
+    areas or interactive widget regions that don't inherit from QPushButton.
+
+    Signals:
+        clicked: Emitted when the left mouse button is pressed on the widget.
     """
 
     clicked = Signal()
 
     def mousePressEvent(self, event: Any) -> None:  # noqa: N802
-        """Handle mouse press event.
+        """Handle left mouse button press and emit clicked signal.
 
-        Emits the clicked signal when the left mouse button is pressed
-        and passes the event to the parent class.
+        Emits the clicked signal when the left mouse button is pressed on the widget,
+        then passes the event to the parent class for standard processing.
 
         Args:
-            event: The mouse press event containing button and position information.
+            event: The QMouseEvent containing button type and position information.
         """
         if event.button() == Qt.MouseButton.LeftButton:
             self.clicked.emit()
@@ -35,22 +39,27 @@ class ClickableWidget(QWidget):
 
 
 class ClickableVideoWidget(QVideoWidget):
-    """Video widget that can be clicked.
+    """Video display widget that emits a clicked signal on left mouse button press.
 
-    A QVideoWidget subclass that emits a clicked signal when the left mouse
-    button is pressed on the video widget.
+    Extends QVideoWidget to make video playback areas interactive by emitting a custom
+    clicked signal when clicked. Commonly used for play/pause toggling or fullscreen
+    mode switching in media player UIs.
+
+    Signals:
+        clicked: Emitted when the left mouse button is pressed on the video widget.
     """
 
     clicked = Signal()
 
     def mousePressEvent(self, event: Any) -> None:  # noqa: N802
-        """Handle mouse press event.
+        """Handle left mouse button press on video and emit clicked signal.
 
-        Emits the clicked signal when the left mouse button is pressed
-        and passes the event to the parent class.
+        Emits the clicked signal
+        when the left mouse button is pressed on the video widget,
+        then passes the event to the parent class for standard processing.
 
         Args:
-            event: The mouse press event containing button and position information.
+            event: The QMouseEvent containing button type and position information.
         """
         if event.button() == Qt.MouseButton.LeftButton:
             self.clicked.emit()

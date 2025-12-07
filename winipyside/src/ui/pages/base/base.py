@@ -24,18 +24,42 @@ if TYPE_CHECKING:
 
 
 class Base(BaseUI, QWidget):
-    """Base page class for the VideoVault application."""
+    """Abstract base class for all pages in the stacked widget navigation system.
+
+    A page is a full-screen view that can be displayed within a QStackedWidget.
+    Each page inherits from BaseUI to get the standard lifecycle hooks and provides
+    a top navigation bar with a menu dropdown. Pages are responsible for their own
+    content layout and child widgets.
+
+    Attributes:
+        v_layout: Main vertical layout for the page content.
+        h_layout: Horizontal layout for top navigation bar.
+        menu_button: Menu button that provides navigation to other pages.
+        base_window: Reference to the containing BaseWindow.
+    """
 
     def __init__(self, base_window: "BaseWindow", *args: Any, **kwargs: Any) -> None:
-        """Initialize the base page."""
+        """Initialize the page with a reference to the base window.
+
+        Args:
+            base_window: The parent BaseWindow containing this page's stack.
+            *args: Additional positional arguments passed to parent QWidget.
+            **kwargs: Additional keyword arguments passed to parent QWidget.
+        """
         self.base_window = base_window
         super().__init__(*args, **kwargs)
 
     def base_setup(self) -> None:
-        """Setup the base Qt object of the UI.
+        """Initialize the page structure with vertical and horizontal layouts.
 
-        Initializes the main vertical layout, adds a horizontal layout for the top row,
-        and sets up the menu dropdown button.
+        Creates the main vertical layout for page content, a horizontal layout
+        for the top navigation bar, and registers this page with the base window.
+        This is the first lifecycle hook and must run before other setup methods.
+
+        The layout structure is:
+        - v_layout (QVBoxLayout) - Main page layout
+          - h_layout (QHBoxLayout) - Top navigation/menu bar
+          - [page content added here by subclasses]
         """
         self.v_layout = QVBoxLayout()
         self.setLayout(self.v_layout)
@@ -48,10 +72,14 @@ class Base(BaseUI, QWidget):
         self.base_window.add_page(self)
 
     def add_menu_dropdown_button(self) -> None:
-        """Add a dropdown menu that leads to each page.
+        """Create and configure the page navigation menu button.
 
-        Creates a menu button with a dropdown containing actions for all available
-        page subclasses. Each action connects to the set_current_page method.
+        Creates a dropdown menu button in the top-left corner that lists all available
+        pages as menu actions. Clicking an action switches to that page. The menu
+        auto-populates with all page subclasses from the window.
+
+        The menu uses SVG icons for a modern appearance and is aligned to the top-left
+        of the navigation bar.
         """
         self.menu_button = QPushButton("Menu")
         self.menu_button.setIcon(self.get_svg_icon("menu_icon"))
@@ -72,14 +100,19 @@ class Base(BaseUI, QWidget):
     def add_to_page_button(
         self, to_page_cls: type["Base"], layout: QLayout
     ) -> QPushButton:
-        """Add a button to go to the specified page.
+        """Create a navigation button that switches to the specified page.
+
+        Creates a styled button with the target page's display name and connects it
+        to automatically navigate to that page when clicked. The button is added to
+        the provided layout.
 
         Args:
-            to_page_cls: The page class to navigate to when button is clicked.
-            layout: The layout to add the button to.
+            to_page_cls: The page class to navigate to when the button is clicked.
+            layout: The layout to add the button to
+                (typically h_layout or a child layout).
 
         Returns:
-            The created QPushButton widget.
+            The created QPushButton widget (if you need to store or modify it).
         """
         button = QPushButton(to_page_cls.get_display_name())
 

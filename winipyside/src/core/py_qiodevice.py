@@ -11,23 +11,28 @@ from PySide6.QtCore import QFile, QIODevice
 
 
 class PyQIODevice(QIODevice):
-    """PySide6 QIODevice wrapper with enhanced functionality.
+    """Pythonic wrapper for PySide6 QIODevice with transparent delegation.
 
-    A wrapper class that provides a Python-friendly interface to PySide6's QIODevice,
-    allowing for easier integration with Python code while maintaining all the
-    original functionality.
+    This class provides a Python-friendly interface to PySide6's QIODevice by wrapping
+    an existing QIODevice instance and delegating all I/O operations to it. This pattern
+    allows for composition-based enhancement of QIODevice functionality
+    while maintaining full API compatibility.
 
-    Args:
-        QIODevice: The base QIODevice class from PySide6.
+    The wrapper implements all standard QIODevice methods,
+    making it suitable as a drop-in
+    replacement for QIODevice in contexts requiring Pythonic behavior or additional
+    processing layers (e.g., encryption/decryption in subclasses).
     """
 
     def __init__(self, q_device: QIODevice, *args: Any, **kwargs: Any) -> None:
         """Initialize the PyQIODevice wrapper.
 
         Args:
-            q_device: The QIODevice instance to wrap.
-            *args: Additional positional arguments passed to parent constructor.
-            **kwargs: Additional keyword arguments passed to parent constructor.
+            q_device: The QIODevice instance to wrap and delegate operations to.
+            *args:
+                Additional positional arguments passed to parent QIODevice constructor.
+            **kwargs:
+                Additional keyword arguments passed to parent QIODevice constructor.
         """
         super().__init__(*args, **kwargs)
         self.q_device = q_device
@@ -196,10 +201,12 @@ class PyQIODevice(QIODevice):
 
 
 class PyQFile(PyQIODevice):
-    """QFile wrapper with enhanced Python integration.
+    """Pythonic wrapper for PySide6 QFile with file path support.
 
-    A specialized PyQIODevice wrapper for file operations, providing a more
-    Python-friendly interface to PySide6's QFile functionality.
+    A specialized PyQIODevice wrapper that handles file path initialization and
+    provides convenient file I/O operations. This class extends PyQIODevice with
+    automatic QFile instantiation from file paths, simplifying file-based I/O
+    operations throughout the application.
     """
 
     def __init__(self, path: Path, *args: Any, **kwargs: Any) -> None:
@@ -215,11 +222,25 @@ class PyQFile(PyQIODevice):
 
 
 class EncryptedPyQFile(PyQFile):
-    """Encrypted file wrapper using AES-GCM encryption.
+    """Transparent AES-GCM encrypted file wrapper for secure media access.
 
-    Provides transparent encryption/decryption for file operations using
-    AES-GCM (Galois/Counter Mode) encryption. Data is encrypted in chunks
-    for efficient streaming operations.
+    This class provides transparent encryption/decryption for file operations using
+    AES-GCM (Galois/Counter Mode), an authenticated encryption cipher. Data is encrypted
+    in fixed-size chunks (64KB plaintext + overhead) to support efficient streaming and
+    random-access playback without decrypting entire files into memory.
+
+    Why chunked encryption is used:
+    This approach enables seeking through encrypted files
+    and playing encrypted videos without temporary files,
+    by mapping between encrypted and
+    decrypted positions and decrypting only necessary chunks on demand.
+
+    Attributes:
+        NONCE_SIZE: Size of random nonce per chunk (12 bytes).
+        CIPHER_SIZE: Size of plaintext per chunk (64 KB).
+        TAG_SIZE: Size of authentication tag per chunk (16 bytes).
+        CHUNK_SIZE: Total encrypted chunk size = CIPHER_SIZE + NONCE_SIZE + TAG_SIZE.
+        CHUNK_OVERHEAD: Total per-chunk overhead = NONCE_SIZE + TAG_SIZE (28 bytes).
     """
 
     NONCE_SIZE = 12
@@ -245,14 +266,18 @@ class EncryptedPyQFile(PyQFile):
     def readData(self, maxlen: int) -> bytes:  # noqa: N802
         """Read and decrypt data from the encrypted file.
 
-        Reads encrypted chunks from the file, decrypts them, and returns
-        the requested portion of decrypted data.
+        Implements transparent decryption by reading encrypted chunks from the file
+        and decrypting them. Handles position mapping between encrypted and decrypted
+        data, enabling random access and seeking within encrypted content.
+
+        This method is called internally by the QIODevice read() method and handles
+        the complexity of chunk boundaries and position tracking.
 
         Args:
-            maxlen: The maximum number of decrypted bytes to read.
+            maxlen: The maximum number of decrypted bytes to read from current position.
 
         Returns:
-            The decrypted data as bytes.
+            The decrypted data as bytes (may be less than maxlen if at end of file).
         """
         # where we are in the encrypted data
         dec_pos = self.pos()
@@ -284,25 +309,31 @@ class EncryptedPyQFile(PyQFile):
     def writeData(self, data: bytes | bytearray | memoryview, len: int) -> int:  # noqa: A002, ARG002, N802
         """Encrypt and write data to the file.
 
+        Encrypts the provided plaintext data using AES-GCM and writes the encrypted
+        chunks to the underlying file device. Each chunk includes a random nonce and
+        authentication tag for authenticated encryption.
+
         Args:
-            data: The data to encrypt and write.
-            len: The length parameter (unused in this implementation).
+            data: The plaintext data to encrypt and write.
+            len: The length parameter (unused in this implementation,
+                actual data length is used).
 
         Returns:
-            The number of bytes actually written.
+            The number of plaintext bytes that were encrypted and written.
         """
         encrypted_data = self.encrypt_data(bytes(data))
         encrypted_len = encrypted_data.__len__()
         return super().writeData(encrypted_data, encrypted_len)
 
     def size(self) -> int:
-        """Get the decrypted size of the file.
+        """Get the decrypted file size.
 
-        Calculates the decrypted size based on the encrypted file size
-        and chunk structure.
+        Calculates and caches the decrypted file size based on the encrypted file size
+        and chunk structure. This is used internally by the media player to determine
+        file bounds without decrypting the entire file.
 
         Returns:
-            The decrypted size of the file in bytes.
+            The total plaintext size of the file in bytes.
         """
         self.enc_size = super().size()
         self.num_chunks = self.enc_size // self.CHUNK_SIZE + 1
@@ -310,13 +341,19 @@ class EncryptedPyQFile(PyQFile):
         return self.dec_size
 
     def get_decrypted_pos(self, enc_pos: int) -> int:
-        """Convert encrypted file position to decrypted position.
+        """Convert encrypted file position to decrypted (plaintext) position.
+
+        Maps positions from the encrypted file layout to the corresponding position
+        in the plaintext stream. Accounts for nonces and tags distributed across chunks.
+
+        This is essential for seeking operations - when user seeks to position X in the
+        plaintext, we need to find the corresponding position in the encrypted file.
 
         Args:
-            enc_pos: The position in the encrypted file.
+            enc_pos: The byte position in the encrypted file.
 
         Returns:
-            The corresponding position in the decrypted data.
+            The corresponding byte position in the decrypted plaintext.
         """
         if enc_pos >= self.enc_size:
             return self.dec_size
@@ -330,13 +367,20 @@ class EncryptedPyQFile(PyQFile):
         return last_dec_chunk_start + enc_bytes_to_move - self.NONCE_SIZE
 
     def get_encrypted_pos(self, dec_pos: int) -> int:
-        """Convert decrypted position to encrypted file position.
+        """Convert decrypted (plaintext) position to encrypted file position.
+
+        Maps positions from the plaintext stream to the corresponding position
+        in the encrypted file layout.
+        Accounts for nonces and tags distributed across chunks.
+
+        This is the inverse of get_decrypted_pos() and is used when seeking - we convert
+        the desired plaintext position to find where to read in the encrypted file.
 
         Args:
-            dec_pos: The position in the decrypted data.
+            dec_pos: The byte position in the decrypted plaintext stream.
 
         Returns:
-            The corresponding position in the encrypted file.
+            The corresponding byte position in the encrypted file.
         """
         if dec_pos >= self.dec_size:
             return self.enc_size
@@ -349,25 +393,31 @@ class EncryptedPyQFile(PyQFile):
         return last_enc_chunk_start + self.NONCE_SIZE + dec_bytes_to_move
 
     def get_chunk_start(self, pos: int) -> int:
-        """Get the start position of the chunk containing the given position.
+        """Get the start byte position of the chunk containing the given position.
+
+        Calculates which chunk boundary contains the position and returns the
+        byte offset where that chunk begins in the encrypted file.
 
         Args:
-            pos: The position to find the chunk start for.
+            pos: The byte position within a chunk (encrypted file coordinates).
 
         Returns:
-            The start position of the chunk.
+            The byte offset of the start of the chunk containing the position.
         """
         return pos // self.CHUNK_SIZE * self.CHUNK_SIZE
 
     def get_chunk_end(self, pos: int, maxlen: int) -> int:
-        """Get the end position of the chunk range for the given position and length.
+        """Get the end byte position of chunk range for given position and length.
+
+        Determines how many chunks are needed to read maxlen bytes starting from pos,
+        and returns the byte offset of the end of the last required chunk.
 
         Args:
-            pos: The starting position.
-            maxlen: The maximum length to read.
+            pos: The starting byte position in the encrypted file.
+            maxlen: The number of bytes to potentially read.
 
         Returns:
-            The end position of the chunk range.
+            The byte offset of the end of the last chunk needed for the read.
         """
         return (pos + maxlen) // self.CHUNK_SIZE * self.CHUNK_SIZE + self.CHUNK_SIZE
 
@@ -375,40 +425,52 @@ class EncryptedPyQFile(PyQFile):
     def chunk_generator(
         cls, data: bytes, *, is_encrypted: bool
     ) -> Generator[bytes, None, None]:
-        """Generate chunks from data.
+        """Generate fixed-size chunks from data for streaming processing.
+
+        Yields chunks of the appropriate size based on whether data is encrypted
+        or plaintext. Used internally for batch encryption/decryption operations.
 
         Args:
-            data: The data to split into chunks.
-            is_encrypted: Whether the data is encrypted (affects chunk size).
+            data: The complete data to split into chunks.
+            is_encrypted: If True, uses CHUNK_SIZE (encrypted). If False, uses
+                CIPHER_SIZE (plaintext).
 
         Yields:
-            Chunks of data of appropriate size.
+            Byte chunks of the appropriate size (last chunk may be smaller).
         """
         size = cls.CHUNK_SIZE if is_encrypted else cls.CIPHER_SIZE
         for i in range(0, len(data), size):
             yield data[i : i + size]
 
     def encrypt_data(self, data: bytes) -> bytes:
-        """Encrypt data using AES-GCM.
+        """Encrypt plaintext data using this instance's AES-GCM cipher.
+
+        Delegates to the static encryption method with this instance's cipher.
 
         Args:
-            data: The data to encrypt.
+            data: The plaintext data to encrypt.
 
         Returns:
-            The encrypted data with nonce and authentication tag.
+            The encrypted data with nonce
+            and authentication tag prepended to each chunk.
         """
         return self.encrypt_data_static(data, self.aes_gcm)
 
     @classmethod
     def encrypt_data_static(cls, data: bytes, aes_gcm: AESGCM) -> bytes:
-        """Encrypt data using AES-GCM (static method).
+        """Encrypt plaintext data using AES-GCM in streaming chunks.
+
+        Processes data in fixed-size plaintext chunks, encrypting each independently.
+        Each chunk receives its own random nonce and authentication tag, enabling
+        random-access decryption (decrypting any chunk without decrypting others).
 
         Args:
-            data: The data to encrypt.
-            aes_gcm: The AES-GCM cipher instance for encryption/decryption.
+            data: The plaintext data to encrypt (any size).
+            aes_gcm: The AES-GCM cipher instance for encryption.
 
         Returns:
-            The encrypted data with nonce and authentication tag.
+            The encrypted data with nonces
+            and authentication tags prepended to each chunk.
         """
         decrypted_chunks = cls.chunk_generator(data, is_encrypted=False)
         encrypted_chunks = map(
@@ -418,40 +480,59 @@ class EncryptedPyQFile(PyQFile):
 
     @classmethod
     def encrypt_chunk_static(cls, data: bytes, aes_gcm: AESGCM) -> bytes:
-        """Encrypt a single chunk using AES-GCM (static method).
+        """Encrypt a single plaintext chunk with authenticated encryption.
+
+        Generates a random 12-byte nonce and encrypts the chunk with Additional
+        Authenticated Data (AAD) to prevent tampering. The nonce is prepended to
+        the ciphertext for use during decryption.
 
         Args:
-            data: The chunk data to encrypt.
-            aes_gcm: The AES-GCM cipher instance for encryption/decryption.
+            data: The plaintext chunk to encrypt (up to CIPHER_SIZE bytes).
+            aes_gcm: The AES-GCM cipher instance for encryption.
 
         Returns:
-            The encrypted chunk with nonce and authentication tag.
+            Encrypted chunk formatted as: nonce || ciphertext || authentication_tag.
         """
         nonce = os.urandom(12)
         aad = cls.__name__.encode()
         return nonce + aes_gcm.encrypt(nonce, data, aad)
 
     def decrypt_data(self, data: bytes) -> bytes:
-        """Decrypt data using AES-GCM.
+        """Decrypt encrypted data using this instance's AES-GCM cipher.
+
+        Delegates to the static decryption method with this instance's cipher.
 
         Args:
-            data: The encrypted data to decrypt.
+            data: The encrypted data with nonces and tags intact.
 
         Returns:
-            The decrypted data as bytes.
+            The decrypted plaintext data.
+
+        Raises:
+            cryptography.exceptions.InvalidTag: If authentication tag verification fails
+                (indicates tampering or corruption).
         """
         return self.decrypt_data_static(data, self.aes_gcm)
 
     @classmethod
     def decrypt_data_static(cls, data: bytes, aes_gcm: AESGCM) -> bytes:
-        """Decrypt data using AES-GCM (static method).
+        """Decrypt encrypted data using AES-GCM in streaming chunks.
+
+        Processes encrypted data in chunk-sized blocks, decrypting each independently
+        with authenticated verification. Each chunk contains its own nonce, making this
+        suitable for random-access scenarios where only specific chunks need decryption.
 
         Args:
-            data: The encrypted data to decrypt.
-            aes_gcm: The AES-GCM cipher instance for encryption/decryption.
+            data: The encrypted data with nonces and tags
+                (any size multiple of CHUNK_SIZE).
+            aes_gcm: The AES-GCM cipher instance for decryption.
 
         Returns:
-            The decrypted data as bytes.
+            The decrypted plaintext data.
+
+        Raises:
+            cryptography.exceptions.InvalidTag: If any chunk fails authentication
+                (indicates tampering, corruption, or wrong key).
         """
         encrypted_chunks = cls.chunk_generator(data, is_encrypted=True)
         decrypted_chunks = map(
@@ -461,14 +542,23 @@ class EncryptedPyQFile(PyQFile):
 
     @classmethod
     def decrypt_chunk_static(cls, data: bytes, aes_gcm: AESGCM) -> bytes:
-        """Decrypt a single chunk using AES-GCM (static method).
+        """Decrypt a single chunk with authenticated verification.
+
+        Extracts the nonce from the chunk prefix, verifies the authentication tag,
+        and decrypts the ciphertext. The AAD must match what was used during encryption.
 
         Args:
-            data: The encrypted chunk data to decrypt.
-            aes_gcm: The AES-GCM cipher instance for encryption/decryption.
+            data: The encrypted chunk formatted as:
+                nonce || ciphertext || authentication_tag.
+            aes_gcm: The AES-GCM cipher instance for decryption.
 
         Returns:
-            The decrypted chunk data as bytes.
+            The decrypted plaintext chunk.
+
+        Raises:
+            cryptography.exceptions.InvalidTag: If the authentication tag is invalid,
+                indicating the chunk was tampered with, corrupted, or encrypted with
+                a different key.
         """
         nonce = data[: cls.NONCE_SIZE]
         cipher_and_tag = data[cls.NONCE_SIZE :]
