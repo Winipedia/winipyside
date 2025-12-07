@@ -10,7 +10,7 @@ name: Health Check Workflow
     branches:
     - main
   schedule:
-  - cron: 0 3 * * *
+  - cron: 0 2 * * *
 permissions: {}
 run-name: Health Check Workflow
 defaults:
