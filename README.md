@@ -190,8 +190,9 @@ winipyside/
 │       ├── widgets/       # Reusable widgets
 │       ├── pages/         # Page components
 │       └── windows/       # Window framework
+├── resources/             # SVG icons and static resources
 └── dev/
-    ├── artifacts/         # Resources and builders
+    ├── builders/          # Build utilities
     ├── cli/              # CLI commands
     ├── configs/          # CI/CD configuration
     └── tests/            # Test fixtures
