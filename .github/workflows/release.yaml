@@ -1,46 +1,34 @@
-name: Release Workflow
+name: Release
 'on':
   workflow_dispatch: {}
   workflow_run:
     workflows:
-    - Health Check Workflow
+    - Build
     types:
     - completed
-    branches:
-    - main
 permissions:
   contents: write
-run-name: Release Workflow
+  actions: read
+run-name: Release
 defaults:
   run:
     shell: bash
 env:
   PYTHONDONTWRITEBYTECODE: 1
 jobs:
-  build:
-    strategy:
-      matrix:
-        os:
-        - ubuntu-latest
-        - windows-latest
-        - macos-latest
-      fail-fast: true
-    runs-on: ${{ matrix.os }}
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    steps:
-    - name: No Builder Defined
-      id: no_builder_defined
-      run: echo 'No non-abstract builders defined. Skipping build.'
   release:
-    needs:
-    - build
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - name: Checkout Repository
       id: checkout_repository
       uses: actions/checkout@main
       with:
         token: ${{ secrets.REPO_TOKEN }}
+    - name: Setup Git
+      id: setup_git
+      run: git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        && git config --global user.name "github-actions[bot]"
     - name: Setup Project Mgt
       id: setup_project_mgt
       uses: astral-sh/setup-uv@main
@@ -62,10 +50,6 @@ jobs:
       id: install_pyside_system_dependencies
       run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
       if: runner.os == 'Linux'
-    - name: Setup Git
-      id: setup_git
-      run: git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        && git config --global user.name "github-actions[bot]"
     - name: Run Pre Commit Hooks
       id: run_pre_commit_hooks
       run: uv run pre-commit run --all-files
@@ -82,11 +66,13 @@ jobs:
     - name: Extract Version
       id: extract_version
       run: echo "version=v$(uv version --short)" >> $GITHUB_OUTPUT
-    - name: Download Artifacts
-      id: download_artifacts
+    - name: Download Artifacts From Workflow Run
+      id: download_artifacts_from_workflow_run
       uses: actions/download-artifact@main
       with:
         path: dist
+        run-id: ${{ github.event.workflow_run.id }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         merge-multiple: 'true'
     - name: Build Changelog
       id: build_changelog

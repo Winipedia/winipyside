@@ -13,6 +13,10 @@ dependencies = [
     "pyside6",
     "winiutils",
 ]
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 
 [project.scripts]
 winipedia-pyside = "pyrig.dev.cli.cli:main"
@@ -84,7 +88,7 @@ files = "."
 testpaths = [
     "tests",
 ]
-addopts = "--cov=winipyside --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=winipyside --cov-report=term-missing --cov-fail-under=90"
 
 [tool.bandit]
 exclude_dirs = [
