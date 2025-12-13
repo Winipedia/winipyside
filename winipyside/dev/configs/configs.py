@@ -67,14 +67,17 @@ class PySideWorkflowMixin(PyrigWorkflow):
 
     @classmethod
     def steps_core_installed_setup(
-        cls, python_version: str | None = None, *, repo_token: bool = False
+        cls,
+        *args: Any,
+        **kwargs: Any,
     ) -> list[dict[str, Any]]:
         """Get the core installed setup steps.
 
         We need to install additional system dependencies for pyside6.
         """
         steps = super().steps_core_installed_setup(
-            python_version, repo_token=repo_token
+            *args,
+            **kwargs,
         )
 
         steps.append(
