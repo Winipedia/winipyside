@@ -11,6 +11,9 @@ from pyrig.dev.configs.pyproject import (
 from pyrig.dev.configs.workflows.base.base import (
     Workflow as PyrigWorkflow,
 )
+from pyrig.dev.configs.workflows.build import (
+    BuildWorkflow as PyrigBuildWorkflow,
+)
 from pyrig.dev.configs.workflows.health_check import (
     HealthCheckWorkflow as PyrigHealthCheckWorkflow,
 )
@@ -99,6 +102,15 @@ class HealthCheckWorkflow(PySideWorkflowMixin, PyrigHealthCheckWorkflow):
     """Health check workflow.
 
     Extends winiutils health check workflow to add additional steps.
+    This is necessary to make pyside6 work on github actions which is a headless linux
+    environment.
+    """
+
+
+class BuildWorkflow(PySideWorkflowMixin, PyrigBuildWorkflow):
+    """Build workflow.
+
+    Extends winiutils build workflow to add additional steps.
     This is necessary to make pyside6 work on github actions which is a headless linux
     environment.
     """
