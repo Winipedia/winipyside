@@ -52,3 +52,7 @@ class TestPyprojectConfigFile:
         assert "pytest-qt" in dev_dependencies, (
             "Dev dependencies should include pytest-qt"
         )
+
+
+class TestBuildWorkflow:
+    """Test class."""
