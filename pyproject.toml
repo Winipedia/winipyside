@@ -27,28 +27,8 @@ winipyside = "pyrig.dev.cli.cli:main"
 
 [dependency-groups]
 dev = [
-    "bandit",
-    "dotenv",
-    "mypy",
-    "pillow",
-    "pre-commit",
-    "pygithub",
-    "pyinstaller",
-    "pytest",
-    "pytest-cov",
-    "pytest-mock",
+    "pyrig-dev",
     "pytest-qt",
-    "pyyaml",
-    "ruff",
-    "setuptools",
-    "tenacity",
-    "tomlkit",
-    "ty",
-    "types-defusedxml",
-    "types-pyinstaller",
-    "types-pyyaml",
-    "types-setuptools",
-    "types-tqdm",
 ]
 
 [build-system]
