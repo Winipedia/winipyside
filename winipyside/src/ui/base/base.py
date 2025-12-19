@@ -3,6 +3,7 @@
 This module contains the base UI class for the VideoVault application.
 """
 
+import sys
 from abc import abstractmethod
 from types import ModuleType
 from typing import TYPE_CHECKING, Any, Self, cast
@@ -10,7 +11,7 @@ from typing import TYPE_CHECKING, Any, Self, cast
 from pyrig.src.modules.class_ import (
     get_all_nonabstract_subclasses,
 )
-from pyrig.src.modules.package import get_main_package, walk_package
+from pyrig.src.modules.package import walk_package
 from pyrig.src.resource import get_resource_path
 from pyrig.src.string import split_on_uppercase
 from PySide6.QtCore import QObject
@@ -131,7 +132,7 @@ class Base(metaclass=QABCLoggingMeta):
         """
         if package is None:
             # find the main package
-            package = get_main_package()
+            package = sys.modules[__name__]
 
         _ = list(walk_package(package))
 
