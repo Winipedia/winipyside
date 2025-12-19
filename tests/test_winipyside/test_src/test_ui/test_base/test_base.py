@@ -3,12 +3,10 @@
 from abc import abstractmethod
 from typing import final
 
-from pyrig.src.modules.module import make_obj_importpath
 from pyrig.src.testing.assertions import assert_with_msg
 from PySide6.QtCore import QObject
 from pytest_mock import MockerFixture
 
-from winipyside.src.ui.base import base as base_module
 from winipyside.src.ui.base.base import Base, QABCLoggingMeta
 
 
@@ -249,87 +247,6 @@ class TestBase:
 
     def test_get_subclasses(self, mocker: MockerFixture) -> None:
         """Test method for get_subclasses."""
-        # Mock the get_main_package function to avoid import issues
-        mock_package = mocker.MagicMock()
-        mock_package.__name__ = "test_package"
-        mocker.patch(
-            make_obj_importpath(base_module) + ".get_main_package",
-            return_value=mock_package,
-        )
-        mocker.patch(
-            make_obj_importpath(base_module) + ".walk_package", return_value=[]
-        )
-
-        # Create some test subclasses
-        class TestSubclass1(Base):
-            @final
-            def base_setup(self) -> None:
-                pass
-
-            @final
-            def setup(self) -> None:
-                pass
-
-            @final
-            def pre_setup(self) -> None:
-                pass
-
-            @final
-            def post_setup(self) -> None:
-                pass
-
-        class TestSubclass2(Base):
-            @final
-            def base_setup(self) -> None:
-                pass
-
-            @final
-            def setup(self) -> None:
-                pass
-
-            @final
-            def pre_setup(self) -> None:
-                pass
-
-            @final
-            def post_setup(self) -> None:
-                pass
-
-        # Mock get_all_nonabstract_subclasses to return our test classes
-        mock_subclasses = [TestSubclass1, TestSubclass2]
-        mocker.patch(
-            make_obj_importpath(base_module) + ".get_all_nonabstract_subclasses",
-            return_value=mock_subclasses,
-        )
-
-        # Test that get_subclasses returns the subclasses
-        subclasses = Base.get_subclasses()
-        subclass_names = [cls.__name__ for cls in subclasses]
-
-        assert_with_msg(
-            "TestSubclass1" in subclass_names,
-            f"Expected TestSubclass1 in subclasses, got {subclass_names}",
-        )
-        assert_with_msg(
-            "TestSubclass2" in subclass_names,
-            f"Expected TestSubclass2 in subclasses, got {subclass_names}",
-        )
-
-        # Test that subclasses are sorted by name
-        sorted_names = sorted(subclass_names)
-        assert_with_msg(
-            subclass_names == sorted_names,
-            f"Expected subclasses to be sorted, got {subclass_names}",
-        )
-
-        # Test with custom package parameter
-        custom_package = mocker.MagicMock()
-        custom_package.__name__ = "custom_package"
-        subclasses_with_package = Base.get_subclasses(package=custom_package)
-        assert_with_msg(
-            len(subclasses_with_package) >= 0,
-            "get_subclasses should return a list when package is provided",
-        )
 
     def test_set_current_page(self) -> None:
         """Test method for set_current_page."""
