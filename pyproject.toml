@@ -16,14 +16,27 @@ dependencies = [
 classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
 ]
 license-files = [
     "LICENSE",
 ]
+maintainers = [
+    {name = "Winipedia"},
+]
+keywords = []
 
 [project.scripts]
 winipedia-pyside = "pyrig.dev.cli.cli:main"
 winipyside = "pyrig.dev.cli.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Winipedia/winipyside"
+Documentation = "https://Winipedia.github.io/winipyside"
+Source = "https://github.com/Winipedia/winipyside"
+Issues = "https://github.com/Winipedia/winipyside/issues"
+Changelog = "https://github.com/Winipedia/winipyside/releases"
 
 [dependency-groups]
 dev = [
