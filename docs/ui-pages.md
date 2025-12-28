@@ -1,6 +1,7 @@
 # UI Pages Package
 
-The `winipyside.src.ui.pages` package provides page components for building multi-page applications with QStackedWidget-based navigation.
+The `winipyside.src.ui.pages` package provides page components
+for building multi-page applications with QStackedWidget-based navigation.
 
 ## Overview
 
@@ -12,17 +13,20 @@ The pages package contains:
 
 ## Base Page
 
-The base page class provides the foundation for all pages in a multi-page application.
+The base page class provides the foundation
+for all pages in a multi-page application.
 
 ### Class Definition
 
 ```python
 class Base(BaseUI, QWidget):
     """Base page class for the application."""
-    
-    def __init__(self, base_window: "BaseWindow", *args: Any, **kwargs: Any) -> None:
+
+    def __init__(
+        self, base_window: "BaseWindow", *args: Any, **kwargs: Any
+    ) -> None:
         """Initialize the base page.
-        
+
         Args:
             base_window: The parent window containing this page.
         """
@@ -55,6 +59,7 @@ Add a dropdown menu button for page navigation.
 Add a button to the menu for navigating to a specific page.
 
 **Parameters:**
+
 - `page_cls` (type[Base]): The page class to navigate to
 - `menu` (QMenu): The menu to add the button to
 
@@ -68,21 +73,21 @@ class CustomPage(BasePage):
     def pre_setup(self) -> None:
         """Setup before main initialization."""
         pass
-    
+
     def setup(self) -> None:
         """Main setup logic."""
         # Add widgets to the vertical layout
         label = QLabel("Welcome to Custom Page")
         self.v_layout.addWidget(label)
-        
+
         button = QPushButton("Click Me")
         button.clicked.connect(self.on_button_clicked)
         self.v_layout.addWidget(button)
-    
+
     def post_setup(self) -> None:
         """Finalization after setup."""
         pass
-    
+
     def on_button_clicked(self) -> None:
         """Handle button click."""
         print("Button clicked!")
@@ -97,11 +102,11 @@ A page with an integrated media player for playing videos.
 ```python
 class Player(BasePage):
     """Media player page."""
-    
+
     @abstractmethod
     def start_playback(self, path: Path, position: int = 0) -> None:
         """Start playback - must be implemented by subclasses.
-        
+
         Args:
             path: Path to media file.
             position: Starting position in milliseconds.
@@ -127,6 +132,7 @@ class Player(BasePage):
 Start playback of a media file. Must be implemented by subclasses.
 
 **Parameters:**
+
 - `path` (Path): Path to media file
 - `position` (int): Starting position in milliseconds (default: 0)
 
@@ -135,14 +141,16 @@ Start playback of a media file. Must be implemented by subclasses.
 Play a regular (unencrypted) file.
 
 **Parameters:**
+
 - `path` (Path): Path to media file
 - `position` (int): Starting position in milliseconds (default: 0)
 
-#### `play_encrypted_file(path: Path, aes_gcm: AESGCM, position: int = 0) -> None`
+#### `play_encrypted_file(...) -> None`
 
 Play an encrypted file.
 
 **Parameters:**
+
 - `path` (Path): Path to encrypted media file
 - `aes_gcm` (AESGCM): AES-GCM cipher instance
 - `position` (int): Starting position in milliseconds (default: 0)
@@ -152,6 +160,7 @@ Play an encrypted file.
 Play a file from a function that returns the path.
 
 **Parameters:**
+
 - `func` (Callable[[], Path]): Function that returns the file path
 - `position` (int): Starting position in milliseconds (default: 0)
 
@@ -166,13 +175,13 @@ class MyPlayerPage(Player):
     def __init__(self, base_window, *args, **kwargs):
         self.aes_gcm = self.load_encryption_key()
         super().__init__(base_window, *args, **kwargs)
-    
+
     def load_encryption_key(self) -> AESGCM:
         """Load encryption key."""
         with open("encryption.key", "rb") as f:
             key = f.read()
         return AESGCM(key)
-    
+
     def start_playback(self, path: Path, position: int = 0) -> None:
         """Start playback of encrypted video."""
         # Check if file is encrypted
@@ -180,17 +189,17 @@ class MyPlayerPage(Player):
             self.play_encrypted_file(path, self.aes_gcm, position)
         else:
             self.play_file(path, position)
-    
+
     def pre_setup(self) -> None:
         """Setup before main initialization."""
         pass
-    
+
     def setup(self) -> None:
         """Main setup logic."""
         # Player widget is automatically created
         # Add custom controls if needed
         pass
-    
+
     def post_setup(self) -> None:
         """Finalization after setup."""
         pass
@@ -228,13 +237,13 @@ class MyBrowserPage(Browser):
     def pre_setup(self) -> None:
         """Setup before main initialization."""
         pass
-    
+
     def setup(self) -> None:
         """Main setup logic."""
         # Browser widget is automatically created
         # Load a default page
         self.browser.load(QUrl("https://example.com"))
-    
+
     def post_setup(self) -> None:
         """Finalization after setup."""
         # Access cookies if needed
@@ -323,7 +332,9 @@ if __name__ == "__main__":
 
 ### Page Organization
 
-1. **One page per feature**: Each page should represent a distinct feature or view
+1. **One page per feature**:
+Each page should represent a distinct feature or view
+
    ```python
    # Good
    class VideoLibraryPage(BasePage): pass
@@ -334,7 +345,9 @@ if __name__ == "__main__":
    class EverythingPage(BasePage): pass
    ```
 
-2. **Use descriptive names**: Page class names should clearly indicate their purpose
+2. **Use descriptive names**:
+Page class names should clearly indicate their purpose
+
    ```python
    # Good
    class VideoPlayerPage(Player): pass
@@ -348,6 +361,7 @@ if __name__ == "__main__":
 ### Player Page Best Practices
 
 1. **Implement start_playback**: Always implement the abstract method
+
    ```python
    def start_playback(self, path: Path, position: int = 0) -> None:
        """Start playback."""
@@ -355,6 +369,7 @@ if __name__ == "__main__":
    ```
 
 2. **Handle both encrypted and regular files**:
+
    ```python
    def start_playback(self, path: Path, position: int = 0) -> None:
        if self.is_encrypted(path):
@@ -364,6 +379,7 @@ if __name__ == "__main__":
    ```
 
 3. **Save playback position**:
+
    ```python
    def closeEvent(self, event):
        position = self.player.position()
@@ -374,12 +390,14 @@ if __name__ == "__main__":
 ### Browser Page Best Practices
 
 1. **Set a default URL**:
+
    ```python
    def setup(self) -> None:
        self.browser.load(QUrl("https://example.com"))
    ```
 
 2. **Handle navigation events**:
+
    ```python
    def setup(self) -> None:
        self.browser.urlChanged.connect(self.on_url_changed)
@@ -389,6 +407,7 @@ if __name__ == "__main__":
    ```
 
 3. **Manage cookies**:
+
    ```python
    def get_session_cookies(self, domain: str):
        """Get cookies for a domain."""
@@ -398,12 +417,14 @@ if __name__ == "__main__":
 ### Navigation Best Practices
 
 1. **Use set_current_page for navigation**:
+
    ```python
    # Navigate to player page
    self.base_window.set_current_page(MyPlayerPage)
    ```
 
 2. **Access other pages**:
+
    ```python
    # Get reference to another page
    player_page = self.base_window.get_page(MyPlayerPage)
@@ -411,6 +432,7 @@ if __name__ == "__main__":
    ```
 
 3. **Communicate between pages**:
+
    ```python
    # In browser page
    def on_video_link_clicked(self, url):
@@ -425,4 +447,3 @@ if __name__ == "__main__":
 - [UI Widgets](ui-widgets.md) - Browser and MediaPlayer widgets
 - [UI Windows](ui-windows.md) - Window framework for pages
 - [Examples](examples.md) - More page examples
-

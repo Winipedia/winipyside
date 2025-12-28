@@ -8,10 +8,11 @@
 [![MkDocs](https://img.shields.io/badge/MkDocs-Documentation-326CE5?logo=mkdocs&logoColor=white)](https://www.mkdocs.org/)
 <!-- code-quality -->
 [![ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)[![mypy](https://img.shields.io/badge/type%20checked-mypy-039dfc.svg)](https://mypy-lang.org/)
+[![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 [![pytest](https://img.shields.io/badge/tested%20with-pytest-46a2f1.svg?logo=pytest)](https://pytest.org/)
 [![codecov](https://codecov.io/gh/Winipedia/winipyside/branch/main/graph/badge.svg)](https://codecov.io/gh/Winipedia/winipyside)
+[![rumdl](https://img.shields.io/badge/markdown-rumdl-darkgreen)](https://github.com/rvben/rumdl)
 <!-- package-info -->
 [![PyPI](https://img.shields.io/pypi/v/winipyside?logo=pypi&logoColor=white)](https://pypi.org/project/winipyside)
 [![Python](https://img.shields.io/badge/python-3.12|3.13-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
@@ -28,7 +29,8 @@
 
 ---
 
-Welcome to the comprehensive documentation for **Winipyside**, a PySide6 utilities package for building modern Qt desktop applications.
+Welcome to the comprehensive documentation for **Winipyside**,
+a PySide6 utilities package for building modern Qt desktop applications.
 
 ## Table of Contents
 
@@ -87,7 +89,7 @@ Welcome to the comprehensive documentation for **Winipyside**, a PySide6 utiliti
 
 Winipyside is organized into several key packages:
 
-```
+```text
 winipyside/src/
 ├── core/              # Low-level I/O and encryption
 │   └── py_qiodevice.py

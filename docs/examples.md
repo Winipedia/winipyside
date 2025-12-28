@@ -14,11 +14,11 @@ from winipyside.src.ui.pages.base.base import Base as BasePage
 class HomePage(BasePage):
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         label = QLabel("Hello, Winipyside!")
         self.v_layout.addWidget(label)
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -26,17 +26,17 @@ class MyApp(BaseWindow):
     @classmethod
     def get_all_page_classes(cls):
         return [HomePage]
-    
+
     @classmethod
     def get_start_page_cls(cls):
         return HomePage
-    
+
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         self.resize(800, 600)
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -63,7 +63,7 @@ class VideoPlayerPage(Player):
         # Load encryption key
         self.aes_gcm = self.load_key()
         super().__init__(base_window, *args, **kwargs)
-    
+
     def load_key(self) -> AESGCM:
         """Load or generate encryption key."""
         key_path = Path("encryption.key")
@@ -75,23 +75,23 @@ class VideoPlayerPage(Player):
             with open(key_path, "wb") as f:
                 f.write(key)
         return AESGCM(key)
-    
+
     def start_playback(self, path: Path, position: int = 0) -> None:
         """Start playback of encrypted video."""
         self.play_encrypted_file(path, self.aes_gcm, position)
-    
+
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         # Add file selection button
         select_btn = QPushButton("Select Video")
         select_btn.clicked.connect(self.select_video)
         self.h_layout.addWidget(select_btn)
-    
+
     def post_setup(self) -> None:
         pass
-    
+
     def select_video(self):
         """Open file dialog to select video."""
         path, _ = QFileDialog.getOpenFileName(
@@ -107,18 +107,18 @@ class VideoPlayerApp(BaseWindow):
     @classmethod
     def get_all_page_classes(cls):
         return [VideoPlayerPage]
-    
+
     @classmethod
     def get_start_page_cls(cls):
         return VideoPlayerPage
-    
+
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         self.resize(1280, 720)
         self.setWindowTitle("Encrypted Video Player")
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -143,19 +143,19 @@ import json
 class BrowserPage(Browser):
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         # Add export cookies button
         export_btn = QPushButton("Export Cookies")
         export_btn.clicked.connect(self.export_cookies)
         self.h_layout.addWidget(export_btn)
-        
+
         # Load default page
         self.browser.load(QUrl("https://example.com"))
-    
+
     def post_setup(self) -> None:
         pass
-    
+
     def export_cookies(self):
         """Export cookies to JSON file."""
         path, _ = QFileDialog.getSaveFileName(
@@ -178,11 +178,11 @@ class BrowserPage(Browser):
                     }
                     for c in cookies
                 ]
-            
+
             # Save to file
             with open(path, "w") as f:
                 json.dump(all_cookies, f, indent=2)
-    
+
     def get_all_domains(self) -> list[str]:
         """Get all domains with cookies."""
         # This is a simplified version
@@ -193,18 +193,18 @@ class BrowserApp(BaseWindow):
     @classmethod
     def get_all_page_classes(cls):
         return [BrowserPage]
-    
+
     @classmethod
     def get_start_page_cls(cls):
         return BrowserPage
-    
+
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         self.resize(1280, 720)
         self.setWindowTitle("Web Browser")
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -221,4 +221,3 @@ if __name__ == "__main__":
 - [UI Widgets](ui-widgets.md)
 - [UI Pages](ui-pages.md)
 - [UI Windows](ui-windows.md)
-

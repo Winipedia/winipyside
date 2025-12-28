@@ -1,6 +1,8 @@
 # UI Widgets Package
 
-The `winipyside.src.ui.widgets` package provides ready-to-use Qt widgets for common functionality including notifications, media playback, web browsing, and clickable widgets.
+The `winipyside.src.ui.widgets` package provides ready-to-use Qt widgets
+for common functionality including notifications,
+media playback, web browsing, and clickable widgets.
 
 ## Overview
 
@@ -14,14 +16,15 @@ The widgets package contains:
 
 ## Notification
 
-A toast notification system using pyqttoast with auto-positioning and smart text truncation.
+A toast notification system using pyqttoast
+with auto-positioning and smart text truncation.
 
 ### Class Definition
 
 ```python
 class Notification(Toast):
     """Toast notification with auto-positioning and text truncation."""
-    
+
     def __init__(
         self,
         title: str,
@@ -97,7 +100,7 @@ A QWidget that emits a `clicked` signal when clicked with the left mouse button.
 ```python
 class ClickableWidget(QWidget):
     """A QWidget that emits a clicked signal."""
-    
+
     clicked = Signal()  # Emitted when widget is clicked
 ```
 
@@ -127,14 +130,15 @@ widget.clicked.connect(lambda: print("Widget clicked!"))
 
 ## ClickableVideoWidget
 
-A QVideoWidget that emits a `clicked` signal when clicked with the left mouse button.
+A QVideoWidget that emits a `clicked`
+signal when clicked with the left mouse button.
 
 ### Class Definition
 
 ```python
 class ClickableVideoWidget(QVideoWidget):
     """A QVideoWidget that emits a clicked signal."""
-    
+
     clicked = Signal()  # Emitted when widget is clicked
 ```
 
@@ -170,14 +174,15 @@ video_widget.clicked.connect(toggle_playback)
 
 ## Browser
 
-An embedded Chromium-based web browser with navigation controls and cookie management.
+An embedded Chromium-based web browser
+with navigation controls and cookie management.
 
 ### Class Definition
 
 ```python
 class Browser(QWebEngineView):
     """Embedded web browser with cookie management."""
-    
+
     def __init__(self, layout: QLayout, *args: Any, **kwargs: Any) -> None:
         """Initialize the browser."""
 ```
@@ -198,9 +203,11 @@ class Browser(QWebEngineView):
 Get Qt cookies for a specific domain.
 
 **Parameters:**
+
 - `domain` (str): Domain name (e.g., "example.com")
 
 **Returns:**
+
 - `list[QNetworkCookie]`: List of Qt cookies
 
 #### `get_domain_http_cookies(domain: str) -> list[http.cookiejar.Cookie]`
@@ -208,9 +215,11 @@ Get Qt cookies for a specific domain.
 Get Python http.cookiejar cookies for a specific domain.
 
 **Parameters:**
+
 - `domain` (str): Domain name
 
 **Returns:**
+
 - `list[http.cookiejar.Cookie]`: List of Python cookies
 
 #### Static Methods
@@ -220,19 +229,23 @@ Get Python http.cookiejar cookies for a specific domain.
 Convert a Qt cookie to a Python cookie.
 
 **Parameters:**
+
 - `qcookie` (QNetworkCookie): Qt cookie
 
 **Returns:**
+
 - `http.cookiejar.Cookie`: Python cookie
 
-##### `qcookies_to_httpcookies(qcookies: list[QNetworkCookie]) -> list[http.cookiejar.Cookie]`
+##### `qcookies_to_httpcookies(...) -> list[http.cookiejar.Cookie]`
 
 Convert a list of Qt cookies to Python cookies.
 
 **Parameters:**
+
 - `qcookies` (list[QNetworkCookie]): List of Qt cookies
 
 **Returns:**
+
 - `list[http.cookiejar.Cookie]`: List of Python cookies
 
 ### Browser Cookie Management
@@ -274,7 +287,8 @@ app.exec()
 
 ## MediaPlayer
 
-A comprehensive media player widget with playback controls, speed adjustment, volume control, and encrypted file support.
+A comprehensive media player widget with playback controls,
+speed adjustment, volume control, and encrypted file support.
 
 ### Class Definition
 
@@ -305,10 +319,12 @@ class MediaPlayer(QMediaPlayer):
 Play a regular (unencrypted) file.
 
 **Parameters:**
+
 - `path` (Path): Path to media file
 - `position` (int): Starting position in milliseconds (default: 0)
 
 **Example:**
+
 ```python
 from pathlib import Path
 from winipyside.src.ui.widgets.media_player import MediaPlayer
@@ -324,16 +340,18 @@ player.play_file(Path("video.mp4"))
 player.play_file(Path("video.mp4"), position=30000)
 ```
 
-#### `play_encrypted_file(path: Path, aes_gcm: AESGCM, position: int = 0) -> None`
+#### `play_encrypted_file(...) -> None`
 
 Play an encrypted file.
 
 **Parameters:**
+
 - `path` (Path): Path to encrypted media file
 - `aes_gcm` (AESGCM): AES-GCM cipher instance
 - `position` (int): Starting position in milliseconds (default: 0)
 
 **Example:**
+
 ```python
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
@@ -351,6 +369,7 @@ player.play_encrypted_file(Path("encrypted_video.mp4"), aes_gcm)
 Play from a custom IO device.
 
 **Parameters:**
+
 - `io_device` (PyQIODevice): IO device to read from
 - `url` (QUrl): URL for media source
 - `position` (int): Starting position in milliseconds (default: 0)
@@ -360,6 +379,7 @@ Play from a custom IO device.
 Stop playback and close the IO device.
 
 **Example:**
+
 ```python
 player.stop_and_close_io_device()
 ```
@@ -369,24 +389,29 @@ player.stop_and_close_io_device()
 The MediaPlayer automatically creates and manages the following controls:
 
 #### Playback Control
+
 - **Play/Pause button**: Toggle playback state
 - **Auto-updates**: Button icon changes based on playback state
 
 #### Speed Control
+
 - **Speed slider**: Adjust playback speed from 0.2x to 5.0x
 - **Speed label**: Displays current speed (e.g., "1.0x")
 - **Logarithmic scale**: Natural feel for speed adjustment
 
 #### Volume Control
+
 - **Volume slider**: Adjust volume from 0% to 100%
 - **Volume label**: Displays current volume percentage
 
 #### Progress Control
+
 - **Progress slider**: Seek to any position in the media
 - **Throttled updates**: Updates every 100ms to prevent lag
 - **Time display**: Shows current position and total duration
 
 #### Fullscreen Control
+
 - **Fullscreen button**: Toggle fullscreen mode
 - **Auto-hide controls**: Controls hide in fullscreen, show on mouse move
 - **Exit fullscreen**: Press Escape or click fullscreen button
@@ -430,6 +455,7 @@ app.exec()
 ### Notification Best Practices
 
 1. **Use appropriate icons** for message types:
+
    ```python
    # Success
    Notification(title="Success", text="...", icon=ToastIcon.SUCCESS)
@@ -441,6 +467,7 @@ app.exec()
 2. **Keep messages concise**: Text is auto-truncated, but shorter is better
 
 3. **Adjust duration** based on message importance:
+
    ```python
    # Quick info - 3 seconds
    Notification(title="Info", text="...", duration=3000)
@@ -452,18 +479,21 @@ app.exec()
 ### Browser Best Practices
 
 1. **Handle cookie expiration**:
+
    ```python
    cookies = browser.get_domain_http_cookies("example.com")
    valid_cookies = [c for c in cookies if not c.is_expired()]
    ```
 
 2. **Clear cookies when needed**:
+
    ```python
    profile = browser.page().profile()
    profile.cookieStore().deleteAllCookies()
    ```
 
 3. **Use cookie conversion** for requests integration:
+
    ```python
    python_cookies = browser.get_domain_http_cookies("example.com")
    session = requests.Session()
@@ -474,6 +504,7 @@ app.exec()
 ### MediaPlayer Best Practices
 
 1. **Always clean up resources**:
+
    ```python
    def closeEvent(self, event):
        self.player.stop_and_close_io_device()
@@ -481,11 +512,13 @@ app.exec()
    ```
 
 2. **Handle playback errors**:
+
    ```python
    player.errorOccurred.connect(lambda error: print(f"Error: {error}"))
    ```
 
 3. **Save and restore position**:
+
    ```python
    # Save position
    position = player.position()
@@ -495,6 +528,7 @@ app.exec()
    ```
 
 4. **Use encrypted files** for sensitive content:
+
    ```python
    # Always use EncryptedPyQFile for sensitive videos
    player.play_encrypted_file(path, aes_gcm)
@@ -505,4 +539,3 @@ app.exec()
 - [Core Package](core.md) - EncryptedPyQFile for media player
 - [UI Pages](ui-pages.md) - Player and Browser pages
 - [Examples](examples.md) - More widget examples
-

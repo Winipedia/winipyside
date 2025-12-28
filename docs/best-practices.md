@@ -38,19 +38,19 @@ class MyPage(BasePage):
         """Initialize Qt components only."""
         # Create layouts, widgets
         self.layout = QVBoxLayout()
-    
+
     def pre_setup(self) -> None:
         """Load configuration and prepare data."""
         # Load config, initialize data structures
         self.config = self.load_config()
         self.data = []
-    
+
     def setup(self) -> None:
         """Main UI setup."""
         # Add widgets, connect signals
         self.add_widgets()
         self.connect_signals()
-    
+
     def post_setup(self) -> None:
         """Finalization."""
         # Apply final state, start background tasks
@@ -94,7 +94,7 @@ def play_video(self, path: Path):
             icon=ToastIcon.ERROR
         )
         return
-    
+
     # Check file size
     if path.stat().st_size > 10 * 1024 * 1024 * 1024:  # 10GB
         Notification(
@@ -102,7 +102,7 @@ def play_video(self, path: Path):
             text="File is very large and may take time to load",
             icon=ToastIcon.WARNING
         )
-    
+
     # Play video
     try:
         self.player.play_file(path)
@@ -126,10 +126,10 @@ class VideoPlayerPage(Player):
         """Clean up on close."""
         # Stop playback and close files
         self.player.stop_and_close_io_device()
-        
+
         # Save state
         self.save_playback_position()
-        
+
         event.accept()
 ```
 
@@ -143,12 +143,12 @@ class VideoLibraryPage(BasePage):
         """Setup UI without loading videos."""
         self.video_list = QListWidget()
         self.v_layout.addWidget(self.video_list)
-    
+
     def post_setup(self) -> None:
         """Load videos after UI is ready."""
         # Load in background to avoid blocking UI
         self.load_videos_async()
-    
+
     def load_videos_async(self):
         """Load videos in background."""
         # Use QThread or similar for background loading
@@ -168,15 +168,15 @@ class MyPage(BasePage):
         self.update_timer = QTimer()
         self.update_timer.setInterval(100)  # 100ms
         self.update_timer.timeout.connect(self.update_display)
-        
+
         self.slider.valueChanged.connect(self.on_slider_changed)
-    
+
     def on_slider_changed(self, value: int):
         """Handle slider change."""
         self.pending_value = value
         if not self.update_timer.isActive():
             self.update_timer.start()
-    
+
     def update_display(self):
         """Update display with throttled value."""
         # Update UI with self.pending_value
@@ -199,11 +199,11 @@ def save_file(self, path: Path):
         icon=ToastIcon.INFORMATION,
         duration=3000
     )
-    
+
     try:
         # Perform save
         self.do_save(path)
-        
+
         # Show success
         Notification(
             title="Success",
@@ -262,7 +262,7 @@ class MyApp(BaseWindow):
     def pre_setup(self) -> None:
         """Load saved state."""
         self.config = self.load_config()
-    
+
     def setup(self) -> None:
         """Apply saved state."""
         # Restore window geometry
@@ -270,17 +270,17 @@ class MyApp(BaseWindow):
             self.restoreGeometry(self.config["geometry"])
         else:
             self.resize(1280, 720)
-        
+
         # Restore theme
         theme = self.config.get("theme", "light")
         self.apply_theme(theme)
-    
+
     def closeEvent(self, event):
         """Save state on close."""
         self.config["geometry"] = self.saveGeometry()
         self.save_config()
         event.accept()
-    
+
     def load_config(self) -> dict:
         """Load configuration."""
         config_path = Path.home() / ".myapp" / "config.json"
@@ -289,7 +289,7 @@ class MyApp(BaseWindow):
             with open(config_path) as f:
                 return json.load(f)
         return {}
-    
+
     def save_config(self):
         """Save configuration."""
         config_path = Path.home() / ".myapp" / "config.json"
@@ -317,7 +317,7 @@ class VideoPlayerPage(Player):
     def __init__(self, *args, **kwargs):
         self.processor = VideoProcessor()
         super().__init__(*args, **kwargs)
-    
+
     def start_playback(self, path: Path, position: int = 0):
         processed_path = self.processor.process_video(path)
         self.play_file(processed_path, position)
@@ -334,4 +334,3 @@ class VideoPlayerPage(Player):
 
 - [Examples](examples.md) - Practical examples
 - [API Reference](api-reference.md) - Complete API documentation
-

@@ -8,10 +8,11 @@
 [![MkDocs](https://img.shields.io/badge/MkDocs-Documentation-326CE5?logo=mkdocs&logoColor=white)](https://www.mkdocs.org/)
 <!-- code-quality -->
 [![ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)[![mypy](https://img.shields.io/badge/type%20checked-mypy-039dfc.svg)](https://mypy-lang.org/)
+[![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 [![pytest](https://img.shields.io/badge/tested%20with-pytest-46a2f1.svg?logo=pytest)](https://pytest.org/)
 [![codecov](https://codecov.io/gh/Winipedia/winipyside/branch/main/graph/badge.svg)](https://codecov.io/gh/Winipedia/winipyside)
+[![rumdl](https://img.shields.io/badge/markdown-rumdl-darkgreen)](https://github.com/rvben/rumdl)
 <!-- package-info -->
 [![PyPI](https://img.shields.io/pypi/v/winipyside?logo=pypi&logoColor=white)](https://pypi.org/project/winipyside)
 [![Python](https://img.shields.io/badge/python-3.12|3.13-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
@@ -30,15 +31,25 @@
 
 ## Overview
 
-Winipyside is a production-ready PySide6 utilities package that provides reusable, well-tested components for building Qt desktop applications. It features encrypted file I/O with AES-GCM, a full-featured media player with encrypted video playback support, an embedded web browser with cookie management, toast notifications, and a modular page-based UI framework.
+Winipyside is a production-ready PySide6 utilities package that provides
+reusable, well-tested components for building Qt desktop applications. It
+features encrypted file I/O with AES-GCM, a full-featured media player with
+encrypted video playback support, an embedded web browser with cookie
+management, toast notifications, and a modular page-based UI framework.
 
 ### Key Highlights
 
-- 🔐 **Encrypted File I/O**: Transparent AES-GCM encryption for files and media playback
-- 🎬 **Media Player**: Full-featured player with encrypted video support, speed control, and fullscreen mode
-- 🌐 **Web Browser**: Embedded browser with cookie management and Qt/Python cookie conversion
-- 🔔 **Notifications**: Toast notification system with auto-positioning and smart text truncation
-- 🏗️ **UI Framework**: Modular page-based architecture with lifecycle hooks and navigation
+- 🔐 **Encrypted File I/O**:
+    Transparent AES-GCM encryption for files and media playback
+- 🎬 **Media Player**:
+    Full-featured player with encrypted video support, speed control,
+        and fullscreen mode
+- 🌐 **Web Browser**:
+    Embedded browser with cookie management and Qt/Python cookie conversion
+- 🔔 **Notifications**:
+    Toast notification system with auto-positioning and smart text truncation
+- 🏗️ **UI Framework**:
+    Modular page-based architecture with lifecycle hooks and navigation
 - ✅ **Type Safe**: 100% type annotated with strict mypy checking
 - 🧪 **Well Tested**: Comprehensive test suite with pytest and pytest-qt
 - 🚀 **CI/CD Ready**: Production-ready workflows for headless environments
@@ -77,7 +88,8 @@ Embedded Chromium-based browser:
 
 Modular architecture for building complex applications:
 
-- **Lifecycle hooks**: `base_setup()` → `pre_setup()` → `setup()` → `post_setup()`
+- **Lifecycle hooks**:
+    `base_setup()` → `pre_setup()` → `setup()` → `post_setup()`
 - **Page-based navigation** with QStackedWidget
 - **Dynamic subclass discovery**
 - **SVG icon support**
@@ -199,7 +211,7 @@ Comprehensive documentation is available in the [`docs/`](docs/) directory:
 
 ## Architecture
 
-```
+```text
 winipyside/
 ├── src/
 │   ├── core/              # Encrypted file I/O
@@ -254,7 +266,8 @@ Contributions are welcome! Please follow these guidelines:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License,
+see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 

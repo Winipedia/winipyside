@@ -1,6 +1,8 @@
 # UI Base Package
 
-The `winipyside.src.ui.base` package provides the foundation framework for all UI components in Winipyside, including lifecycle management, navigation, and utility methods.
+The `winipyside.src.ui.base` package provides the foundation framework for
+all UI components in Winipyside, including lifecycle
+management, navigation, and utility methods.
 
 ## Overview
 
@@ -11,14 +13,16 @@ The UI base package contains:
 
 ## Base Class
 
-The `Base` class is the foundation for all UI components (widgets, pages, windows) in Winipyside. It provides a consistent lifecycle pattern and utility methods.
+The `Base` class is the foundation for all UI components
+(widgets, pages, windows) in Winipyside. It provides a consistent
+lifecycle pattern and utility methods.
 
 ### Class Definition
 
 ```python
 class Base(metaclass=QABCLoggingMeta):
     """Base UI class for a Qt application."""
-    
+
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         """Initialize the base UI."""
         super().__init__(*args, **kwargs)
@@ -39,18 +43,21 @@ class Base(metaclass=QABCLoggingMeta):
 
 ## Lifecycle Hooks
 
-All UI components follow a consistent 4-phase initialization pattern. Each phase has a specific purpose:
+All UI components follow a consistent 4-phase initialization pattern.
+Each phase has a specific purpose:
 
 ### 1. `base_setup()`
 
 **Purpose:** Initialize core Qt components required for the UI to function.
 
 **When to use:**
+
 - Create Qt widgets (QVBoxLayout, QStackedWidget, etc.)
 - Set window properties (title, size)
 - Initialize Qt-specific attributes
 
 **Example:**
+
 ```python
 def base_setup(self) -> None:
     """Setup the base Qt object of the UI."""
@@ -64,12 +71,14 @@ def base_setup(self) -> None:
 **Purpose:** Setup operations that must run before main setup.
 
 **When to use:**
+
 - Load configuration or settings
 - Initialize data structures
 - Setup connections that other components depend on
 - Prepare resources
 
 **Example:**
+
 ```python
 def pre_setup(self) -> None:
     """Setup operations to run before main setup."""
@@ -82,12 +91,14 @@ def pre_setup(self) -> None:
 **Purpose:** Main UI initialization logic.
 
 **When to use:**
+
 - Add widgets to layouts
 - Configure UI components
 - Set up signal/slot connections
 - Apply styling
 
 **Example:**
+
 ```python
 def setup(self) -> None:
     """Setup the main UI components."""
@@ -101,12 +112,14 @@ def setup(self) -> None:
 **Purpose:** Finalization after main setup is complete.
 
 **When to use:**
+
 - Final adjustments to UI
 - Start background tasks
 - Show initial dialogs
 - Apply final state
 
 **Example:**
+
 ```python
 def post_setup(self) -> None:
     """Setup operations to run after main setup."""
@@ -123,9 +136,11 @@ def post_setup(self) -> None:
 Set the current page in the stacked widget.
 
 **Parameters:**
+
 - `page_cls` (type[BasePage]): The page class to set as current
 
 **Example:**
+
 ```python
 from winipyside.src.ui.pages.browser import Browser
 
@@ -138,12 +153,15 @@ self.set_current_page(Browser)
 Get a page instance by its class.
 
 **Parameters:**
+
 - `page_cls` (type[BasePage]): The page class to retrieve
 
 **Returns:**
+
 - `BasePage`: The page instance
 
 **Example:**
+
 ```python
 browser_page = self.get_page(Browser)
 browser_page.browser.load(QUrl("https://example.com"))
@@ -154,9 +172,11 @@ browser_page.browser.load(QUrl("https://example.com"))
 Get the stacked widget containing all pages.
 
 **Returns:**
+
 - `QStackedWidget`: The stacked widget
 
 **Example:**
+
 ```python
 stack = self.get_stack()
 current_index = stack.currentIndex()
@@ -169,9 +189,11 @@ current_index = stack.currentIndex()
 Get the human-readable display name derived from the class name.
 
 **Returns:**
+
 - `str`: Display name with spaces between words
 
 **Example:**
+
 ```python
 class MyCustomWidget(Base, QWidget):
     pass
@@ -179,17 +201,21 @@ class MyCustomWidget(Base, QWidget):
 print(MyCustomWidget.get_display_name())  # "My Custom Widget"
 ```
 
-#### `get_subclasses(package: ModuleType | None = None) -> list[type[Self]]` (classmethod)
+#### `get_subclasses(...) -> list[type[Self]]` (classmethod)
 
 Get all non-abstract subclasses of the UI component.
 
 **Parameters:**
-- `package` (ModuleType | None): Package to search in. If None, searches main package.
+
+- `package` (ModuleType | None): Package to search in.
+If None, searches main package.
 
 **Returns:**
+
 - `list[type[Self]]`: Sorted list of all non-abstract subclasses
 
 **Example:**
+
 ```python
 from winipyside.src.ui.pages.base.base import Base as BasePage
 
@@ -204,13 +230,16 @@ for page_cls in all_pages:
 Load an SVG icon from resources.
 
 **Parameters:**
+
 - `name` (str): Icon name (without .svg extension)
 - `color` (str): Icon color (default: "white")
 
 **Returns:**
+
 - `QIcon`: The loaded icon
 
 **Example:**
+
 ```python
 icon = self.get_svg_icon("play", color="blue")
 button.setIcon(icon)
@@ -218,11 +247,14 @@ button.setIcon(icon)
 
 ## QABCLoggingMeta
 
-Custom metaclass that combines Python's ABC (Abstract Base Class) functionality with Qt's metaclass.
+Custom metaclass that combines Python's ABC
+(Abstract Base Class) functionality with Qt's metaclass.
 
 ### Why It's Needed
 
-Qt classes use a custom metaclass (`type(QObject)`), and Python's ABC uses its own metaclass. To use both together, we need a metaclass that inherits from both.
+Qt classes use a custom metaclass (`type(QObject)`),
+and Python's ABC uses its own metaclass.
+To use both together, we need a metaclass that inherits from both.
 
 ### Class Definition
 
@@ -236,7 +268,8 @@ class QABCLoggingMeta(
 
 ### Usage
 
-The metaclass is automatically applied to the `Base` class, so all subclasses inherit it:
+The metaclass is automatically applied to the
+`Base` class, so all subclasses inherit it:
 
 ```python
 from winipyside.src.ui.base.base import Base
@@ -260,41 +293,41 @@ from abc import abstractmethod
 
 class CustomWidget(Base, QWidget):
     """A custom widget demonstrating the Base class."""
-    
+
     def base_setup(self) -> None:
         """Initialize Qt components."""
         # Create main layout
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
-        
+
         # Set window title from class name
         self.setWindowTitle(self.get_display_name())  # "Custom Widget"
-    
+
     def pre_setup(self) -> None:
         """Setup before main initialization."""
         # Load configuration
         self.config = {"theme": "dark", "font_size": 12}
-        
+
         # Initialize data structures
         self.data = []
-    
+
     def setup(self) -> None:
         """Main setup logic."""
         # Add widgets
         self.button = QPushButton("Click Me")
         self.layout.addWidget(self.button)
-        
+
         # Connect signals
         self.button.clicked.connect(self.on_button_clicked)
-        
+
         # Apply styling
         self.setStyleSheet("background-color: #2b2b2b;")
-    
+
     def post_setup(self) -> None:
         """Finalization after setup."""
         # Show initial message
         print(f"{self.get_display_name()} initialized successfully")
-    
+
     def on_button_clicked(self) -> None:
         """Handle button click."""
         print("Button clicked!")
@@ -312,7 +345,8 @@ app.exec()
 
 ### 1. Always Call Super
 
-When overriding lifecycle methods, always call `super()` if the parent class has implementation:
+When overriding lifecycle methods, always call `super()`
+if the parent class has implementation:
 
 ```python
 def base_setup(self) -> None:
@@ -443,4 +477,3 @@ def closeEvent(self, event) -> None:
 - [UI Pages](ui-pages.md) - Page components using Base
 - [UI Windows](ui-windows.md) - Window framework using Base
 - [Examples](examples.md) - More examples using Base class
-

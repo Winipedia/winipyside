@@ -5,11 +5,11 @@ All subclasses of ConfigFile in the configs package are automatically called.
 
 from typing import Any
 
+from pyrig.dev.configs.base.workflow import (
+    Workflow as PyrigWorkflow,
+)
 from pyrig.dev.configs.pyproject import (
     PyprojectConfigFile as PyrigPyprojectConfigFile,
-)
-from pyrig.dev.configs.workflows.base.base import (
-    Workflow as PyrigWorkflow,
 )
 from pyrig.dev.configs.workflows.build import (
     BuildWorkflow as PyrigBuildWorkflow,

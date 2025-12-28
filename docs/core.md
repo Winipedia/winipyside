@@ -1,6 +1,8 @@
 # Core Package
 
-The `winipyside.src.core` package provides advanced QIODevice wrappers for PySide6, including transparent AES-GCM encryption for files and media playback.
+The `winipyside.src.core` package provides advanced QIODevice wrappers
+for PySide6, including transparent AES-GCM encryption
+for files and media playback.
 
 ## Overview
 
@@ -12,17 +14,18 @@ The core package contains three main classes:
 
 ## PyQIODevice
 
-A Python-friendly wrapper around PySide6's QIODevice that provides enhanced functionality and easier integration with Python code.
+A Python-friendly wrapper around PySide6's QIODevice that provides
+enhanced functionality and easier integration with Python code.
 
 ### Class Definition
 
 ```python
 class PyQIODevice(QIODevice):
     """PySide6 QIODevice wrapper with enhanced functionality."""
-    
+
     def __init__(self, q_device: QIODevice, *args: Any, **kwargs: Any) -> None:
         """Initialize the PyQIODevice wrapper.
-        
+
         Args:
             q_device: The QIODevice instance to wrap.
         """
@@ -42,9 +45,11 @@ class PyQIODevice(QIODevice):
 Read data from the device.
 
 **Parameters:**
+
 - `maxlen` (int): Maximum number of bytes to read
 
 **Returns:**
+
 - `bytes`: The data read from the device
 
 #### `writeData(data: bytes) -> int`
@@ -52,9 +57,11 @@ Read data from the device.
 Write data to the device.
 
 **Parameters:**
+
 - `data` (bytes): The data to write
 
 **Returns:**
+
 - `int`: Number of bytes written
 
 #### `size() -> int`
@@ -62,6 +69,7 @@ Write data to the device.
 Get the size of the device.
 
 **Returns:**
+
 - `int`: Size in bytes
 
 #### `pos() -> int`
@@ -69,6 +77,7 @@ Get the size of the device.
 Get the current position in the device.
 
 **Returns:**
+
 - `int`: Current position in bytes
 
 #### `seek(pos: int) -> bool`
@@ -76,9 +85,11 @@ Get the current position in the device.
 Seek to a specific position.
 
 **Parameters:**
+
 - `pos` (int): Position to seek to
 
 **Returns:**
+
 - `bool`: True if successful
 
 ### Example
@@ -101,17 +112,18 @@ device.close()
 
 ## PyQFile
 
-A file-specific wrapper extending PyQIODevice with simplified file operations and Path support.
+A file-specific wrapper extending PyQIODevice
+with simplified file operations and Path support.
 
 ### Class Definition
 
 ```python
 class PyQFile(PyQIODevice):
     """QFile wrapper with enhanced Python integration."""
-    
+
     def __init__(self, path: Path, *args: Any, **kwargs: Any) -> None:
         """Initialize the PyQFile with a file path.
-        
+
         Args:
             path: The file path to open.
         """
@@ -146,17 +158,20 @@ player.play()
 
 ## EncryptedPyQFile
 
-Transparent AES-GCM encrypted file I/O with support for streaming and random access.
+Transparent AES-GCM encrypted file I/O with support
+for streaming and random access.
 
 ### Class Definition
 
 ```python
 class EncryptedPyQFile(PyQFile):
     """Encrypted file wrapper with AES-GCM encryption."""
-    
-    def __init__(self, path: Path, aes_gcm: AESGCM, *args: Any, **kwargs: Any) -> None:
+
+    def __init__(
+        self, path: Path, aes_gcm: AESGCM, *args: Any, **kwargs: Any
+    ) -> None:
         """Initialize the encrypted file wrapper.
-        
+
         Args:
             path: The file path to open.
             aes_gcm: The AES-GCM cipher instance for encryption/decryption.
@@ -187,12 +202,15 @@ CHUNK_SIZE = NONCE_SIZE + CIPHER_SIZE + TAG_SIZE  # 65564 bytes total
 Read and decrypt data from the encrypted file.
 
 **Parameters:**
+
 - `maxlen` (int): Maximum number of decrypted bytes to read
 
 **Returns:**
+
 - `bytes`: Decrypted data
 
 **How it works:**
+
 1. Reads encrypted chunks from file
 2. Decrypts each chunk with AES-GCM
 3. Returns requested portion of decrypted data
@@ -202,6 +220,7 @@ Read and decrypt data from the encrypted file.
 Get the decrypted size of the file.
 
 **Returns:**
+
 - `int`: Size of decrypted data in bytes
 
 #### `seek(pos: int) -> bool`
@@ -209,12 +228,15 @@ Get the decrypted size of the file.
 Seek to a position in the decrypted data.
 
 **Parameters:**
+
 - `pos` (int): Position in decrypted data
 
 **Returns:**
+
 - `bool`: True if successful
 
 **How it works:**
+
 1. Maps decrypted position to encrypted position
 2. Seeks to start of corresponding encrypted chunk
 3. Maintains offset within chunk for next read
@@ -226,9 +248,11 @@ Seek to a position in the decrypted data.
 Map a decrypted position to its corresponding encrypted position.
 
 **Parameters:**
+
 - `decrypted_pos` (int): Position in decrypted data
 
 **Returns:**
+
 - `int`: Corresponding position in encrypted data
 
 ##### `get_decrypted_pos(encrypted_pos: int) -> int`
@@ -236,21 +260,25 @@ Map a decrypted position to its corresponding encrypted position.
 Map an encrypted position to its corresponding decrypted position.
 
 **Parameters:**
+
 - `encrypted_pos` (int): Position in encrypted data
 
 **Returns:**
+
 - `int`: Corresponding position in decrypted data
 
-##### `encrypt_file(input_path: Path, output_path: Path, aes_gcm: AESGCM) -> None`
+##### `encrypt_file(...) -> None`
 
 Encrypt a file using AES-GCM.
 
 **Parameters:**
+
 - `input_path` (Path): Path to input file
 - `output_path` (Path): Path to output encrypted file
 - `aes_gcm` (AESGCM): AES-GCM cipher instance
 
 **Example:**
+
 ```python
 from pathlib import Path
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -268,16 +296,18 @@ EncryptedPyQFile.encrypt_file(
 )
 ```
 
-##### `decrypt_file(input_path: Path, output_path: Path, aes_gcm: AESGCM) -> None`
+##### `decrypt_file(...) -> None`
 
 Decrypt a file encrypted with AES-GCM.
 
 **Parameters:**
+
 - `input_path` (Path): Path to encrypted file
 - `output_path` (Path): Path to output decrypted file
 - `aes_gcm` (AESGCM): AES-GCM cipher instance
 
 **Example:**
+
 ```python
 # Decrypt file
 EncryptedPyQFile.decrypt_file(
@@ -289,7 +319,8 @@ EncryptedPyQFile.decrypt_file(
 
 ### Encrypted Video Playback
 
-The primary use case for `EncryptedPyQFile` is playing encrypted videos without creating temporary decrypted files.
+The primary use case for `EncryptedPyQFile`
+is playing encrypted videos without creating temporary decrypted files.
 
 **Complete Example:**
 
@@ -342,7 +373,7 @@ app.exec()
 
 Each encrypted chunk has the following structure:
 
-```
+```text
 [Nonce (12 bytes)][Encrypted Data (64KB)][Auth Tag (16 bytes)]
 ```
 
@@ -365,15 +396,18 @@ Total chunk size: 65,564 bytes
 
 ### Position Mapping
 
-To support random access (seeking), positions must be mapped between encrypted and decrypted data:
+To support random access (seeking),
+positions must be mapped between encrypted and decrypted data:
 
 **Decrypted → Encrypted:**
+
 ```python
 chunk_index = decrypted_pos // CIPHER_SIZE
 encrypted_pos = chunk_index * CHUNK_SIZE
 ```
 
 **Encrypted → Decrypted:**
+
 ```python
 chunk_index = encrypted_pos // CHUNK_SIZE
 decrypted_pos = chunk_index * CIPHER_SIZE
@@ -427,4 +461,3 @@ finally:
 - [UI Widgets - MediaPlayer](ui-widgets.md#mediaplayer) - Using encrypted files with MediaPlayer
 - [Examples - Encrypted Video Player](examples.md#encrypted-video-player)
 - [API Reference](api-reference.md#core-package)
-

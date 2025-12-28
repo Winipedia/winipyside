@@ -1,6 +1,7 @@
 # UI Windows Package
 
-The `winipyside.src.ui.windows` package provides the main window framework for building multi-page Qt applications with QStackedWidget-based navigation.
+The `winipyside.src.ui.windows` package provides the main window framework
+for building multi-page Qt applications with QStackedWidget-based navigation.
 
 ## Overview
 
@@ -17,21 +18,21 @@ The base window class provides the foundation for multi-page applications.
 ```python
 class Base(BaseUI, QMainWindow):
     """Base window class for the application."""
-    
+
     @classmethod
     @abstractmethod
     def get_all_page_classes(cls) -> list[type[BasePage]]:
         """Get all page classes.
-        
+
         Returns:
             List of page classes to include in the application.
         """
-    
+
     @classmethod
     @abstractmethod
     def get_start_page_cls(cls) -> type[BasePage]:
         """Get the start page class.
-        
+
         Returns:
             The page class to display on startup.
         """
@@ -57,9 +58,11 @@ class Base(BaseUI, QMainWindow):
 Get all page classes to include in the application.
 
 **Returns:**
+
 - `list[type[BasePage]]`: List of page classes
 
 **Example:**
+
 ```python
 @classmethod
 def get_all_page_classes(cls):
@@ -71,9 +74,11 @@ def get_all_page_classes(cls):
 Get the page class to display on startup.
 
 **Returns:**
+
 - `type[BasePage]`: The start page class
 
 **Example:**
+
 ```python
 @classmethod
 def get_start_page_cls(cls):
@@ -99,6 +104,7 @@ Set the start page as the current page.
 Add a page to the stacked widget.
 
 **Parameters:**
+
 - `page` (BasePage): The page to add
 
 **Note:** Usually called automatically by pages during initialization.
@@ -115,11 +121,11 @@ from PySide6.QtWidgets import QLabel
 class HomePage(BasePage):
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         label = QLabel("Welcome to the Home Page")
         self.v_layout.addWidget(label)
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -128,17 +134,17 @@ class MyApp(BaseWindow):
     @classmethod
     def get_all_page_classes(cls):
         return [HomePage]
-    
+
     @classmethod
     def get_start_page_cls(cls):
         return HomePage
-    
+
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         self.resize(800, 600)
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -168,20 +174,24 @@ from winipyside.src.ui.pages.browser import Browser
 class HomePage(BasePage):
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         label = QLabel("Welcome! Choose a page from the menu.")
         self.v_layout.addWidget(label)
-        
+
         # Add quick navigation buttons
         browser_btn = QPushButton("Open Browser")
-        browser_btn.clicked.connect(lambda: self.base_window.set_current_page(BrowserPage))
+        browser_btn.clicked.connect(
+            lambda: self.base_window.set_current_page(BrowserPage)
+        )
         self.v_layout.addWidget(browser_btn)
-        
+
         player_btn = QPushButton("Open Player")
-        player_btn.clicked.connect(lambda: self.base_window.set_current_page(PlayerPage))
+        player_btn.clicked.connect(
+            lambda: self.base_window.set_current_page(PlayerPage)
+        )
         self.v_layout.addWidget(player_btn)
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -189,10 +199,10 @@ class HomePage(BasePage):
 class BrowserPage(Browser):
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         self.browser.load(QUrl("https://example.com"))
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -203,17 +213,17 @@ class PlayerPage(Player):
         key = AESGCM.generate_key(bit_length=256)
         self.aes_gcm = AESGCM(key)
         super().__init__(base_window, *args, **kwargs)
-    
+
     def start_playback(self, path: Path, position: int = 0) -> None:
         """Start playback."""
         self.play_file(path, position)
-    
+
     def pre_setup(self) -> None:
         pass
-    
+
     def setup(self) -> None:
         pass
-    
+
     def post_setup(self) -> None:
         pass
 
@@ -271,7 +281,9 @@ if __name__ == "__main__":
 
 ### Window Organization
 
-1. **Keep window class focused**: The window should manage pages, not implement features
+1. **Keep window class focused**:
+The window should manage pages, not implement features
+
    ```python
    # Good
    class MyApp(BaseWindow):
@@ -289,6 +301,7 @@ if __name__ == "__main__":
    ```
 
 2. **Use pre_setup for configuration**: Load config before pages are created
+
    ```python
    def pre_setup(self) -> None:
        self.config = self.load_config()
@@ -296,6 +309,7 @@ if __name__ == "__main__":
    ```
 
 3. **Use post_setup for finalization**: Final adjustments after pages are ready
+
    ```python
    def post_setup(self) -> None:
        self.restore_window_state()
@@ -305,6 +319,7 @@ if __name__ == "__main__":
 ### Page Management
 
 1. **Define all pages in get_all_page_classes**:
+
    ```python
    @classmethod
    def get_all_page_classes(cls):
@@ -312,6 +327,7 @@ if __name__ == "__main__":
    ```
 
 2. **Choose an appropriate start page**:
+
    ```python
    @classmethod
    def get_start_page_cls(cls):
@@ -320,6 +336,7 @@ if __name__ == "__main__":
    ```
 
 3. **Access pages when needed**:
+
    ```python
    # Get reference to a page
    settings_page = self.get_page(SettingsPage)
@@ -329,6 +346,7 @@ if __name__ == "__main__":
 ### State Management
 
 1. **Save window state on close**:
+
    ```python
    def closeEvent(self, event):
        self.save_window_geometry()
@@ -337,6 +355,7 @@ if __name__ == "__main__":
    ```
 
 2. **Restore window state on startup**:
+
    ```python
    def setup(self) -> None:
        geometry = self.load_window_geometry()
@@ -345,6 +364,7 @@ if __name__ == "__main__":
    ```
 
 3. **Use shared data for inter-page communication**:
+
    ```python
    # In window class
    self.shared_data = {}
@@ -357,4 +377,3 @@ if __name__ == "__main__":
 - [UI Base](ui-base.md) - Base class and lifecycle hooks
 - [UI Pages](ui-pages.md) - Page components
 - [Examples](examples.md) - Complete application examples
-
