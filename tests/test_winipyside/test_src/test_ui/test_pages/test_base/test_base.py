@@ -3,7 +3,6 @@
 from typing import final
 
 from pyrig.src.modules.module import make_obj_importpath
-from pyrig.src.testing.assertions import assert_with_msg
 from pytest_mock import MockFixture
 
 from winipyside.src.ui.pages.base import base
@@ -45,9 +44,8 @@ class TestBase:
         page = TestPage(base_window=mock_base_window)
 
         # Verify base_window is set
-        assert_with_msg(
-            page.base_window is mock_base_window,
-            "__init__ should set base_window attribute",
+        assert page.base_window is mock_base_window, (
+            "__init__ should set base_window attribute"
         )
 
         # Verify all setup methods were called in correct order
@@ -98,8 +96,8 @@ class TestBase:
         mock_base_window.add_page.assert_called_once_with(page)
 
         # Verify layouts are set as attributes
-        assert_with_msg(hasattr(page, "v_layout"), "Should create v_layout attribute")
-        assert_with_msg(hasattr(page, "h_layout"), "Should create h_layout attribute")
+        assert hasattr(page, "v_layout"), "Should create v_layout attribute"
+        assert hasattr(page, "h_layout"), "Should create h_layout attribute"
 
     def test_add_menu_dropdown_button(self, mocker: MockFixture) -> None:
         """Test method for add_menu_dropdown_button."""
@@ -193,4 +191,4 @@ class TestBase:
         mock_button_instance.clicked.connect.assert_called_once()
 
         # Verify return value
-        assert_with_msg(result is mock_button_instance, "Should return button instance")
+        assert result is mock_button_instance, "Should return button instance"

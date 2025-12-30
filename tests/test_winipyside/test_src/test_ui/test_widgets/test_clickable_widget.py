@@ -1,6 +1,5 @@
 """Tests for ClickableWidget and ClickableVideoWidget."""
 
-from pyrig.src.testing.assertions import assert_with_msg
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QMouseEvent
 from PySide6.QtWidgets import QWidget
@@ -42,9 +41,8 @@ class TestClickableWidget:
         widget.mousePressEvent(left_click_event)
 
         # Verify clicked signal was emitted
-        assert_with_msg(
-            signal_spy.signal_triggered,
-            "Clicked signal should be emitted for left click",
+        assert signal_spy.signal_triggered, (
+            "Clicked signal should be emitted for left click"
         )
 
         # Verify parent mousePressEvent was called
@@ -68,9 +66,8 @@ class TestClickableWidget:
         widget.mousePressEvent(right_click_event)
 
         # Verify clicked signal was NOT emitted for right click
-        assert_with_msg(
-            not signal_spy_right.signal_triggered,
-            "Clicked signal should NOT be emitted for right click",
+        assert not signal_spy_right.signal_triggered, (
+            "Clicked signal should NOT be emitted for right click"
         )
 
         # Verify parent mousePressEvent was still called
@@ -81,12 +78,9 @@ class TestClickableWidget:
         widget = ClickableWidget()
         qtbot.addWidget(widget)
 
-        assert_with_msg(
-            hasattr(widget, "clicked"), "ClickableWidget should have clicked signal"
-        )
-        assert_with_msg(
-            widget.clicked.__class__.__name__ == "SignalInstance",
-            "clicked should be a Qt signal",
+        assert hasattr(widget, "clicked"), "ClickableWidget should have clicked signal"
+        assert widget.clicked.__class__.__name__ == "SignalInstance", (
+            "clicked should be a Qt signal"
         )
 
 
@@ -121,9 +115,8 @@ class TestClickableVideoWidget:
         widget.mousePressEvent(left_click_event)
 
         # Verify clicked signal was emitted
-        assert_with_msg(
-            signal_spy.signal_triggered,
-            "Clicked signal should be emitted for left click",
+        assert signal_spy.signal_triggered, (
+            "Clicked signal should be emitted for left click"
         )
 
         # Verify parent mousePressEvent was called
@@ -147,9 +140,8 @@ class TestClickableVideoWidget:
         widget.mousePressEvent(right_click_event)
 
         # Verify clicked signal was NOT emitted for right click
-        assert_with_msg(
-            not signal_spy_right.signal_triggered,
-            "Clicked signal should NOT be emitted for right click",
+        assert not signal_spy_right.signal_triggered, (
+            "Clicked signal should NOT be emitted for right click"
         )
 
         # Verify parent mousePressEvent was still called
@@ -160,11 +152,9 @@ class TestClickableVideoWidget:
         widget = ClickableVideoWidget()
         qtbot.addWidget(widget)
 
-        assert_with_msg(
-            hasattr(widget, "clicked"),
-            "ClickableVideoWidget should have clicked signal",
+        assert hasattr(widget, "clicked"), (
+            "ClickableVideoWidget should have clicked signal"
         )
-        assert_with_msg(
-            widget.clicked.__class__.__name__ == "SignalInstance",
-            "clicked should be a Qt signal",
+        assert widget.clicked.__class__.__name__ == "SignalInstance", (
+            "clicked should be a Qt signal"
         )

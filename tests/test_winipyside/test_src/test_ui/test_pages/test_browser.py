@@ -1,7 +1,6 @@
 """Tests for winipyside.ui.pages.browser module."""
 
 from pyrig.src.modules.module import make_obj_importpath
-from pyrig.src.testing.assertions import assert_with_msg
 from PySide6.QtWidgets import QVBoxLayout
 from pytest_mock import MockerFixture
 
@@ -26,11 +25,11 @@ class TestBrowser:
 
         # Verify add_brwoser was called
         mock_add_brwoser.assert_called_once()
-        assert_with_msg(mock_add_brwoser.called, "setup should call add_brwoser method")
+        assert mock_add_brwoser.called, "setup should call add_brwoser method"
 
         # Test that setup method exists and is final
-        assert_with_msg(hasattr(Browser, "setup"), "Browser should have setup method")
-        assert_with_msg(callable(Browser.setup), "setup should be callable")
+        assert hasattr(Browser, "setup"), "Browser should have setup method"
+        assert callable(Browser.setup), "setup should be callable"
 
     def test_add_brwoser(self, mocker: MockerFixture) -> None:
         """Test method for add_brwoser."""
@@ -53,19 +52,15 @@ class TestBrowser:
         mock_browser_widget_class.assert_called_once_with(mock_layout)
 
         # Verify the browser widget was assigned to the browser attribute
-        assert_with_msg(
-            mock_browser.browser is mock_browser_widget_instance,
-            "add_brwoser should assign BrowserWidget instance to browser attribute",
+        assert mock_browser.browser is mock_browser_widget_instance, (
+            "add_brwoser should assign BrowserWidget instance to browser attribute"
         )
 
         # Test that the method exists and is final
-        assert_with_msg(
-            hasattr(Browser, "add_brwoser"), "Browser should have add_brwoser method"
-        )
-        assert_with_msg(callable(Browser.add_brwoser), "add_brwoser should be callable")
+        assert hasattr(Browser, "add_brwoser"), "Browser should have add_brwoser method"
+        assert callable(Browser.add_brwoser), "add_brwoser should be callable"
 
         # Test that it's a method of the Browser class
-        assert_with_msg(
-            "add_brwoser" in Browser.__dict__,
-            "add_brwoser should be defined in Browser class",
+        assert "add_brwoser" in Browser.__dict__, (
+            "add_brwoser should be defined in Browser class"
         )

@@ -3,7 +3,6 @@
 from collections import defaultdict
 
 import pytest
-from pyrig.src.testing.assertions import assert_with_msg
 from PySide6.QtCore import QUrl
 from PySide6.QtWidgets import QLineEdit, QSizePolicy, QVBoxLayout, QWidget
 from pytest_mock import MockFixture
@@ -32,9 +31,7 @@ class TestBrowser:
 
         browser = Browser(parent_layout)
 
-        assert_with_msg(
-            browser.parent_layout is parent_layout, "Parent layout should be set"
-        )
+        assert browser.parent_layout is parent_layout, "Parent layout should be set"
         mock_make_widget.assert_called_once()
         mock_connect_signals.assert_called_once()
         mock_load_first_url.assert_called_once()
@@ -59,24 +56,16 @@ class TestBrowser:
         browser.browser_layout = QVBoxLayout(browser.browser_widget)
         browser.make_address_bar()
 
-        assert_with_msg(
-            hasattr(browser, "address_bar_layout"),
-            "Address bar layout should be created",
+        assert hasattr(browser, "address_bar_layout"), (
+            "Address bar layout should be created"
         )
-        assert_with_msg(
-            hasattr(browser, "back_button"), "Back button should be created"
-        )
-        assert_with_msg(
-            hasattr(browser, "forward_button"), "Forward button should be created"
-        )
-        assert_with_msg(
-            hasattr(browser, "address_bar"), "Address bar should be created"
-        )
-        assert_with_msg(hasattr(browser, "go_button"), "Go button should be created")
-        assert_with_msg(
-            hasattr(browser, "address_bar")
-            and browser.address_bar.__class__.__name__ == "QLineEdit",
-            "Address bar should be QLineEdit",
+        assert hasattr(browser, "back_button"), "Back button should be created"
+        assert hasattr(browser, "forward_button"), "Forward button should be created"
+        assert hasattr(browser, "address_bar"), "Address bar should be created"
+        assert hasattr(browser, "go_button"), "Go button should be created"
+        assert hasattr(browser, "address_bar"), "Address bar should be created"
+        assert browser.address_bar.__class__.__name__ == "QLineEdit", (
+            "Address bar should be QLineEdit"
         )
 
     def test_navigate_to_url(
@@ -96,12 +85,8 @@ class TestBrowser:
 
         mock_load.assert_called_once()
         call_args = mock_load.call_args[0][0]
-        assert_with_msg(
-            call_args.__class__.__name__ == "QUrl", "Should call load with QUrl"
-        )
-        assert_with_msg(
-            call_args.toString() == "https://example.com", "Should load correct URL"
-        )
+        assert call_args.__class__.__name__ == "QUrl", "Should call load with QUrl"
+        assert call_args.toString() == "https://example.com", "Should load correct URL"
 
     def test_make_widget(self, qtbot: QtBot, mocker: MockFixture) -> None:
         """Test method for make_widget."""
@@ -120,21 +105,15 @@ class TestBrowser:
 
         browser = Browser(parent_layout)
 
-        assert_with_msg(
-            hasattr(browser, "browser_widget"), "Browser widget should be created"
+        assert hasattr(browser, "browser_widget"), "Browser widget should be created"
+        assert hasattr(browser, "browser_layout"), "Browser layout should be created"
+        assert hasattr(browser, "browser_widget"), "Browser widget should be created"
+        assert browser.browser_widget.__class__.__name__ == "QWidget", (
+            "Browser widget should be QWidget"
         )
-        assert_with_msg(
-            hasattr(browser, "browser_layout"), "Browser layout should be created"
-        )
-        assert_with_msg(
-            hasattr(browser, "browser_widget")
-            and browser.browser_widget.__class__.__name__ == "QWidget",
-            "Browser widget should be QWidget",
-        )
-        assert_with_msg(
-            hasattr(browser, "browser_layout")
-            and browser.browser_layout.__class__.__name__ == "QVBoxLayout",
-            "Browser layout should be QVBoxLayout",
+        assert hasattr(browser, "browser_layout"), "Browser layout should be created"
+        assert browser.browser_layout.__class__.__name__ == "QVBoxLayout", (
+            "Browser layout should be QVBoxLayout"
         )
 
     def test_set_size_policy(
@@ -223,9 +202,8 @@ class TestBrowser:
 
         browser.update_address_bar(test_url)
 
-        assert_with_msg(
-            browser.address_bar.text() == "https://example.com",
-            f"Address bar should show URL, got {browser.address_bar.text()}",
+        assert browser.address_bar.text() == "https://example.com", (
+            f"Address bar should show URL, got {browser.address_bar.text()}"
         )
 
     def test_connect_on_cookie_added_signal(
@@ -247,10 +225,9 @@ class TestBrowser:
         browser = Browser(parent_layout)
         browser.connect_on_cookie_added_signal()
 
-        assert_with_msg(hasattr(browser, "cookies"), "Cookies dict should be created")
-        assert_with_msg(
-            browser.cookies.__class__.__name__ == "defaultdict",
-            "Cookies should be defaultdict",
+        assert hasattr(browser, "cookies"), "Cookies dict should be created"
+        assert browser.cookies.__class__.__name__ == "defaultdict", (
+            "Cookies should be defaultdict"
         )
         mock_cookie_store.cookieAdded.connect.assert_called_once_with(
             browser.on_cookie_added
@@ -273,9 +250,8 @@ class TestBrowser:
 
         browser.on_cookie_added(mock_cookie)
 
-        assert_with_msg(
-            mock_cookie in browser.cookies["example.com"],
-            "Cookie should be added to domain list",
+        assert mock_cookie in browser.cookies["example.com"], (
+            "Cookie should be added to domain list"
         )
 
     def test_load_first_url(
@@ -293,12 +269,9 @@ class TestBrowser:
 
         mock_load.assert_called_once()
         call_args = mock_load.call_args[0][0]
-        assert_with_msg(
-            call_args.__class__.__name__ == "QUrl", "Should call load with QUrl"
-        )
-        assert_with_msg(
-            call_args.toString() == "https://www.google.com/",
-            "Should load Google homepage",
+        assert call_args.__class__.__name__ == "QUrl", "Should call load with QUrl"
+        assert call_args.toString() == "https://www.google.com/", (
+            "Should load Google homepage"
         )
 
     def test_http_cookies(
@@ -319,8 +292,8 @@ class TestBrowser:
 
         result = browser.http_cookies
 
-        assert_with_msg(result.__class__.__name__ == "dict", "Should return dict")
-        assert_with_msg("example.com" in result, "Should contain domain key")
+        assert result.__class__.__name__ == "dict", "Should return dict"
+        assert "example.com" in result, "Should contain domain key"
         mock_convert.assert_called_once()
 
     def test_qcookies_to_httpcookies(
@@ -341,9 +314,9 @@ class TestBrowser:
 
         result = browser.qcookies_to_httpcookies([mock_qcookie])
 
-        assert_with_msg(result.__class__.__name__ == "list", "Should return list")
-        assert_with_msg(len(result) == 1, "Should convert one cookie")
-        assert_with_msg(result[0] is mock_httpcookie, "Should return converted cookie")
+        assert result.__class__.__name__ == "list", "Should return list"
+        assert len(result) == 1, "Should convert one cookie"
+        assert result[0] is mock_httpcookie, "Should return converted cookie"
         mock_convert.assert_called_once_with(mock_qcookie)
 
     def test_qcookie_to_httpcookie(
@@ -368,12 +341,10 @@ class TestBrowser:
 
         result = browser.qcookie_to_httpcookie(mock_qcookie)
 
-        assert_with_msg(
-            result.__class__.__name__ == "Cookie", "Should return Cookie instance"
-        )
-        assert_with_msg(result.name == "test_name", "Should set correct name")
-        assert_with_msg(result.value == "test_value", "Should set correct value")
-        assert_with_msg(result.domain == "example.com", "Should set correct domain")
+        assert result.__class__.__name__ == "Cookie", "Should return Cookie instance"
+        assert result.name == "test_name", "Should set correct name"
+        assert result.value == "test_value", "Should set correct value"
+        assert result.domain == "example.com", "Should set correct domain"
 
     def test_get_domain_cookies(
         self, parent_layout: QVBoxLayout, mocker: MockFixture
@@ -390,7 +361,7 @@ class TestBrowser:
 
         result = browser.get_domain_cookies("example.com")
 
-        assert_with_msg(result is test_cookies, "Should return cookies for domain")
+        assert result is test_cookies, "Should return cookies for domain"
 
     def test_get_domain_http_cookies(
         self, parent_layout: QVBoxLayout, mocker: MockFixture
@@ -413,6 +384,6 @@ class TestBrowser:
 
         result = browser.get_domain_http_cookies("example.com")
 
-        assert_with_msg(result is test_httpcookies, "Should return converted cookies")
+        assert result is test_httpcookies, "Should return converted cookies"
         mock_get_domain.assert_called_once_with("example.com")
         mock_convert.assert_called_once_with(test_qcookies)

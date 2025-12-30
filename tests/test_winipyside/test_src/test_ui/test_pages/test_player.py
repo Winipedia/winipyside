@@ -4,7 +4,6 @@ from pathlib import Path
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from pyrig.src.modules.module import make_obj_importpath
-from pyrig.src.testing.assertions import assert_with_msg
 from PySide6.QtWidgets import QVBoxLayout
 from pytest_mock import MockerFixture
 
@@ -18,18 +17,14 @@ class TestPlayer:
     def test_start_playback(self) -> None:
         """Test method for start_playback."""
         # Test that the method exists in the class
-        assert_with_msg(
-            hasattr(Player, "start_playback"),
-            "Player should have start_playback method",
+        assert hasattr(Player, "start_playback"), (
+            "Player should have start_playback method"
         )
-        assert_with_msg(
-            callable(Player.start_playback), "start_playback should be callable"
-        )
+        assert callable(Player.start_playback), "start_playback should be callable"
 
         # Test that start_playback is abstract by checking the method
-        assert_with_msg(
-            getattr(Player.start_playback, "__isabstractmethod__", False),
-            "start_playback should be marked as abstract method",
+        assert getattr(Player.start_playback, "__isabstractmethod__", False), (
+            "start_playback should be marked as abstract method"
         )
 
     def test_setup(self, mocker: MockerFixture) -> None:
@@ -53,14 +48,13 @@ class TestPlayer:
         mock_media_player_class.assert_called_once_with(mock_layout)
 
         # Verify the media player was assigned to the media_player attribute
-        assert_with_msg(
-            mock_player.media_player is mock_media_player_instance,
-            "setup should assign MediaPlayer instance to media_player attribute",
+        assert mock_player.media_player is mock_media_player_instance, (
+            "setup should assign MediaPlayer instance to media_player attribute"
         )
 
         # Test that setup method exists and is final
-        assert_with_msg(hasattr(Player, "setup"), "Player should have setup method")
-        assert_with_msg(callable(Player.setup), "setup should be callable")
+        assert hasattr(Player, "setup"), "Player should have setup method"
+        assert callable(Player.setup), "setup should be callable"
 
     def test_play_file_from_func(self, mocker: MockerFixture) -> None:
         """Test method for play_file_from_func."""
@@ -97,13 +91,11 @@ class TestPlayer:
         )
 
         # Test that the method exists and is final
-        assert_with_msg(
-            hasattr(Player, "play_file_from_func"),
-            "Player should have play_file_from_func method",
+        assert hasattr(Player, "play_file_from_func"), (
+            "Player should have play_file_from_func method"
         )
-        assert_with_msg(
-            callable(Player.play_file_from_func),
-            "play_file_from_func should be callable",
+        assert callable(Player.play_file_from_func), (
+            "play_file_from_func should be callable"
         )
 
     def test_play_file(self, mocker: MockerFixture) -> None:
@@ -131,14 +123,8 @@ class TestPlayer:
         )
 
         # Test that the method exists and is final
-        assert_with_msg(
-            hasattr(Player, "play_file"),
-            "Player should have play_file method",
-        )
-        assert_with_msg(
-            callable(Player.play_file),
-            "play_file should be callable",
-        )
+        assert hasattr(Player, "play_file"), "Player should have play_file method"
+        assert callable(Player.play_file), "play_file should be callable"
 
     def test_play_encrypted_file(self, mocker: MockerFixture) -> None:
         """Test method for play_encrypted_file."""
@@ -171,11 +157,9 @@ class TestPlayer:
         )
 
         # Test that the method exists and is final
-        assert_with_msg(
-            hasattr(Player, "play_encrypted_file"),
-            "Player should have play_encrypted_file method",
+        assert hasattr(Player, "play_encrypted_file"), (
+            "Player should have play_encrypted_file method"
         )
-        assert_with_msg(
-            callable(Player.play_encrypted_file),
-            "play_encrypted_file should be callable",
+        assert callable(Player.play_encrypted_file), (
+            "play_encrypted_file should be callable"
         )

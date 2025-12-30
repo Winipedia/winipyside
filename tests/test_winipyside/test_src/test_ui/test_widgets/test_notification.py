@@ -2,7 +2,6 @@
 
 from pyqttoast import ToastIcon  # type: ignore[import-untyped]
 from pyrig.src.modules.module import make_obj_importpath
-from pyrig.src.testing.assertions import assert_with_msg
 from pytest_mock import MockFixture
 
 from winipyside.src.ui.widgets import notification
@@ -146,7 +145,7 @@ class TestNotification:
 
         expected_width = 500  # 1000 / 2
         mock_truncate.assert_called_once_with(test_string, expected_width)
-        assert_with_msg(result == "truncated text", "Should return truncated text")
+        assert result == "truncated text", "Should return truncated text"
 
         # Test with no active window (fallback to 500)
         mock_active_window.return_value = None
@@ -156,4 +155,4 @@ class TestNotification:
         result2 = notification_new.str_to_half_window_width(test_string)
 
         mock_truncate.assert_called_once_with(test_string, 500)  # Fallback width
-        assert_with_msg(result2 == "fallback truncated", "Should use fallback width")
+        assert result2 == "fallback truncated", "Should use fallback width"

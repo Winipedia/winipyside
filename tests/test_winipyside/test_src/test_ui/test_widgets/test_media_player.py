@@ -3,7 +3,6 @@
 from pathlib import Path
 
 from pyrig.src.modules.module import make_obj_importpath
-from pyrig.src.testing.assertions import assert_with_msg
 from PySide6.QtCore import QUrl
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QVBoxLayout
@@ -23,9 +22,7 @@ class TestMediaPlayer:
 
         player = MediaPlayer(parent_layout)
 
-        assert_with_msg(
-            player.parent_layout is parent_layout, "Parent layout should be set"
-        )
+        assert player.parent_layout is parent_layout, "Parent layout should be set"
         mock_make_widget.assert_called_once()
 
     def test_make_widget(self, mocker: MockFixture) -> None:
@@ -73,8 +70,8 @@ class TestMediaPlayer:
 
         player.make_video_widget()
 
-        assert_with_msg(hasattr(player, "video_widget"), "Should create video widget")
-        assert_with_msg(hasattr(player, "audio_output"), "Should create audio output")
+        assert hasattr(player, "video_widget"), "Should create video widget"
+        assert hasattr(player, "audio_output"), "Should create audio output"
         mock_clickable_widget.assert_called_once()
         mock_audio_output.assert_called_once()
         mock_set_video_output.assert_called_once()
@@ -146,30 +143,24 @@ class TestMediaPlayer:
 
         # Verify Qt widgets were created
         expected_widget_count = 4
-        assert_with_msg(
-            mock_qwidget.call_count == expected_widget_count,
-            f"Should create {expected_widget_count} QWidget instances",
+        assert mock_qwidget.call_count == expected_widget_count, (
+            f"Should create {expected_widget_count} QWidget instances"
         )
-        assert_with_msg(
-            mock_qhboxlayout.call_count == expected_widget_count,
-            f"Should create {expected_widget_count} QHBoxLayout instances",
+        assert mock_qhboxlayout.call_count == expected_widget_count, (
+            f"Should create {expected_widget_count} QHBoxLayout instances"
         )
 
-        assert_with_msg(
-            hasattr(player, "media_controls_widget_above"),
-            "Should create above controls widget",
+        assert hasattr(player, "media_controls_widget_above"), (
+            "Should create above controls widget"
         )
-        assert_with_msg(
-            hasattr(player, "left_controls_widget"),
-            "Should create left controls widget",
+        assert hasattr(player, "left_controls_widget"), (
+            "Should create left controls widget"
         )
-        assert_with_msg(
-            hasattr(player, "center_controls_widget"),
-            "Should create center controls widget",
+        assert hasattr(player, "center_controls_widget"), (
+            "Should create center controls widget"
         )
-        assert_with_msg(
-            hasattr(player, "right_controls_widget"),
-            "Should create right controls widget",
+        assert hasattr(player, "right_controls_widget"), (
+            "Should create right controls widget"
         )
         mock_add_speed.assert_called_once()
         mock_add_volume.assert_called_once()
@@ -195,9 +186,8 @@ class TestMediaPlayer:
         mock_qwidget.assert_called_once()
         mock_qhboxlayout.assert_called_once()
 
-        assert_with_msg(
-            hasattr(player, "media_controls_widget_below"),
-            "Should create below controls widget",
+        assert hasattr(player, "media_controls_widget_below"), (
+            "Should create below controls widget"
         )
         mock_add_progress.assert_called_once()
 
@@ -212,9 +202,7 @@ class TestMediaPlayer:
 
         player.add_playback_control()
 
-        assert_with_msg(
-            hasattr(player, "playback_button"), "Should create playback button"
-        )
+        assert hasattr(player, "playback_button"), "Should create playback button"
         mock_get_icon.assert_called()
         mock_button.assert_called_once()
 
@@ -254,9 +242,9 @@ class TestMediaPlayer:
 
         player.add_speed_control()
 
-        assert_with_msg(hasattr(player, "speed_button"), "Should create speed button")
-        assert_with_msg(hasattr(player, "speed_menu"), "Should create speed menu")
-        assert_with_msg(hasattr(player, "speed_options"), "Should create speed options")
+        assert hasattr(player, "speed_button"), "Should create speed button"
+        assert hasattr(player, "speed_menu"), "Should create speed menu"
+        assert hasattr(player, "speed_options"), "Should create speed options"
         mock_button.assert_called_once()
         mock_menu.assert_called_once()
 
@@ -281,7 +269,7 @@ class TestMediaPlayer:
 
         player.add_volume_control()
 
-        assert_with_msg(hasattr(player, "volume_slider"), "Should create volume slider")
+        assert hasattr(player, "volume_slider"), "Should create volume slider"
         mock_slider.assert_called_once()
 
     def test_on_volume_changed(self, mocker: MockFixture) -> None:
@@ -308,9 +296,7 @@ class TestMediaPlayer:
 
         player.add_fullscreen_control()
 
-        assert_with_msg(
-            hasattr(player, "fullscreen_button"), "Should create fullscreen button"
-        )
+        assert hasattr(player, "fullscreen_button"), "Should create fullscreen button"
         mock_get_icon.assert_called()
         mock_button.assert_called_once()
 
@@ -355,9 +341,7 @@ class TestMediaPlayer:
 
         player.add_progress_control()
 
-        assert_with_msg(
-            hasattr(player, "progress_slider"), "Should create progress slider"
-        )
+        assert hasattr(player, "progress_slider"), "Should create progress slider"
         mock_slider.assert_called_once()
         mock_position_changed.connect.assert_called_once()
         mock_duration_changed.connect.assert_called_once()
@@ -407,9 +391,8 @@ class TestMediaPlayer:
         player.on_slider_moved(test_position)
 
         mock_set_position.assert_called_once_with(test_position)
-        assert_with_msg(
-            player.last_slider_moved_update == 1.0,
-            "Should update last slider moved time",
+        assert player.last_slider_moved_update == 1.0, (
+            "Should update last slider moved time"
         )
 
     def test_on_slider_released(self, mocker: MockFixture) -> None:
@@ -500,8 +483,8 @@ class TestMediaPlayer:
 
         player.set_source_device(io_device, source_url)
 
-        assert_with_msg(player.source_url == source_url, "Should set source URL")
-        assert_with_msg(player.io_device == io_device, "Should set IO device")
+        assert player.source_url == source_url, "Should set source URL"
+        assert player.io_device == io_device, "Should set IO device"
         mock_set_source_device.assert_called_once_with(io_device, source_url)
 
     def test_play_file(self, mocker: MockFixture) -> None:

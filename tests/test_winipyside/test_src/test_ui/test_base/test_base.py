@@ -3,7 +3,6 @@
 from abc import abstractmethod
 from typing import final
 
-from pyrig.src.testing.assertions import assert_with_msg
 from PySide6.QtCore import QObject
 from pytest_mock import MockerFixture
 
@@ -16,9 +15,8 @@ class TestQABCLoggingMeta:
     def test_metaclass_inheritance(self) -> None:
         """Test that QABCImplementationLoggingMeta has correct inheritance."""
         # Test that it's a metaclass that combines the expected functionality
-        assert_with_msg(
-            issubclass(QABCLoggingMeta, type(QObject)),
-            "QABCLoggingMeta should inherit from QObject's metaclass",
+        assert issubclass(QABCLoggingMeta, type(QObject)), (
+            "QABCLoggingMeta should inherit from QObject's metaclass"
         )
 
         # Create a test class using the metaclass
@@ -33,9 +31,8 @@ class TestQABCLoggingMeta:
                 return "test"
 
         # Verify the class uses the correct metaclass
-        assert_with_msg(
-            type(TestClass) is QABCLoggingMeta,
-            "TestClass should use QABCLoggingMeta",
+        assert type(TestClass) is QABCLoggingMeta, (
+            "TestClass should use QABCLoggingMeta"
         )
 
 
@@ -66,21 +63,27 @@ class TestBase:
         # Test initialization calls all setup methods in correct order
         instance = ConcreteBase()
 
-        assert_with_msg(
-            hasattr(instance, "base_setup_called") and instance.base_setup_called,
-            "base_setup should be called during initialization",
+        assert hasattr(instance, "base_setup_called"), (
+            "base_setup_called should be set during initialization"
         )
-        assert_with_msg(
-            hasattr(instance, "pre_setup_called") and instance.pre_setup_called,
-            "pre_setup should be called during initialization",
+        assert instance.base_setup_called, (
+            "base_setup should be called during initialization"
         )
-        assert_with_msg(
-            hasattr(instance, "setup_called") and instance.setup_called,
-            "setup should be called during initialization",
+        assert hasattr(instance, "pre_setup_called"), (
+            "pre_setup_called should be set during initialization"
         )
-        assert_with_msg(
-            hasattr(instance, "post_setup_called") and instance.post_setup_called,
-            "post_setup should be called during initialization",
+        assert instance.pre_setup_called, (
+            "pre_setup should be called during initialization"
+        )
+        assert hasattr(instance, "setup_called"), (
+            "setup_called should be set during initialization"
+        )
+        assert instance.setup_called, "setup should be called during initialization"
+        assert hasattr(instance, "post_setup_called"), (
+            "post_setup_called should be set during initialization"
+        )
+        assert instance.post_setup_called, (
+            "post_setup should be called during initialization"
         )
 
     def test_base_setup(self) -> None:
@@ -105,9 +108,11 @@ class TestBase:
                 self.base_setup_called = True
 
         instance = TestBase()
-        assert_with_msg(
-            hasattr(instance, "base_setup_called") and instance.base_setup_called,
-            "base_setup should be called during initialization",
+        assert hasattr(instance, "base_setup_called"), (
+            "base_setup_called should be set during initialization"
+        )
+        assert instance.base_setup_called, (
+            "base_setup should be called during initialization"
         )
 
     def test_setup(self) -> None:
@@ -132,10 +137,10 @@ class TestBase:
                 self.setup_called = True
 
         instance = TestBase()
-        assert_with_msg(
-            hasattr(instance, "setup_called") and instance.setup_called,
-            "setup should be called during initialization",
+        assert hasattr(instance, "setup_called"), (
+            "setup_called should be set during initialization"
         )
+        assert instance.setup_called, "setup should be called during initialization"
 
     def test_pre_setup(self) -> None:
         """Test method for pre_setup."""
@@ -159,9 +164,11 @@ class TestBase:
                 self.pre_setup_called = True
 
         instance = TestBase()
-        assert_with_msg(
-            hasattr(instance, "pre_setup_called") and instance.pre_setup_called,
-            "pre_setup should be called during initialization",
+        assert hasattr(instance, "pre_setup_called"), (
+            "pre_setup_called should be set during initialization"
+        )
+        assert instance.pre_setup_called, (
+            "pre_setup should be called during initialization"
         )
 
     def test_post_setup(self) -> None:
@@ -186,9 +193,11 @@ class TestBase:
                 self.post_setup_called = True
 
         instance = TestBase()
-        assert_with_msg(
-            hasattr(instance, "post_setup_called") and instance.post_setup_called,
-            "post_setup should be called during initialization",
+        assert hasattr(instance, "post_setup_called"), (
+            "post_setup_called should be set during initialization"
+        )
+        assert instance.post_setup_called, (
+            "post_setup should be called during initialization"
         )
 
     def test_get_display_name(self) -> None:
@@ -215,9 +224,8 @@ class TestBase:
         # Test that get_display_name splits on uppercase
         display_name = TestDisplayName.get_display_name()
         expected_name = "Test Display Name"
-        assert_with_msg(
-            display_name == expected_name,
-            f"Expected display name '{expected_name}', got '{display_name}'",
+        assert display_name == expected_name, (
+            f"Expected display name '{expected_name}', got '{display_name}'"
         )
 
         # Test with single word class name
@@ -240,9 +248,8 @@ class TestBase:
 
         single_display_name = SingleWord.get_display_name()
         expected_single = "Single Word"
-        assert_with_msg(
-            single_display_name == expected_single,
-            f"Expected display name '{expected_single}', got '{single_display_name}'",
+        assert single_display_name == expected_single, (
+            f"Expected display name '{expected_single}', got '{single_display_name}'"
         )
 
     def test_get_subclasses(self, mocker: MockerFixture) -> None:
@@ -271,13 +278,11 @@ class TestBase:
                 pass
 
         instance = TestBase()
-        assert_with_msg(
-            hasattr(instance, "set_current_page"),
-            "Base should have set_current_page method",
+        assert hasattr(instance, "set_current_page"), (
+            "Base should have set_current_page method"
         )
-        assert_with_msg(
-            callable(instance.set_current_page),
-            "set_current_page should be callable",
+        assert callable(instance.set_current_page), (
+            "set_current_page should be callable"
         )
 
     def test_get_stack(self) -> None:
@@ -303,14 +308,8 @@ class TestBase:
                 pass
 
         instance = TestBase()
-        assert_with_msg(
-            hasattr(instance, "get_stack"),
-            "Base should have get_stack method",
-        )
-        assert_with_msg(
-            callable(instance.get_stack),
-            "get_stack should be callable",
-        )
+        assert hasattr(instance, "get_stack"), "Base should have get_stack method"
+        assert callable(instance.get_stack), "get_stack should be callable"
 
     def test_get_stack_pages(self) -> None:
         """Test method for get_stack_pages."""
@@ -335,14 +334,10 @@ class TestBase:
                 pass
 
         instance = TestBase()
-        assert_with_msg(
-            hasattr(instance, "get_stack_pages"),
-            "Base should have get_stack_pages method",
+        assert hasattr(instance, "get_stack_pages"), (
+            "Base should have get_stack_pages method"
         )
-        assert_with_msg(
-            callable(instance.get_stack_pages),
-            "get_stack_pages should be callable",
-        )
+        assert callable(instance.get_stack_pages), "get_stack_pages should be callable"
 
     def test_get_page(self) -> None:
         """Test method for get_page."""
@@ -367,47 +362,31 @@ class TestBase:
                 pass
 
         instance = TestBase()
-        assert_with_msg(
-            hasattr(instance, "get_page"),
-            "Base should have get_page method",
-        )
-        assert_with_msg(
-            callable(instance.get_page),
-            "get_page should be callable",
-        )
+        assert hasattr(instance, "get_page"), "Base should have get_page method"
+        assert callable(instance.get_page), "get_page should be callable"
 
     def test_get_svg_icon(self) -> None:
         """Test method for get_svg_icon."""
         # Test that the method exists and is callable
-        assert_with_msg(
-            hasattr(Base, "get_svg_icon"),
-            "Base should have get_svg_icon class method",
+        assert hasattr(Base, "get_svg_icon"), (
+            "Base should have get_svg_icon class method"
         )
-        assert_with_msg(
-            callable(Base.get_svg_icon),
-            "get_svg_icon should be callable",
-        )
+        assert callable(Base.get_svg_icon), "get_svg_icon should be callable"
 
         # Test that it's a classmethod
-        assert_with_msg(
-            isinstance(Base.__dict__["get_svg_icon"], classmethod),
-            "get_svg_icon should be a classmethod",
+        assert isinstance(Base.__dict__["get_svg_icon"], classmethod), (
+            "get_svg_icon should be a classmethod"
         )
 
     def test_get_page_static(self) -> None:
         """Test method for get_page_static."""
         # Test that the method exists and is callable
-        assert_with_msg(
-            hasattr(Base, "get_page_static"),
-            "Base should have get_page_static class method",
+        assert hasattr(Base, "get_page_static"), (
+            "Base should have get_page_static class method"
         )
-        assert_with_msg(
-            callable(Base.get_page_static),
-            "get_page_static should be callable",
-        )
+        assert callable(Base.get_page_static), "get_page_static should be callable"
 
         # Test that it's a classmethod
-        assert_with_msg(
-            isinstance(Base.__dict__["get_page_static"], classmethod),
-            "get_page_static should be a classmethod",
+        assert isinstance(Base.__dict__["get_page_static"], classmethod), (
+            "get_page_static should be a classmethod"
         )

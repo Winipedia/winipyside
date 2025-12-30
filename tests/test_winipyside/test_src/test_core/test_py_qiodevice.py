@@ -4,7 +4,6 @@ from pathlib import Path
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from pyrig.src.modules.module import make_obj_importpath
-from pyrig.src.testing.assertions import assert_with_msg
 from PySide6.QtCore import QIODevice
 from pytest_mock import MockerFixture
 
@@ -24,9 +23,8 @@ class TestPyQIODevice:
         # Test basic initialization
         mock_device = mocker.MagicMock(spec=QIODevice)
         py_device = PyQIODevice(mock_device)
-        assert_with_msg(
-            py_device.q_device is mock_device,
-            "q_device should be set to the provided device",
+        assert py_device.q_device is mock_device, (
+            "q_device should be set to the provided device"
         )
 
     def test_atEnd(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -36,18 +34,16 @@ class TestPyQIODevice:
         py_device = PyQIODevice(mock_device)
 
         result = py_device.atEnd()
-        assert_with_msg(
-            result is True,
-            "atEnd should return True when underlying device returns True",
+        assert result is True, (
+            "atEnd should return True when underlying device returns True"
         )
         mock_device.atEnd.assert_called_once()
 
         # Test False case
         mock_device.atEnd.return_value = False
         result = py_device.atEnd()
-        assert_with_msg(
-            result is False,
-            "atEnd should return False when underlying device returns False",
+        assert result is False, (
+            "atEnd should return False when underlying device returns False"
         )
 
     def test_bytesAvailable(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -58,8 +54,8 @@ class TestPyQIODevice:
         py_device = PyQIODevice(mock_device)
 
         result = py_device.bytesAvailable()
-        assert_with_msg(
-            result == expected_bytes, f"bytesAvailable should return {expected_bytes}"
+        assert result == expected_bytes, (
+            f"bytesAvailable should return {expected_bytes}"
         )
         mock_device.bytesAvailable.assert_called_once()
 
@@ -71,9 +67,7 @@ class TestPyQIODevice:
         py_device = PyQIODevice(mock_device)
 
         result = py_device.bytesToWrite()
-        assert_with_msg(
-            result == expected_bytes, f"bytesToWrite should return {expected_bytes}"
-        )
+        assert result == expected_bytes, f"bytesToWrite should return {expected_bytes}"
         mock_device.bytesToWrite.assert_called_once()
 
     def test_canReadLine(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -83,9 +77,8 @@ class TestPyQIODevice:
         py_device = PyQIODevice(mock_device)
 
         result = py_device.canReadLine()
-        assert_with_msg(
-            result is True,
-            "canReadLine should return True when underlying device returns True",
+        assert result is True, (
+            "canReadLine should return True when underlying device returns True"
         )
         mock_device.canReadLine.assert_called_once()
 
@@ -104,9 +97,8 @@ class TestPyQIODevice:
         py_device = PyQIODevice(mock_device)
 
         result = py_device.isSequential()
-        assert_with_msg(
-            result is False,
-            "isSequential should return False when underlying device returns False",
+        assert result is False, (
+            "isSequential should return False when underlying device returns False"
         )
         mock_device.isSequential.assert_called_once()
 
@@ -118,7 +110,7 @@ class TestPyQIODevice:
 
         mode = QIODevice.OpenModeFlag.ReadOnly
         result = py_device.open(mode)
-        assert_with_msg(result is True, "open should return True when successful")
+        assert result is True, "open should return True when successful"
         mock_device.open.assert_called_once_with(mode)
 
     def test_pos(self, mocker: MockerFixture) -> None:
@@ -129,7 +121,7 @@ class TestPyQIODevice:
         py_device = PyQIODevice(mock_device)
 
         result = py_device.pos()
-        assert_with_msg(result == expected_pos, f"pos should return {expected_pos}")
+        assert result == expected_pos, f"pos should return {expected_pos}"
         mock_device.pos.assert_called_once()
 
     def test_readData(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -143,7 +135,7 @@ class TestPyQIODevice:
 
         maxlen = 100
         result = py_device.readData(maxlen)
-        assert_with_msg(result == test_data, f"readData should return {test_data!r}")
+        assert result == test_data, f"readData should return {test_data!r}"
         mock_device.read.assert_called_once_with(maxlen)
 
     def test_readLineData(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -155,9 +147,7 @@ class TestPyQIODevice:
 
         maxlen = 100
         result = py_device.readLineData(maxlen)
-        assert_with_msg(
-            result == expected_line, f"readLineData should return {expected_line}"
-        )
+        assert result == expected_line, f"readLineData should return {expected_line}"
         mock_device.readLine.assert_called_once_with(maxlen)
 
     def test_reset(self, mocker: MockerFixture) -> None:
@@ -167,7 +157,7 @@ class TestPyQIODevice:
         py_device = PyQIODevice(mock_device)
 
         result = py_device.reset()
-        assert_with_msg(result is True, "reset should return True when successful")
+        assert result is True, "reset should return True when successful"
         mock_device.reset.assert_called_once()
 
     def test_seek(self, mocker: MockerFixture) -> None:
@@ -178,7 +168,7 @@ class TestPyQIODevice:
 
         pos = 50
         result = py_device.seek(pos)
-        assert_with_msg(result is True, "seek should return True when successful")
+        assert result is True, "seek should return True when successful"
         mock_device.seek.assert_called_once_with(pos)
 
     def test_size(self, mocker: MockerFixture) -> None:
@@ -189,7 +179,7 @@ class TestPyQIODevice:
         py_device = PyQIODevice(mock_device)
 
         result = py_device.size()
-        assert_with_msg(result == expected_size, f"size should return {expected_size}")
+        assert result == expected_size, f"size should return {expected_size}"
         mock_device.size.assert_called_once()
 
     def test_skipData(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -201,9 +191,7 @@ class TestPyQIODevice:
 
         max_size = 100
         result = py_device.skipData(max_size)
-        assert_with_msg(
-            result == expected_skipped, f"skipData should return {expected_skipped}"
-        )
+        assert result == expected_skipped, f"skipData should return {expected_skipped}"
         mock_device.skip.assert_called_once_with(max_size)
 
     def test_waitForBytesWritten(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -214,9 +202,7 @@ class TestPyQIODevice:
 
         msecs = 1000
         result = py_device.waitForBytesWritten(msecs)
-        assert_with_msg(
-            result is True, "waitForBytesWritten should return True when successful"
-        )
+        assert result is True, "waitForBytesWritten should return True when successful"
         mock_device.waitForBytesWritten.assert_called_once_with(msecs)
 
     def test_waitForReadyRead(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -227,9 +213,7 @@ class TestPyQIODevice:
 
         msecs = 1000
         result = py_device.waitForReadyRead(msecs)
-        assert_with_msg(
-            result is True, "waitForReadyRead should return True when successful"
-        )
+        assert result is True, "waitForReadyRead should return True when successful"
         mock_device.waitForReadyRead.assert_called_once_with(msecs)
 
     def test_writeData(self, mocker: MockerFixture) -> None:  # noqa: N802
@@ -241,9 +225,7 @@ class TestPyQIODevice:
 
         test_data = b"test data"
         result = py_device.writeData(test_data, len(test_data))
-        assert_with_msg(
-            result == expected_written, f"writeData should return {expected_written}"
-        )
+        assert result == expected_written, f"writeData should return {expected_written}"
         mock_device.write.assert_called_once_with(test_data)
 
 
@@ -260,9 +242,8 @@ class TestPyQFile:
 
         py_file = PyQFile(test_path)
 
-        assert_with_msg(
-            py_file.q_device is mock_qfile,
-            "q_device should be set to QFile instance",
+        assert py_file.q_device is mock_qfile, (
+            "q_device should be set to QFile instance"
         )
         mock_qfile_class.assert_called_once_with(test_path)
 
@@ -288,18 +269,15 @@ class TestEncryptedPyQFile:
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
-        assert_with_msg(
-            encrypted_file.q_device is mock_qfile,
-            "q_device should be set to QFile instance",
+        assert encrypted_file.q_device is mock_qfile, (
+            "q_device should be set to QFile instance"
         )
-        assert_with_msg(
-            encrypted_file.aes_gcm is aes_gcm,
-            "aes_gcm should be set to provided cipher",
+        assert encrypted_file.aes_gcm is aes_gcm, (
+            "aes_gcm should be set to provided cipher"
         )
         expected_dec_size = 1024
-        assert_with_msg(
-            encrypted_file.dec_size == expected_dec_size,
-            "dec_size should be set from size() call",
+        assert encrypted_file.dec_size == expected_dec_size, (
+            "dec_size should be set from size() call"
         )
         mock_qfile_class.assert_called_once_with(test_path)
 
@@ -328,10 +306,7 @@ class TestEncryptedPyQFile:
         mocker.patch.object(PyQFile, "readData", return_value=b"encrypted data")
         result = encrypted_file.readData(10)
 
-        assert_with_msg(
-            result == b"decrypted ",
-            "readData should return decrypted data slice",
-        )
+        assert result == b"decrypted ", "readData should return decrypted data slice"
 
     def test_writeData(self, mocker: MockerFixture) -> None:  # noqa: N802
         """Test method for writeData."""
@@ -353,9 +328,8 @@ class TestEncryptedPyQFile:
         )
         result = encrypted_file.writeData(test_data, len(test_data))
 
-        assert_with_msg(
-            result == len(encrypted_data),
-            f"writeData should return {len(encrypted_data)}",
+        assert result == len(encrypted_data), (
+            f"writeData should return {len(encrypted_data)}"
         )
         mock_parent_write.assert_called_once_with(encrypted_data, len(encrypted_data))
 
@@ -383,17 +357,14 @@ class TestEncryptedPyQFile:
             expected_num_chunks * EncryptedPyQFile.CIPHER_SIZE
         )  # 2*65536=131072
 
-        assert_with_msg(
-            result == expected_dec_size,
-            f"size should return calculated decrypted size {expected_dec_size}",
+        assert result == expected_dec_size, (
+            f"size should return calculated decrypted size {expected_dec_size}"
         )
-        assert_with_msg(
-            encrypted_file.enc_size == expected_enc_size,
-            "enc_size should be set from parent size",
+        assert encrypted_file.enc_size == expected_enc_size, (
+            "enc_size should be set from parent size"
         )
-        assert_with_msg(
-            encrypted_file.num_chunks == expected_num_chunks,
-            "num_chunks should be calculated correctly",
+        assert encrypted_file.num_chunks == expected_num_chunks, (
+            "num_chunks should be calculated correctly"
         )
 
     def test_get_decrypted_pos(self, mocker: MockerFixture) -> None:
@@ -410,24 +381,21 @@ class TestEncryptedPyQFile:
 
         # Test position at start of first chunk (after nonce)
         result = encrypted_file.get_decrypted_pos(12)
-        assert_with_msg(
-            result == 0,
-            "Position 12 (after first nonce) should map to decrypted position 0",
+        assert result == 0, (
+            "Position 12 (after first nonce) should map to decrypted position 0"
         )
 
         # Test position in middle of first chunk
         result = encrypted_file.get_decrypted_pos(1000)
         expected = 1000 - 12  # 988
-        assert_with_msg(
-            result == expected,
-            f"Position 1000 should map to decrypted position {expected}",
+        assert result == expected, (
+            f"Position 1000 should map to decrypted position {expected}"
         )
 
         # Test position beyond encrypted size
         result = encrypted_file.get_decrypted_pos(200000)
-        assert_with_msg(
-            result == encrypted_file.dec_size,
-            "Position beyond enc_size should return dec_size",
+        assert result == encrypted_file.dec_size, (
+            "Position beyond enc_size should return dec_size"
         )
 
     def test_get_encrypted_pos(self, mocker: MockerFixture) -> None:
@@ -449,21 +417,19 @@ class TestEncryptedPyQFile:
             f"Decrypted position 0 should map to encrypted position "
             f"{expected_nonce_offset} (after nonce)"
         )
-        assert_with_msg(result == expected_nonce_offset, expected_msg)
+        assert result == expected_nonce_offset, expected_msg
 
         # Test position in middle of first chunk
         result = encrypted_file.get_encrypted_pos(1000)
         expected = 12 + 1000  # 1012
-        assert_with_msg(
-            result == expected,
-            f"Decrypted position 1000 should map to encrypted position {expected}",
+        assert result == expected, (
+            f"Decrypted position 1000 should map to encrypted position {expected}"
         )
 
         # Test position beyond decrypted size
         result = encrypted_file.get_encrypted_pos(300000)
-        assert_with_msg(
-            result == encrypted_file.enc_size,
-            "Position beyond dec_size should return enc_size",
+        assert result == encrypted_file.enc_size, (
+            "Position beyond dec_size should return enc_size"
         )
 
     def test_get_chunk_start(self, mocker: MockerFixture) -> None:
@@ -478,25 +444,23 @@ class TestEncryptedPyQFile:
 
         # Test position at start of chunk
         result = encrypted_file.get_chunk_start(0)
-        assert_with_msg(result == 0, "Position 0 should return chunk start 0")
+        assert result == 0, "Position 0 should return chunk start 0"
 
         # Test position in middle of first chunk
         result = encrypted_file.get_chunk_start(1000)
-        assert_with_msg(result == 0, "Position 1000 should return chunk start 0")
+        assert result == 0, "Position 1000 should return chunk start 0"
 
         # Test position at start of second chunk
         chunk_size = EncryptedPyQFile.CHUNK_SIZE
         result = encrypted_file.get_chunk_start(chunk_size)
-        assert_with_msg(
-            result == chunk_size,
-            f"Position {chunk_size} should return chunk start {chunk_size}",
+        assert result == chunk_size, (
+            f"Position {chunk_size} should return chunk start {chunk_size}"
         )
 
         # Test position in middle of second chunk
         result = encrypted_file.get_chunk_start(chunk_size + 1000)
-        assert_with_msg(
-            result == chunk_size,
-            f"Position {chunk_size + 1000} should return chunk start {chunk_size}",
+        assert result == chunk_size, (
+            f"Position {chunk_size + 1000} should return chunk start {chunk_size}"
         )
 
     def test_get_chunk_end(self, mocker: MockerFixture) -> None:
@@ -512,17 +476,14 @@ class TestEncryptedPyQFile:
         # Test small read from start
         result = encrypted_file.get_chunk_end(0, 100)
         chunk_size = EncryptedPyQFile.CHUNK_SIZE
-        assert_with_msg(
-            result == chunk_size,
-            f"Small read should return one chunk end {chunk_size}",
+        assert result == chunk_size, (
+            f"Small read should return one chunk end {chunk_size}"
         )
 
         # Test read spanning multiple chunks
         result = encrypted_file.get_chunk_end(0, chunk_size + 1000)
         expected = 2 * chunk_size
-        assert_with_msg(
-            result == expected, f"Read spanning chunks should return {expected}"
-        )
+        assert result == expected, f"Read spanning chunks should return {expected}"
 
     def test_chunk_generator(self) -> None:
         """Test method for chunk_generator."""
@@ -533,15 +494,13 @@ class TestEncryptedPyQFile:
         expected_chunk_count = (
             len(test_data) + EncryptedPyQFile.CIPHER_SIZE - 1
         ) // EncryptedPyQFile.CIPHER_SIZE
-        assert_with_msg(
-            len(chunks) == expected_chunk_count,
-            f"Should generate {expected_chunk_count} chunks for unencrypted data",
+        assert len(chunks) == expected_chunk_count, (
+            f"Should generate {expected_chunk_count} chunks for unencrypted data"
         )
 
         # Check first chunk size
-        assert_with_msg(
-            len(chunks[0]) == EncryptedPyQFile.CIPHER_SIZE,
-            f"First chunk should be {EncryptedPyQFile.CIPHER_SIZE} bytes",
+        assert len(chunks[0]) == EncryptedPyQFile.CIPHER_SIZE, (
+            f"First chunk should be {EncryptedPyQFile.CIPHER_SIZE} bytes"
         )
 
         # Test with encrypted data
@@ -554,7 +513,7 @@ class TestEncryptedPyQFile:
             len(encrypted_data) + EncryptedPyQFile.CHUNK_SIZE - 1
         ) // EncryptedPyQFile.CHUNK_SIZE
         encrypted_msg = f"Should generate {expected_count} chunks for encrypted data"
-        assert_with_msg(len(encrypted_chunks) == expected_count, encrypted_msg)
+        assert len(encrypted_chunks) == expected_count, encrypted_msg
 
     def test_encrypt_data(self, mocker: MockerFixture) -> None:
         """Test method for encrypt_data."""
@@ -576,9 +535,8 @@ class TestEncryptedPyQFile:
         )
         result = encrypted_file.encrypt_data(test_data)
 
-        assert_with_msg(
-            result == expected_encrypted,
-            "encrypt_data should return result from static method",
+        assert result == expected_encrypted, (
+            "encrypt_data should return result from static method"
         )
         mock_static.assert_called_once_with(test_data, aes_gcm)
 
@@ -601,15 +559,13 @@ class TestEncryptedPyQFile:
         result = EncryptedPyQFile.encrypt_data_static(test_data, aes_gcm)
 
         expected = b"enc_chunk1enc_chunk2"
-        assert_with_msg(
-            result == expected,
-            f"encrypt_data_static should return joined encrypted chunks {expected!r}",
+        assert result == expected, (
+            f"encrypt_data_static should return joined encrypted chunks {expected!r}"
         )
         mock_generator.assert_called_once_with(test_data, is_encrypted=False)
         expected_chunk_count = len(mock_chunks)
-        assert_with_msg(
-            mock_encrypt_chunk.call_count == expected_chunk_count,
-            "encrypt_chunk_static should be called for each chunk",
+        assert mock_encrypt_chunk.call_count == expected_chunk_count, (
+            "encrypt_chunk_static should be called for each chunk"
         )
 
     def test_encrypt_chunk_static(self, mocker: MockerFixture) -> None:
@@ -631,7 +587,7 @@ class TestEncryptedPyQFile:
         expected_msg = (
             f"encrypt_chunk_static should return nonce + encrypted content {expected!r}"
         )
-        assert_with_msg(result == expected, expected_msg)
+        assert result == expected, expected_msg
         mock_urandom.assert_called_once_with(nonce_size)
         mock_aes_gcm.encrypt.assert_called_once_with(
             b"test_nonce12", test_data, b"EncryptedPyQFile"
@@ -657,9 +613,8 @@ class TestEncryptedPyQFile:
         )
         result = encrypted_file.decrypt_data(encrypted_data)
 
-        assert_with_msg(
-            result == expected_decrypted,
-            "decrypt_data should return result from static method",
+        assert result == expected_decrypted, (
+            "decrypt_data should return result from static method"
         )
         mock_static.assert_called_once_with(encrypted_data, aes_gcm)
 
@@ -683,14 +638,12 @@ class TestEncryptedPyQFile:
         result = EncryptedPyQFile.decrypt_data_static(encrypted_data, aes_gcm)
 
         expected = b"dec_chunk1dec_chunk2"
-        assert_with_msg(
-            result == expected,
-            f"decrypt_data_static should return joined decrypted chunks {expected!r}",
+        assert result == expected, (
+            f"decrypt_data_static should return joined decrypted chunks {expected!r}"
         )
         mock_generator.assert_called_once_with(encrypted_data, is_encrypted=True)
-        assert_with_msg(
-            mock_decrypt_chunk.call_count == expected_chunk_count,
-            "decrypt_chunk_static should be called for each chunk",
+        assert mock_decrypt_chunk.call_count == expected_chunk_count, (
+            "decrypt_chunk_static should be called for each chunk"
         )
 
     def test_decrypt_chunk_static(self, mocker: MockerFixture) -> None:
@@ -710,7 +663,7 @@ class TestEncryptedPyQFile:
         expected_msg = (
             f"decrypt_chunk_static should return content {decrypted_content!r}"
         )
-        assert_with_msg(result == decrypted_content, expected_msg)
+        assert result == decrypted_content, expected_msg
         mock_aes_gcm.decrypt.assert_called_once_with(
             nonce, cipher_and_tag, b"EncryptedPyQFile"
         )

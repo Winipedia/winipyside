@@ -3,7 +3,6 @@
 from typing import final
 
 from pyrig.src.modules.module import make_obj_importpath
-from pyrig.src.testing.assertions import assert_with_msg
 from pytest_mock import MockFixture
 
 from winipyside.src.ui.pages.base.base import Base as BasePage
@@ -56,9 +55,8 @@ class TestBase:
                 pass
 
         # Test that the method returns the expected page class
-        assert_with_msg(
-            TestWindow.get_start_page_cls() is MockPage,
-            "get_start_page_cls should return the expected page class",
+        assert TestWindow.get_start_page_cls() is MockPage, (
+            "get_start_page_cls should return the expected page class"
         )
 
     def test_base_setup(self, mocker: MockFixture) -> None:
@@ -130,9 +128,7 @@ class TestBase:
         mock_set_start_page.assert_called_once()
 
         # Verify stack attribute is created
-        assert_with_msg(
-            hasattr(window, "stack"), "base_setup should create stack attribute"
-        )
+        assert hasattr(window, "stack"), "base_setup should create stack attribute"
 
     def test_add_page(self, mocker: MockFixture) -> None:
         """Test method for add_page."""
@@ -233,13 +229,11 @@ class TestBase:
 
         # Test that the method returns the expected page classes
         page_classes = TestWindow.get_all_page_classes()
-        assert_with_msg(
-            len(page_classes) == 1,
-            "get_all_page_classes should return one page class",
+        assert len(page_classes) == 1, (
+            "get_all_page_classes should return one page class"
         )
-        assert_with_msg(
-            page_classes[0] is MockPage,
-            "get_all_page_classes should return the expected page class",
+        assert page_classes[0] is MockPage, (
+            "get_all_page_classes should return the expected page class"
         )
 
     def test_make_pages(self, mocker: MockFixture) -> None:
