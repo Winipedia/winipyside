@@ -9,7 +9,7 @@ from types import ModuleType
 from typing import TYPE_CHECKING, Any, Self, cast
 
 from pyrig.src.modules.class_ import (
-    get_all_nonabstract_subclasses,
+    get_all_subclasses,
 )
 from pyrig.src.modules.imports import walk_package
 from pyrig.src.resource import get_resource_path
@@ -136,7 +136,7 @@ class Base(metaclass=QABCLoggingMeta):
 
         _ = list(walk_package(package))
 
-        children = get_all_nonabstract_subclasses(cls)
+        children = get_all_subclasses(cls, exclude_abstract=True)
         return sorted(children, key=lambda cls: cls.__name__)
 
     def set_current_page(self, page_cls: type["BasePage"]) -> None:
