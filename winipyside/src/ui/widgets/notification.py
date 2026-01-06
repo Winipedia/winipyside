@@ -5,7 +5,7 @@ This module provides a notification toast widget for displaying temporary messag
 
 from pyqttoast import Toast, ToastIcon, ToastPosition  # type: ignore[import-untyped]
 from PySide6.QtWidgets import QApplication
-from winiutils.src.data.structures.text.string import value_to_truncated_string
+from winiutils.src.data.structures.text.string_ import value_to_truncated_string
 
 Toast.setPosition(ToastPosition.TOP_MIDDLE)
 

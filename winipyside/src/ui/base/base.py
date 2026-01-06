@@ -13,7 +13,7 @@ from pyrig.src.modules.class_ import (
 )
 from pyrig.src.modules.imports import walk_package
 from pyrig.src.resource import get_resource_path
-from pyrig.src.string import split_on_uppercase
+from pyrig.src.string_ import split_on_uppercase
 from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QStackedWidget
