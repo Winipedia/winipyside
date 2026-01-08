@@ -1553,7 +1553,7 @@ wheels = [
 
 [[package]]
 name = "winipyside"
-version = "2.1.58"
+version = "2.1.59"
 source = { editable = "." }
 dependencies = [
     { name = "pyqt-toast-notification" },
