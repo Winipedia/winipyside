@@ -3,14 +3,14 @@
 This module provides a notification toast widget for displaying temporary messages.
 """
 
-from pyqttoast import Toast, ToastIcon, ToastPosition  # type: ignore[import-untyped]
+from pyqttoast import Toast, ToastIcon, ToastPosition
 from PySide6.QtWidgets import QApplication
 from winiutils.src.data.structures.text.string_ import value_to_truncated_string
 
 Toast.setPosition(ToastPosition.TOP_MIDDLE)
 
 
-class Notification(Toast):  # type: ignore[misc]
+class Notification(Toast):
     """Toast notification widget with automatic text truncation.
 
     A configurable toast notification that appears in the top-middle of the screen

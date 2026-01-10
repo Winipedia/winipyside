@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 class QABCLoggingMeta(
     ABCLoggingMeta,
-    type(QObject),  # type: ignore[misc]
+    type(QObject),
 ):
     """Metaclass combining ABC enforcement with Qt and logging integration.
 

@@ -1,6 +1,6 @@
 """Tests for Notification widget."""
 
-from pyqttoast import ToastIcon  # type: ignore[import-untyped]
+from pyqttoast import ToastIcon
 from pyrig.src.modules.module import make_obj_importpath
 from pytest_mock import MockFixture
 
