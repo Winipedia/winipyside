@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "2.1.67"
+version = "2.1.68"
 description = "A utilities package for PySide6"
 authors = [
     {name = "Winipedia"},
