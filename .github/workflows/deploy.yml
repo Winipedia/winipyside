@@ -1,4 +1,4 @@
-name: Publish
+name: Deploy
 'on':
   workflow_dispatch: {}
   workflow_run:
@@ -7,7 +7,7 @@ name: Publish
     types:
     - completed
 permissions: {}
-run-name: Publish
+run-name: Deploy
 defaults:
   run:
     shell: bash
@@ -39,7 +39,7 @@ jobs:
       run: 'if [ ${{ secrets.PYPI_TOKEN }} ]; then uv publish --token ${{ secrets.PYPI_TOKEN
         }}; else echo "Skipping step due to failed condition: secrets.PYPI_TOKEN.";
         fi'
-  publish_documentation:
+  deploy_documentation:
     permissions:
       pages: write
       id-token: write
@@ -81,6 +81,6 @@ jobs:
       uses: actions/upload-pages-artifact@main
       with:
         path: site
-    - name: Publish Documentation
-      id: publish_documentation
+    - name: Deploy Documentation
+      id: deploy_documentation
       uses: actions/deploy-pages@main
