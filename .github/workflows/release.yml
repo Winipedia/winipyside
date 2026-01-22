@@ -35,6 +35,12 @@ jobs:
       uses: astral-sh/setup-uv@main
       with:
         python-version: '3.13'
+    - name: Patch Version
+      id: patch_version
+      run: uv version --bump patch
+    - name: Add Version Bump To Version Control
+      id: add_version_bump_to_version_control
+      run: git add pyproject.toml uv.lock
     - name: Update Dependencies
       id: update_dependencies
       run: uv lock --upgrade
@@ -48,12 +54,6 @@ jobs:
       id: install_pyside_system_dependencies
       run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
       if: runner.os == 'Linux'
-    - name: Patch Version
-      id: patch_version
-      run: uv version --bump patch
-    - name: Add Version Bump To Version Control
-      id: add_version_bump_to_version_control
-      run: git add pyproject.toml uv.lock
     - name: Commit Added Changes
       id: commit_added_changes
       run: 'git commit --no-verify -m "[skip ci] CI/CD: Committing possible changes
