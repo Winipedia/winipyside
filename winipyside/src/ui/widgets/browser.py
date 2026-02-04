@@ -251,7 +251,7 @@ class Browser(QWebEngineView):
         name = bytes(qcookie.name().data()).decode()
         value = bytes(qcookie.value().data()).decode()
         domain = qcookie.domain()
-        path = qcookie.path() if qcookie.path() else "/"
+        path = qcookie.path() or "/"
         secure = qcookie.isSecure()
         expires = None
         if qcookie.expirationDate().isValid():
