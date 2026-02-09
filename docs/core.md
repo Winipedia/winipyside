@@ -458,6 +458,7 @@ finally:
 
 ## See Also
 
-- [UI Widgets - MediaPlayer](ui-widgets.md#mediaplayer) - Using encrypted files with MediaPlayer
+- [UI Widgets - MediaPlayer](ui-widgets.md#mediaplayer) -
+Using encrypted files with MediaPlayer
 - [Examples - Encrypted Video Player](examples.md#encrypted-video-player)
 - [API Reference](api-reference.md#core-package)

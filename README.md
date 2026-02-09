@@ -1,5 +1,6 @@
 # winipyside
 
+<!-- rumdl-disable MD013 -->
 <!-- tooling -->
 [![pyrig](https://img.shields.io/badge/built%20with-pyrig-3776AB?logo=buildkite&logoColor=black)](https://github.com/Winipedia/pyrig)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
@@ -22,6 +23,7 @@
 [![CD](https://img.shields.io/github/actions/workflow/status/Winipedia/winipyside/release.yml?label=CD&logo=github)](https://github.com/Winipedia/winipyside/actions/workflows/release.yml)
 <!-- documentation -->
 [![Documentation](https://img.shields.io/badge/Docs-GitHub%20Pages-black?style=for-the-badge&logo=github&logoColor=white)](https://Winipedia.github.io/winipyside)
+<!-- rumdl-enable MD013 -->
 
 ---
 
@@ -204,7 +206,8 @@ Comprehensive documentation is available in the [`docs/`](docs/) directory:
 
 - **[Core Package](docs/core.md)** - Encrypted file I/O and QIODevice wrappers
 - **[UI Base](docs/ui-base.md)** - Foundation framework and lifecycle management
-- **[UI Widgets](docs/ui-widgets.md)** - Reusable widgets (Browser, MediaPlayer, Notifications)
+- **[UI Widgets](docs/ui-widgets.md)** -
+Reusable widgets (Browser, MediaPlayer, Notifications)
 - **[UI Pages](docs/ui-pages.md)** - Page components for navigation
 - **[UI Windows](docs/ui-windows.md)** - Main window framework
 - **[API Reference](docs/api-reference.md)** - Complete API documentation
@@ -271,14 +274,15 @@ see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- Built with [Pyrig](https://github.com/Winipedia/pyrig) - Python project scaffolding framework
+- Built with [Pyrig](https://github.com/Winipedia/pyrig) -
+Python project scaffolding framework
 - Uses [PySide6](https://www.qt.io/qt-for-python) - Qt for Python
-- Toast notifications powered by [pyqttoast](https://github.com/niklashenning/pyqttoast)
+- Toast notifications powered by [pyqttoast](https://github.com/niklashenning/pyqttoast) <!-- rumdl-disable-line MD013 -->
 
 ## Support
 
 - **Documentation**: [docs/](docs/)
 - **Issues**: [GitHub Issues](https://github.com/Winipedia/winipyside/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Winipedia/winipyside/discussions)
+- **Discussions**: [GitHub Discussions](https://github.com/Winipedia/winipyside/discussions) <!-- rumdl-disable-line MD013 -->
 
 ---

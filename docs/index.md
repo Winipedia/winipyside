@@ -1,5 +1,6 @@
 # winipyside Documentation
 
+<!-- rumdl-disable MD013 -->
 <!-- tooling -->
 [![pyrig](https://img.shields.io/badge/built%20with-pyrig-3776AB?logo=buildkite&logoColor=black)](https://github.com/Winipedia/pyrig)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
@@ -22,6 +23,7 @@
 [![CD](https://img.shields.io/github/actions/workflow/status/Winipedia/winipyside/release.yml?label=CD&logo=github)](https://github.com/Winipedia/winipyside/actions/workflows/release.yml)
 <!-- documentation -->
 [![Documentation](https://img.shields.io/badge/Docs-GitHub%20Pages-black?style=for-the-badge&logo=github&logoColor=white)](https://Winipedia.github.io/winipyside)
+<!-- rumdl-enable MD013 -->
 
 ---
 
@@ -146,5 +148,5 @@ See the [Contributing Guide](../README.md#contributing) for information on:
 
 ## Support
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/Winipedia/winipyside/issues)
-- **GitHub Discussions**: [Ask questions or share ideas](https://github.com/Winipedia/winipyside/discussions)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/Winipedia/winipyside/issues) <!-- rumdl-disable-line MD013 -->
+- **GitHub Discussions**: [Ask questions or share ideas](https://github.com/Winipedia/winipyside/discussions) <!-- rumdl-disable-line MD013 -->
