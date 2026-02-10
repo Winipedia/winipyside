@@ -7,4 +7,4 @@ It also import custom plugins from tests/base/scopes.
 This file should not be modified manually.
 """
 
-pytest_plugins = ["pyrig.dev.tests.conftest"]
+pytest_plugins = ["pyrig.rig.tests.conftest"]

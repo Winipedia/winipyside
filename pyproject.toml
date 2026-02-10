@@ -28,8 +28,7 @@ maintainers = [
 keywords = []
 
 [project.scripts]
-winipedia-pyside = "pyrig.dev.cli.cli:main"
-winipyside = "pyrig.dev.cli.cli:main"
+winipyside = "pyrig.rig.cli.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/Winipedia/winipyside"

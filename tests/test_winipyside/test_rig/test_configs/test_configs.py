@@ -1,6 +1,6 @@
 """module."""
 
-from winipyside.dev.configs.configs import HealthCheckWorkflow, PyprojectConfigFile
+from winipyside.rig.configs.configs import HealthCheckWorkflow, PyprojectConfigFile
 
 
 class TestPySideWorkflowMixin:
