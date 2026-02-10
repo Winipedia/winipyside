@@ -39,8 +39,24 @@ Changelog = "https://github.com/Winipedia/winipyside/releases"
 
 [dependency-groups]
 dev = [
+    "bandit>=1.9.3",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.1",
+    "mkdocs-mermaid2-plugin>=1.2.3",
+    "mkdocstrings[python]>=1.0.3",
+    "pip-audit>=2.10.0",
+    "prek>=0.3.2",
+    "pygithub>=2.8.1",
     "pyrig-dev",
-    "pytest-qt",
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "pytest-mock>=3.15.1",
+    "pytest-qt>=4.5.0",
+    "ruff>=0.15.0",
+    "rumdl>=0.1.18",
+    "ty>=0.0.16",
+    "types-defusedxml>=0.7.0.20250822",
+    "types-tqdm>=4.67.3.20260205",
 ]
 
 [build-system]

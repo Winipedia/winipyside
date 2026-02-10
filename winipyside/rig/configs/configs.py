@@ -8,9 +8,6 @@ from typing import Any
 from pyrig.rig.configs.base.workflow import (
     Workflow as PyrigWorkflow,
 )
-from pyrig.rig.configs.pyproject import (
-    PyprojectConfigFile as PyrigPyprojectConfigFile,
-)
 from pyrig.rig.configs.workflows.build import (
     BuildWorkflow as PyrigBuildWorkflow,
 )
@@ -20,24 +17,6 @@ from pyrig.rig.configs.workflows.health_check import (
 from pyrig.rig.configs.workflows.release import (
     ReleaseWorkflow as PyrigReleaseWorkflow,
 )
-
-
-class PyprojectConfigFile(PyrigPyprojectConfigFile):
-    """Pyproject config file.
-
-    Extends winiutils pyproject config file to add additional config.
-    """
-
-    @classmethod
-    def get_standard_dev_dependencies(cls) -> list[str]:
-        """Get the standard dev dependencies."""
-        standard_dev_dependencies = super().get_standard_dev_dependencies()
-        standard_dev_dependencies.extend(
-            [
-                "pytest-qt",
-            ]
-        )
-        return standard_dev_dependencies
 
 
 class PySideWorkflowMixin(PyrigWorkflow):

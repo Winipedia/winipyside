@@ -1,6 +1,6 @@
 """module."""
 
-from winipyside.rig.configs.configs import HealthCheckWorkflow, PyprojectConfigFile
+from winipyside.rig.configs.configs import HealthCheckWorkflow
 
 
 class TestPySideWorkflowMixin:
@@ -35,20 +35,6 @@ class TestHealthCheckWorkflow:
 
 class TestReleaseWorkflow:
     """Test class for ReleaseWorkflow."""
-
-
-class TestPyprojectConfigFile:
-    """Test class."""
-
-    def test_get_standard_dev_dependencies(self) -> None:
-        """Test method."""
-        dev_dependencies = PyprojectConfigFile.get_standard_dev_dependencies()
-
-        assert isinstance(dev_dependencies, list), "Dev dependencies should be a dict"
-
-        assert "pytest-qt" in dev_dependencies, (
-            "Dev dependencies should include pytest-qt"
-        )
 
 
 class TestBuildWorkflow:
