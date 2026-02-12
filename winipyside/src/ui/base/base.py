@@ -9,10 +9,10 @@ from types import ModuleType
 from typing import TYPE_CHECKING, Any, Self, cast
 
 from pyrig.src.modules.class_ import (
-    get_all_subclasses,
+    discover_all_subclasses,
 )
 from pyrig.src.modules.imports import walk_package
-from pyrig.src.resource import get_resource_path
+from pyrig.src.resource import resource_path
 from pyrig.src.string_ import split_on_uppercase
 from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
@@ -136,7 +136,7 @@ class Base(metaclass=QABCLoggingMeta):
 
         _ = list(walk_package(package))
 
-        children = get_all_subclasses(cls, exclude_abstract=True)
+        children = discover_all_subclasses(cls, exclude_abstract=True)
         return sorted(children, key=lambda cls: cls.__name__)
 
     def set_current_page(self, page_cls: type["BasePage"]) -> None:
@@ -229,7 +229,7 @@ class Base(metaclass=QABCLoggingMeta):
         if not svg_name.endswith(".svg"):
             svg_name = f"{svg_name}.svg"
 
-        return QIcon(str(get_resource_path(svg_name, package=package)))
+        return QIcon(str(resource_path(svg_name, package=package)))
 
     @classmethod
     def get_page_static[T: "BasePage"](cls, page_cls: type[T]) -> T:
