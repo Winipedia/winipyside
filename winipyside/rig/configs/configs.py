@@ -6,29 +6,28 @@ All subclasses of ConfigFile in the configs package are automatically called.
 from typing import Any
 
 from pyrig.rig.configs.base.workflow import (
-    Workflow as PyrigWorkflow,
+    WorkflowConfigFile as PyrigWorkflowConfigFile,
 )
 from pyrig.rig.configs.workflows.build import (
-    BuildWorkflow as PyrigBuildWorkflow,
+    BuildWorkflowConfigFile as PyrigBuildWorkflowConfigFile,
 )
 from pyrig.rig.configs.workflows.health_check import (
-    HealthCheckWorkflow as PyrigHealthCheckWorkflow,
+    HealthCheckWorkflowConfigFile as PyrigHealthCheckWorkflowConfigFile,
 )
 from pyrig.rig.configs.workflows.release import (
-    ReleaseWorkflow as PyrigReleaseWorkflow,
+    ReleaseWorkflowConfigFile as PyrigReleaseWorkflowConfigFile,
 )
 
 
-class PySideWorkflowMixin(PyrigWorkflow):
+class PySideWorkflowConfigFileMixin(PyrigWorkflowConfigFile):
     """Mixin to add PySide6-specific workflow steps.
 
     This mixin provides common overrides for PySide6 workflows to work on
     GitHub Actions headless Linux environments.
     """
 
-    @classmethod
     def step_run_tests(
-        cls,
+        self,
         *,
         step: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
@@ -47,9 +46,8 @@ class PySideWorkflowMixin(PyrigWorkflow):
         )
         return step
 
-    @classmethod
     def steps_core_installed_setup(
-        cls,
+        self,
         *args: Any,
         **kwargs: Any,
     ) -> list[dict[str, Any]]:
@@ -63,21 +61,22 @@ class PySideWorkflowMixin(PyrigWorkflow):
         )
 
         steps.append(
-            cls.step_install_pyside_system_dependencies(),
+            self.step_install_pyside_system_dependencies(),
         )
         return steps
 
-    @classmethod
-    def step_install_pyside_system_dependencies(cls) -> dict[str, Any]:
+    def step_install_pyside_system_dependencies(self) -> dict[str, Any]:
         """Get the step to install PySide6 dependencies."""
-        return cls.step(
-            step_func=cls.step_install_pyside_system_dependencies,
+        return self.step(
+            step_func=self.step_install_pyside_system_dependencies,
             run="sudo apt-get update && sudo apt-get install -y libegl1 libpulse0",
             if_condition="runner.os == 'Linux'",
         )
 
 
-class HealthCheckWorkflow(PySideWorkflowMixin, PyrigHealthCheckWorkflow):
+class HealthCheckWorkflowConfigFile(
+    PySideWorkflowConfigFileMixin, PyrigHealthCheckWorkflowConfigFile
+):
     """Health check workflow.
 
     Extends winiutils health check workflow to add additional steps.
@@ -86,7 +85,9 @@ class HealthCheckWorkflow(PySideWorkflowMixin, PyrigHealthCheckWorkflow):
     """
 
 
-class BuildWorkflow(PySideWorkflowMixin, PyrigBuildWorkflow):
+class BuildWorkflowConfigFile(
+    PySideWorkflowConfigFileMixin, PyrigBuildWorkflowConfigFile
+):
     """Build workflow.
 
     Extends winiutils build workflow to add additional steps.
@@ -95,7 +96,9 @@ class BuildWorkflow(PySideWorkflowMixin, PyrigBuildWorkflow):
     """
 
 
-class ReleaseWorkflow(PySideWorkflowMixin, PyrigReleaseWorkflow):
+class ReleaseWorkflowConfigFile(
+    PySideWorkflowConfigFileMixin, PyrigReleaseWorkflowConfigFile
+):
     """Release workflow.
 
     Extends winiutils release workflow to add additional steps.
