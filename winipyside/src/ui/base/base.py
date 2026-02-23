@@ -9,9 +9,9 @@ from types import ModuleType
 from typing import TYPE_CHECKING, Any, Self, cast
 
 from pyrig.src.modules.class_ import (
+    discard_parent_classes,
     discover_all_subclasses,
 )
-from pyrig.src.modules.imports import walk_package
 from pyrig.src.resource import resource_path
 from pyrig.src.string_ import split_on_uppercase
 from PySide6.QtCore import QObject
@@ -134,9 +134,9 @@ class Base(metaclass=QABCLoggingMeta):
             # find the main package
             package = sys.modules[__name__]
 
-        _ = list(walk_package(package))
-
-        children = discover_all_subclasses(cls, exclude_abstract=True)
+        children = discard_parent_classes(
+            discover_all_subclasses(cls, load_package_before=package)
+        )
         return sorted(children, key=lambda cls: cls.__name__)
 
     def set_current_page(self, page_cls: type["BasePage"]) -> None:
