@@ -1134,14 +1134,14 @@ wheels = [
 
 [[package]]
 name = "pyrig"
-version = "10.1.16"
+version = "10.1.17"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ee/11/96b417606053528320109f51d27bcf12d63e180d52388c1fd22a32192247/pyrig-10.1.16.tar.gz", hash = "sha256:cf50ee0b9efb9b5d43cc03fa65a097a013b23b1dff9878d6a1d94f4201013155", size = 134486, upload-time = "2026-02-25T02:11:18.3Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/af/77/b04297bca29706e0571a06c1d4a085a74dee5cc82cb83baff4718d623cf8/pyrig-10.1.17.tar.gz", hash = "sha256:677f8907d30e55dd0339d79ed9ea64272b2fa50f068d54582ec12958cd4e21bb", size = 134611, upload-time = "2026-02-25T12:42:47.481Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/40/2d/2d1f34e4fc207a921c2de454035ecd98965cc9dfa51731337e2cb9737f92/pyrig-10.1.16-py3-none-any.whl", hash = "sha256:1a8e48a0f8d137c49b3cd6d4eff8c9a0cacc71ccfd6f3d006769ad8e9acd96d4", size = 204794, upload-time = "2026-02-25T02:11:16.792Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/70/c2adebe5468c77f8010fe7173cb1407861d7ffcfbb4cafe2a243043cfe48/pyrig-10.1.17-py3-none-any.whl", hash = "sha256:e2390f003a1cd8f2fd40ed80e5f796f9f95c4c8d355589c9f958ccb794be3696", size = 204948, upload-time = "2026-02-25T12:42:48.699Z" },
 ]
 
 [[package]]
@@ -1717,7 +1717,7 @@ wheels = [
 
 [[package]]
 name = "winipyside"
-version = "2.1.84"
+version = "2.1.85"
 source = { editable = "." }
 dependencies = [
     { name = "pyqt-toast-notification" },
