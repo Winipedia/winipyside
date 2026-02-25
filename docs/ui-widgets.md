@@ -456,13 +456,13 @@ app.exec()
 
 1. **Use appropriate icons** for message types:
 
-   ```python
-   # Success
-   Notification(title="Success", text="...", icon=ToastIcon.SUCCESS)
+```python
+# Success
+Notification(title="Success", text="...", icon=ToastIcon.SUCCESS)
 
-   # Error
-   Notification(title="Error", text="...", icon=ToastIcon.ERROR)
-   ```
+# Error
+Notification(title="Error", text="...", icon=ToastIcon.ERROR)
+```
 
 2. **Keep messages concise**: Text is auto-truncated, but shorter is better
 
