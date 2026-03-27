@@ -19,7 +19,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QStackedWidget
 from winiutils.src.oop.mixins.meta import ABCLoggingMeta
 
-from winipyside import resources
+from winipyside.rig import resources
 
 # Avoid circular import
 if TYPE_CHECKING:
