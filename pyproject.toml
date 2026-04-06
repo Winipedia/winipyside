@@ -65,10 +65,6 @@ requires = [
 ]
 build-backend = "uv_build"
 
-[tool.uv.build-backend]
-module-name = "winipyside"
-module-root = ""
-
 [tool.ruff]
 exclude = [
     ".*",

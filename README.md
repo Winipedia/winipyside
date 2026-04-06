@@ -45,16 +45,16 @@ management, toast notifications, and a modular page-based UI framework.
 ### Key Highlights
 
 - 🔐 **Encrypted File I/O**:
-    Transparent AES-GCM encryption for files and media playback
+  Transparent AES-GCM encryption for files and media playback
 - 🎬 **Media Player**:
-    Full-featured player with encrypted video support, speed control,
-        and fullscreen mode
+  Full-featured player with encrypted video support, speed control,
+  and fullscreen mode
 - 🌐 **Web Browser**:
-    Embedded browser with cookie management and Qt/Python cookie conversion
+  Embedded browser with cookie management and Qt/Python cookie conversion
 - 🔔 **Notifications**:
-    Toast notification system with auto-positioning and smart text truncation
+  Toast notification system with auto-positioning and smart text truncation
 - 🏗️ **UI Framework**:
-    Modular page-based architecture with lifecycle hooks and navigation
+  Modular page-based architecture with lifecycle hooks and navigation
 - ✅ **Type Safe**: 100% type annotated with strict mypy checking
 - 🧪 **Well Tested**: Comprehensive test suite with pytest and pytest-qt
 - 🚀 **CI/CD Ready**: Production-ready workflows for headless environments
@@ -94,7 +94,7 @@ Embedded Chromium-based browser:
 Modular architecture for building complex applications:
 
 - **Lifecycle hooks**:
-    `base_setup()` → `pre_setup()` → `setup()` → `post_setup()`
+  `base_setup()` → `pre_setup()` → `setup()` → `post_setup()`
 - **Page-based navigation** with QStackedWidget
 - **Dynamic subclass discovery**
 - **SVG icon support**
