@@ -8,13 +8,13 @@ from typing import Any
 from pyrig.rig.configs.base.workflow import (
     WorkflowConfigFile as PyrigWorkflowConfigFile,
 )
-from pyrig.rig.configs.workflows.build import (
+from pyrig.rig.configs.remote_version_control.workflows.build import (
     BuildWorkflowConfigFile as PyrigBuildWorkflowConfigFile,
 )
-from pyrig.rig.configs.workflows.health_check import (
+from pyrig.rig.configs.remote_version_control.workflows.health_check import (
     HealthCheckWorkflowConfigFile as PyrigHealthCheckWorkflowConfigFile,
 )
-from pyrig.rig.configs.workflows.release import (
+from pyrig.rig.configs.remote_version_control.workflows.release import (
     ReleaseWorkflowConfigFile as PyrigReleaseWorkflowConfigFile,
 )
 
