@@ -8,12 +8,12 @@ from abc import abstractmethod
 from types import ModuleType
 from typing import TYPE_CHECKING, Any, Self, cast
 
-from pyrig.core.modules.class_ import (
+from pyrig.core.introspection.classes import (
     discard_parent_classes,
     discover_all_subclasses,
 )
-from pyrig.core.resource import resource_path
-from pyrig.core.string_ import split_on_uppercase
+from pyrig.core.resources import resource_path
+from pyrig.core.strings import split_on_uppercase
 from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QStackedWidget
