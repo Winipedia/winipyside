@@ -1,7 +1,6 @@
 """Tests for Notification widget."""
 
 from pyqttoast import ToastIcon
-from pyrig.core.modules.module import make_obj_importpath
 from pytest_mock import MockFixture
 
 from winipyside.core.ui.widgets import notification
@@ -16,7 +15,7 @@ class TestNotification:
         # Mock the Toast parent class and its methods
         mock_toast_init = mocker.patch("pyqttoast.Toast.__init__")
         mock_active_window = mocker.patch(
-            make_obj_importpath(notification) + ".QApplication.activeWindow"
+            notification.__name__ + ".QApplication.activeWindow"
         )
         mock_window = mocker.MagicMock()
         mock_active_window.return_value = mock_window
@@ -65,7 +64,7 @@ class TestNotification:
         """Test method for set_title."""
         # Mock all dependencies first
         mocker.patch("pyqttoast.Toast.__init__")
-        mocker.patch(make_obj_importpath(notification) + ".QApplication.activeWindow")
+        mocker.patch(notification.__name__ + ".QApplication.activeWindow")
         mocker.patch.object(Notification, "setDuration")
         mocker.patch.object(Notification, "setIcon")
 
@@ -92,7 +91,7 @@ class TestNotification:
         """Test method for set_text."""
         # Mock all dependencies first
         mocker.patch("pyqttoast.Toast.__init__")
-        mocker.patch(make_obj_importpath(notification) + ".QApplication.activeWindow")
+        mocker.patch(notification.__name__ + ".QApplication.activeWindow")
         mocker.patch.object(Notification, "setDuration")
         mocker.patch.object(Notification, "setIcon")
 
@@ -126,10 +125,10 @@ class TestNotification:
 
         # Mock QApplication.activeWindow and value_to_truncated_string
         mock_active_window = mocker.patch(
-            make_obj_importpath(notification) + ".QApplication.activeWindow"
+            notification.__name__ + ".QApplication.activeWindow"
         )
         mock_truncate = mocker.patch(
-            make_obj_importpath(notification) + ".value_to_truncated_string"
+            notification.__name__ + ".value_to_truncated_string"
         )
 
         notification_new = Notification("title", "text")

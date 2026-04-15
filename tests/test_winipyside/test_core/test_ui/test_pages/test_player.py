@@ -3,7 +3,6 @@
 from pathlib import Path
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from pyrig.core.modules.module import make_obj_importpath
 from PySide6.QtWidgets import QVBoxLayout
 from pytest_mock import MockerFixture
 
@@ -30,9 +29,7 @@ class TestPlayer:
     def test_setup(self, mocker: MockerFixture) -> None:
         """Test method for setup."""
         # Mock the MediaPlayer class
-        mock_media_player_class = mocker.patch(
-            make_obj_importpath(player) + ".MediaPlayer"
-        )
+        mock_media_player_class = mocker.patch(player.__name__ + ".MediaPlayer")
         mock_media_player_instance = mocker.MagicMock()
         mock_media_player_class.return_value = mock_media_player_instance
 

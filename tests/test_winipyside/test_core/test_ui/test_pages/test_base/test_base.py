@@ -2,7 +2,6 @@
 
 from typing import final
 
-from pyrig.core.modules.module import make_obj_importpath
 from pytest_mock import MockFixture
 
 from winipyside.core.ui.pages.base import base
@@ -57,8 +56,8 @@ class TestBase:
     def test_base_setup(self, mocker: MockFixture) -> None:
         """Test method for base_setup."""
         # Mock Qt components to avoid creating real widgets
-        mock_qvboxlayout = mocker.patch(make_obj_importpath(base) + ".QVBoxLayout")
-        mock_qhboxlayout = mocker.patch(make_obj_importpath(base) + ".QHBoxLayout")
+        mock_qvboxlayout = mocker.patch(base.__name__ + ".QVBoxLayout")
+        mock_qhboxlayout = mocker.patch(base.__name__ + ".QHBoxLayout")
 
         # Create test page class
         class TestPage(Base):
@@ -102,8 +101,8 @@ class TestBase:
     def test_add_menu_dropdown_button(self, mocker: MockFixture) -> None:
         """Test method for add_menu_dropdown_button."""
         # Mock Qt components
-        mock_qpushbutton = mocker.patch(make_obj_importpath(base) + ".QPushButton")
-        mock_qmenu = mocker.patch(make_obj_importpath(base) + ".QMenu")
+        mock_qpushbutton = mocker.patch(base.__name__ + ".QPushButton")
+        mock_qmenu = mocker.patch(base.__name__ + ".QMenu")
 
         # Create test page class
         class TestPage(Base):
@@ -141,7 +140,7 @@ class TestBase:
     def test_add_to_page_button(self, mocker: MockFixture) -> None:
         """Test method for add_to_page_button."""
         # Mock Qt components
-        mock_qpushbutton = mocker.patch(make_obj_importpath(base) + ".QPushButton")
+        mock_qpushbutton = mocker.patch(base.__name__ + ".QPushButton")
         mock_button_instance = mocker.MagicMock()
         mock_qpushbutton.return_value = mock_button_instance
 

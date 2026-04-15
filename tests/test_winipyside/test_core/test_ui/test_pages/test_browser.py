@@ -1,6 +1,5 @@
 """Tests for winipyside.ui.pages.browser module."""
 
-from pyrig.core.modules.module import make_obj_importpath
 from PySide6.QtWidgets import QVBoxLayout
 from pytest_mock import MockerFixture
 
@@ -34,9 +33,7 @@ class TestBrowser:
     def test_add_brwoser(self, mocker: MockerFixture) -> None:
         """Test method for add_brwoser."""
         # Mock the BrowserWidget class
-        mock_browser_widget_class = mocker.patch(
-            make_obj_importpath(browser) + ".BrowserWidget"
-        )
+        mock_browser_widget_class = mocker.patch(browser.__name__ + ".BrowserWidget")
         mock_browser_widget_instance = mocker.MagicMock()
         mock_browser_widget_class.return_value = mock_browser_widget_instance
 

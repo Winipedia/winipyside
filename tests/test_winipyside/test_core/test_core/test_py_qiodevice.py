@@ -3,7 +3,6 @@
 from pathlib import Path
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-from pyrig.core.modules.module import make_obj_importpath
 from PySide6.QtCore import QIODevice
 from pytest_mock import MockerFixture
 
@@ -236,7 +235,7 @@ class TestPyQFile:
         """Test method for __init__."""
         # Test basic initialization
         test_path = Path("test_file.txt")
-        mock_qfile_class = mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mock_qfile_class = mocker.patch(py_qiodevice.__name__ + ".QFile")
         mock_qfile = mocker.MagicMock()
         mock_qfile_class.return_value = mock_qfile
 
@@ -261,7 +260,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mock_qfile_class = mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mock_qfile_class = mocker.patch(py_qiodevice.__name__ + ".QFile")
         mock_qfile = mocker.MagicMock()
         mock_qfile_class.return_value = mock_qfile
 
@@ -287,7 +286,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
@@ -314,7 +313,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
@@ -339,7 +338,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         # Don't mock size during initialization for this test
         mocker.patch.object(PyQFile, "size", return_value=131100)  # Mock parent size
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
@@ -373,7 +372,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
         encrypted_file.enc_size = 131100
@@ -404,7 +403,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
         encrypted_file.enc_size = 131100
@@ -438,7 +437,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
@@ -469,7 +468,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
@@ -521,7 +520,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
@@ -599,7 +598,7 @@ class TestEncryptedPyQFile:
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
-        mocker.patch(make_obj_importpath(py_qiodevice) + ".QFile")
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 

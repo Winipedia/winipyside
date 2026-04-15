@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-from pyrig.core.modules.module import make_obj_importpath
 from PySide6.QtCore import QUrl
 from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QVBoxLayout
@@ -37,10 +36,8 @@ class TestMediaPlayer:
         )
 
         # Mock QWidget and QVBoxLayout to avoid Qt issues
-        mock_qwidget = mocker.patch(make_obj_importpath(media_player) + ".QWidget")
-        mock_qvboxlayout = mocker.patch(
-            make_obj_importpath(media_player) + ".QVBoxLayout"
-        )
+        mock_qwidget = mocker.patch(media_player.__name__ + ".QWidget")
+        mock_qvboxlayout = mocker.patch(media_player.__name__ + ".QVBoxLayout")
 
         player = MediaPlayer.__new__(MediaPlayer)
         player.parent_layout = mocker.MagicMock()
@@ -55,11 +52,9 @@ class TestMediaPlayer:
     def test_make_video_widget(self, mocker: MockFixture) -> None:
         """Test method for make_video_widget."""
         mock_clickable_widget = mocker.patch(
-            make_obj_importpath(media_player) + ".ClickableVideoWidget"
+            media_player.__name__ + ".ClickableVideoWidget"
         )
-        mock_audio_output = mocker.patch(
-            make_obj_importpath(media_player) + ".QAudioOutput"
-        )
+        mock_audio_output = mocker.patch(media_player.__name__ + ".QAudioOutput")
 
         player = MediaPlayer.__new__(MediaPlayer)
         player.media_player_layout = mocker.MagicMock()
@@ -129,10 +124,8 @@ class TestMediaPlayer:
         player.media_player_layout = mocker.MagicMock()
 
         # Mock Qt widget classes to avoid creating real widgets
-        mock_qwidget = mocker.patch(make_obj_importpath(media_player) + ".QWidget")
-        mock_qhboxlayout = mocker.patch(
-            make_obj_importpath(media_player) + ".QHBoxLayout"
-        )
+        mock_qwidget = mocker.patch(media_player.__name__ + ".QWidget")
+        mock_qhboxlayout = mocker.patch(media_player.__name__ + ".QHBoxLayout")
 
         mock_add_speed = mocker.patch.object(player, "add_speed_control")
         mock_add_volume = mocker.patch.object(player, "add_volume_control")
@@ -173,10 +166,8 @@ class TestMediaPlayer:
         player.media_player_layout = mocker.MagicMock()
 
         # Mock Qt widget classes to avoid creating real widgets
-        mock_qwidget = mocker.patch(make_obj_importpath(media_player) + ".QWidget")
-        mock_qhboxlayout = mocker.patch(
-            make_obj_importpath(media_player) + ".QHBoxLayout"
-        )
+        mock_qwidget = mocker.patch(media_player.__name__ + ".QWidget")
+        mock_qhboxlayout = mocker.patch(media_player.__name__ + ".QHBoxLayout")
 
         mock_add_progress = mocker.patch.object(player, "add_progress_control")
 
@@ -195,10 +186,8 @@ class TestMediaPlayer:
         """Test method for add_playback_control."""
         player = MediaPlayer.__new__(MediaPlayer)
         player.center_controls_layout = mocker.MagicMock()
-        mock_get_icon = mocker.patch(
-            make_obj_importpath(media_player) + ".BaseUI.get_svg_icon"
-        )
-        mock_button = mocker.patch(make_obj_importpath(media_player) + ".QPushButton")
+        mock_get_icon = mocker.patch(media_player.__name__ + ".BaseUI.get_svg_icon")
+        mock_button = mocker.patch(media_player.__name__ + ".QPushButton")
 
         player.add_playback_control()
 
@@ -237,8 +226,8 @@ class TestMediaPlayer:
         """Test method for add_speed_control."""
         player = MediaPlayer.__new__(MediaPlayer)
         player.left_controls_layout = mocker.MagicMock()
-        mock_button = mocker.patch(make_obj_importpath(media_player) + ".QPushButton")
-        mock_menu = mocker.patch(make_obj_importpath(media_player) + ".QMenu")
+        mock_button = mocker.patch(media_player.__name__ + ".QPushButton")
+        mock_menu = mocker.patch(media_player.__name__ + ".QMenu")
 
         player.add_speed_control()
 
@@ -265,7 +254,7 @@ class TestMediaPlayer:
         """Test method for add_volume_control."""
         player = MediaPlayer.__new__(MediaPlayer)
         player.left_controls_layout = mocker.MagicMock()
-        mock_slider = mocker.patch(make_obj_importpath(media_player) + ".QSlider")
+        mock_slider = mocker.patch(media_player.__name__ + ".QSlider")
 
         player.add_volume_control()
 
@@ -289,10 +278,8 @@ class TestMediaPlayer:
         player.right_controls_layout = mocker.MagicMock()
         player.parent_layout = mocker.MagicMock()
         player.media_player_widget = mocker.MagicMock()
-        mock_get_icon = mocker.patch(
-            make_obj_importpath(media_player) + ".BaseUI.get_svg_icon"
-        )
-        mock_button = mocker.patch(make_obj_importpath(media_player) + ".QPushButton")
+        mock_get_icon = mocker.patch(media_player.__name__ + ".BaseUI.get_svg_icon")
+        mock_button = mocker.patch(media_player.__name__ + ".QPushButton")
 
         player.add_fullscreen_control()
 
@@ -335,7 +322,7 @@ class TestMediaPlayer:
         """Test method for add_progress_control."""
         player = MediaPlayer.__new__(MediaPlayer)
         player.media_controls_layout_below = mocker.MagicMock()
-        mock_slider = mocker.patch(make_obj_importpath(media_player) + ".QSlider")
+        mock_slider = mocker.patch(media_player.__name__ + ".QSlider")
         mock_position_changed = mocker.patch.object(player, "positionChanged")
         mock_duration_changed = mocker.patch.object(player, "durationChanged")
 
@@ -382,7 +369,7 @@ class TestMediaPlayer:
         player = MediaPlayer.__new__(MediaPlayer)
         player.last_slider_moved_update = 0
         player.slider_moved_update_interval = 0.1
-        mock_time = mocker.patch(make_obj_importpath(media_player) + ".time")
+        mock_time = mocker.patch(media_player.__name__ + ".time")
         mock_set_position = mocker.patch.object(player, "setPosition")
 
         # Test when enough time has passed
@@ -414,8 +401,8 @@ class TestMediaPlayer:
         player.io_device = None  # Initialize the attribute that __init__ would set
         mock_stop_and_close = mocker.patch.object(player, "stop_and_close_io_device")
         mock_media_status_changed = mocker.patch.object(player, "mediaStatusChanged")
-        mock_timer = mocker.patch(make_obj_importpath(media_player) + ".QTimer")
-        mock_partial = mocker.patch(make_obj_importpath(media_player) + ".partial")
+        mock_timer = mocker.patch(media_player.__name__ + ".QTimer")
+        mock_partial = mocker.patch(media_player.__name__ + ".partial")
 
         io_device = mocker.MagicMock()
         source_url = QUrl("file:///test.mp4")
@@ -491,8 +478,8 @@ class TestMediaPlayer:
         """Test method for play_file."""
         player = MediaPlayer.__new__(MediaPlayer)
         mock_play_video = mocker.patch.object(player, "play_video")
-        mock_pyq_file = mocker.patch(make_obj_importpath(media_player) + ".PyQFile")
-        mock_qurl = mocker.patch(make_obj_importpath(media_player) + ".QUrl")
+        mock_pyq_file = mocker.patch(media_player.__name__ + ".PyQFile")
+        mock_qurl = mocker.patch(media_player.__name__ + ".QUrl")
 
         test_path = Path("/test/video.mp4")
         position = 500
@@ -507,10 +494,8 @@ class TestMediaPlayer:
         """Test method for play_encrypted_file."""
         player = MediaPlayer.__new__(MediaPlayer)
         mock_play_video = mocker.patch.object(player, "play_video")
-        mock_encrypted_file = mocker.patch(
-            make_obj_importpath(media_player) + ".EncryptedPyQFile"
-        )
-        mock_qurl = mocker.patch(make_obj_importpath(media_player) + ".QUrl")
+        mock_encrypted_file = mocker.patch(media_player.__name__ + ".EncryptedPyQFile")
+        mock_qurl = mocker.patch(media_player.__name__ + ".QUrl")
 
         test_path = Path("/test/encrypted.mp4")
         aes_gcm = mocker.MagicMock()

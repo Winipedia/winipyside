@@ -26,6 +26,7 @@ name = "Winipedia"
 
 [[project.maintainers]]
 name = "Winipedia"
+
 [project.scripts]
 winipyside = "pyrig.rig.cli.cli:main"
 
@@ -66,7 +67,6 @@ build-backend = "uv_build"
 
 [tool.ruff]
 exclude = [
-    ".*",
     "**/migrations/*.py",
 ]
 
@@ -84,16 +84,13 @@ fixable = [
     "ALL",
 ]
 
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = [
-    "S101",
-]
 "**/tests/**/*.py" = [
     "S101",
 ]
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
 
 [tool.mypy]
 strict = true
@@ -109,9 +106,6 @@ addopts = "--cov=winipyside --cov-report=term-missing --cov-fail-under=90"
 
 [tool.ty.terminal]
 error-on-warning = true
-
-[tool.rumdl]
-respect_gitignore = true
 
 [tool.bandit.assert_used]
 skips = [

@@ -2,7 +2,6 @@
 
 from typing import final
 
-from pyrig.core.modules.module import make_obj_importpath
 from pytest_mock import MockFixture
 
 from winipyside.core.ui.pages.base.base import Base as BasePage
@@ -104,9 +103,7 @@ class TestBase:
         mocker.patch("PySide6.QtWidgets.QMainWindow.__init__")
         mock_set_window_title = mocker.patch.object(TestWindow, "setWindowTitle")
         mock_set_central_widget = mocker.patch.object(TestWindow, "setCentralWidget")
-        mock_qstacked_widget = mocker.patch(
-            make_obj_importpath(windows_base) + ".QStackedWidget"
-        )
+        mock_qstacked_widget = mocker.patch(windows_base.__name__ + ".QStackedWidget")
         mock_make_pages = mocker.patch.object(TestWindow, "make_pages")
         mock_set_start_page = mocker.patch.object(TestWindow, "set_start_page")
         mock_get_display_name = mocker.patch.object(
