@@ -10,8 +10,8 @@ from typing import TYPE_CHECKING, Any, Self, cast
 
 from pyrig.core.introspection.classes import (
     discard_parent_classes,
-    discover_all_subclasses,
 )
+from pyrig.core.introspection.packages import discover_all_subclasses_across_package
 from pyrig.core.resources import resource_path
 from pyrig.core.strings import split_on_uppercase
 from PySide6.QtCore import QObject
@@ -135,7 +135,7 @@ class Base(metaclass=QABCLoggingMeta):
             package = sys.modules[__name__]
 
         children = discard_parent_classes(
-            discover_all_subclasses(cls, load_package_before=package)
+            discover_all_subclasses_across_package(cls, package=package)
         )
         return sorted(children, key=lambda cls: cls.__name__)
 
