@@ -17,57 +17,42 @@ env:
   PYTHONDONTWRITEBYTECODE: 1
   UV_NO_SYNC: 1
 jobs:
-  release:
+  distributions:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - name: Checkout Repository
-      id: checkout_repository
+      id: checkout-repository
       uses: actions/checkout@main
       with:
         token: ${{ secrets.REPO_TOKEN }}
     - name: Setup Version Control
-      id: setup_version_control
+      id: setup-version-control
       run: git config --global user.email "github-actions[bot]@users.noreply.github.com"
         && git config --global user.name "github-actions[bot]"
     - name: Setup Package Manager
-      id: setup_package_manager
+      id: setup-package-manager
       uses: astral-sh/setup-uv@main
       with:
         python-version: '3.13'
-    - name: Patch Version
-      id: patch_version
-      run: uv version --bump patch
-    - name: Add Version Bump To Version Control
-      id: add_version_bump_to_version_control
-      run: git add pyproject.toml uv.lock
-    - name: Update Dependencies
-      id: update_dependencies
-      run: uv lock --upgrade
     - name: Install Dependencies
-      id: install_dependencies
+      id: install-dependencies
       run: uv sync
-    - name: Add Dependency Updates To Version Control
-      id: add_dependency_updates_to_version_control
-      run: git add pyproject.toml uv.lock
     - name: Install Pyside System Dependencies
-      id: install_pyside_system_dependencies
+      id: install-pyside-system-dependencies
       run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
       if: runner.os == 'Linux'
-    - name: Commit Added Changes
-      id: commit_added_changes
-      run: 'git commit -m "[skip ci] CI/CD: Committing possible staged changes"'
-    - name: Push Commits
-      id: push_commits
-      run: git push
-    - name: Create And Push Tag
-      id: create_and_push_tag
-      run: git tag v$(uv version --short) && git push origin v$(uv version --short)
+    - name: Create Tag
+      id: create-tag
+      run: git tag v$(uv version --short)
+    - name: Push Tag
+      id: push-tag
+      run: git push origin v$(uv version --short)
     - name: Extract Version
-      id: extract_version
+      id: extract-version
       run: echo "version=v$(uv version --short)" >> $GITHUB_OUTPUT
     - name: Download Artifacts From Workflow Run
-      id: download_artifacts_from_workflow_run
+      id: download-artifacts-from-workflow-run
       uses: actions/download-artifact@main
       with:
         path: dist
@@ -75,16 +60,16 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         merge-multiple: 'true'
     - name: Build Changelog
-      id: build_changelog
+      id: build-changelog
       uses: mikepenz/release-changelog-builder-action@develop
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     - name: Create Release
-      id: create_release
+      id: create-release
       uses: ncipollo/release-action@main
       with:
-        tag: ${{ steps.extract_version.outputs.version }}
-        name: ${{ github.event.repository.name }} ${{ steps.extract_version.outputs.version
+        tag: ${{ steps.extract-version.outputs.version }}
+        name: ${{ github.event.repository.name }} ${{ steps.extract-version.outputs.version
           }}
-        body: ${{ steps.build_changelog.outputs.changelog }}
+        body: ${{ steps.build-changelog.outputs.changelog }}
         artifacts: dist/*
