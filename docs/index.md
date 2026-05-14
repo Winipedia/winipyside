@@ -23,7 +23,7 @@
 [![License](https://img.shields.io/github/license/Winipedia/winipyside)](https://github.com/Winipedia/winipyside/blob/main/LICENSE)
 <!-- testing -->
 [![ProjectTester](https://img.shields.io/badge/tested%20with-pytest-46a2f1.svg?logo=pytest)](https://pytest.org)
-[![ProjectCoverageTester](https://codecov.io/gh/Winipedia/winipyside/branch/main/graph/badge.svg)](https://codecov.io/gh/Winipedia/winipyside)
+[![CoverageTester](https://codecov.io/gh/Winipedia/winipyside/branch/main/graph/badge.svg)](https://codecov.io/gh/Winipedia/winipyside)
 <!-- ci/cd -->
 [![CI](https://img.shields.io/github/actions/workflow/status/Winipedia/winipyside/health_check.yml?label=CI&logo=github)](https://github.com/Winipedia/winipyside/actions/workflows/health_check.yml)
 [![CD](https://img.shields.io/github/actions/workflow/status/Winipedia/winipyside/release.yml?label=CD&logo=github)](https://github.com/Winipedia/winipyside/actions/workflows/release.yml)
