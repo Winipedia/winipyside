@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "2.2.2"
+version = "2.2.3"
 description = "A utilities package for PySide6"
 license = "MIT"
 readme = "README.md"
