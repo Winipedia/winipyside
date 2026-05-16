@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "2.2.3"
+version = "2.2.4"
 description = "A utilities package for PySide6"
 license = "MIT"
 readme = "README.md"
@@ -102,7 +102,7 @@ files = "."
 testpaths = [
     "tests",
 ]
-addopts = "--cov=winipyside --cov-report=term-missing --cov-fail-under=90"
+addopts = "--cov=winipyside --cov-branch --cov-report=term-missing --cov-fail-under=90"
 
 [tool.ty.terminal]
 error-on-warning = true
