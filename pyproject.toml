@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "2.2.5"
+version = "2.2.6"
 description = "A utilities package for PySide6"
 license = "MIT"
 readme = "README.md"
@@ -28,7 +28,7 @@ name = "Winipedia"
 name = "Winipedia"
 
 [project.scripts]
-winipyside = "pyrig.rig.cli.cli:main"
+winipyside = "pyrig.rig.cli.main:main"
 
 [project.urls]
 Homepage = "https://github.com/Winipedia/winipyside"
