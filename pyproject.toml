@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "2.2.8"
+version = "2.3.0"
 description = "A utilities package for PySide6"
 license = "MIT"
 readme = "README.md"
@@ -48,6 +48,7 @@ dev = [
     "prek>=0.3.2",
     "pygithub>=2.8.1",
     "pyrig-dev",
+    "pyrig-pypi>=1.0.1",
     "pytest-cov>=7.0.0",
     "pytest-mock>=3.15.1",
     "pytest-qt>=4.5.0",
