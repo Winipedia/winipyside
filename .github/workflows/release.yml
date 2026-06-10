@@ -26,22 +26,11 @@ jobs:
       uses: actions/checkout@main
       with:
         token: ${{ secrets.REPO_TOKEN }}
-    - name: Setup Version Control
-      id: setup-version-control
-      run: git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        && git config --global user.name "github-actions[bot]"
     - name: Setup Package Manager
       id: setup-package-manager
       uses: astral-sh/setup-uv@main
       with:
         python-version: '3.13'
-    - name: Install Dependencies
-      id: install-dependencies
-      run: uv sync
-    - name: Install Pyside System Dependencies
-      id: install-pyside-system-dependencies
-      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
-      if: runner.os == 'Linux'
     - name: Create Tag
       id: create-tag
       run: git tag v$(uv version --short)
