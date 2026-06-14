@@ -8,9 +8,6 @@ from typing import Any
 from pyrig.rig.configs.base.workflow import (
     WorkflowConfigFile as PyrigWorkflowConfigFile,
 )
-from pyrig.rig.configs.remote_version_control.workflows.build import (
-    BuildWorkflowConfigFile as PyrigBuildWorkflowConfigFile,
-)
 from pyrig.rig.configs.remote_version_control.workflows.health_check import (
     HealthCheckWorkflowConfigFile as PyrigHealthCheckWorkflowConfigFile,
 )
@@ -80,17 +77,6 @@ class HealthCheckWorkflowConfigFile(
     """Health check workflow.
 
     Extends winiutils health check workflow to add additional steps.
-    This is necessary to make pyside6 work on github actions which is a headless linux
-    environment.
-    """
-
-
-class BuildWorkflowConfigFile(
-    PySideWorkflowConfigFileMixin, PyrigBuildWorkflowConfigFile
-):
-    """Build workflow.
-
-    Extends winiutils build workflow to add additional steps.
     This is necessary to make pyside6 work on github actions which is a headless linux
     environment.
     """
