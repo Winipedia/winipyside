@@ -23,26 +23,6 @@ class PySideWorkflowConfigFileMixin(PyrigWorkflowConfigFile):
     GitHub Actions headless Linux environments.
     """
 
-    def step_run_tests(
-        self,
-        *,
-        step: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
-        """Get the pre-commit step.
-
-        We need to add some env vars
-        so QtWebEngine doesn't try to use GPU acceleration etc.
-        """
-        step = super().step_run_tests(step=step)
-        step.setdefault("env", {}).update(
-            {
-                "QT_QPA_PLATFORM": "offscreen",
-                "QTWEBENGINE_DISABLE_SANDBOX": "1",
-                "QTWEBENGINE_CHROMIUM_FLAGS": "--no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage",  # noqa: E501
-            }
-        )
-        return step
-
     def steps_core_installed_setup(
         self,
         *args: Any,
@@ -80,6 +60,26 @@ class HealthCheckWorkflowConfigFile(
     This is necessary to make pyside6 work on github actions which is a headless linux
     environment.
     """
+
+    def step_run_tests(
+        self,
+        *,
+        step: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Get the pre-commit step.
+
+        We need to add some env vars
+        so QtWebEngine doesn't try to use GPU acceleration etc.
+        """
+        step = super().step_run_tests(step=step)
+        step.setdefault("env", {}).update(
+            {
+                "QT_QPA_PLATFORM": "offscreen",
+                "QTWEBENGINE_DISABLE_SANDBOX": "1",
+                "QTWEBENGINE_CHROMIUM_FLAGS": "--no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage",  # noqa: E501
+            }
+        )
+        return step
 
 
 class ReleaseWorkflowConfigFile(
