@@ -23,15 +23,15 @@ class Browser(BasePage):
         Creates and configures the BrowserWidget for web browsing and adds it to
         the page's layout. The browser provides full navigation capabilities.
         """
-        self.add_brwoser()
+        self.add_browser()
 
-    def add_brwoser(self) -> None:
+    def add_browser(self) -> None:
         """Create and add a web browser widget to the page.
 
         Creates a BrowserWidget instance and adds it to the vertical layout,
         making the embedded browser available for web navigation. The browser
         automatically handles cookies and provides standard navigation controls.
 
-        Note: Method name has a typo (brwoser) but kept for backward compatibility.
+        Note: Method name has a typo (browser) but kept for backward compatibility.
         """
         self.browser = BrowserWidget(self.v_layout)

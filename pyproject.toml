@@ -1,12 +1,14 @@
 [project]
 name = "winipyside"
-version = "2.5.4"
+version = "2.6.0"
 description = "A utilities package for PySide6"
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 dependencies = [
+    "cryptography>=49.0.0",
     "pyqt-toast-notification",
+    "pyrig>=15.4.0",
     "pyside6",
     "winiutils",
 ]
@@ -45,6 +47,7 @@ Changelog = "https://github.com/Winipedia/winipyside/releases"
 [dependency-groups]
 dev = [
     "bandit>=1.9.3",
+    "deptry>=0.25.1",
     "mkdocs-material>=9.7.1",
     "mkdocs-mermaid2-plugin>=1.2.3",
     "mkdocs>=1.6.1",
@@ -63,6 +66,7 @@ dev = [
     "ty>=0.0.16",
     "types-defusedxml>=0.7.0.20250822",
     "types-tqdm>=4.67.3.20260205",
+    "typos>=1.47.2",
 ]
 
 [build-system]
@@ -117,4 +121,12 @@ error-on-warning = true
 skips = [
     "*/tests/*.py",
     "*/test_*/*.py",
+]
+
+[tool.deptry]
+root = "src"
+
+[tool.deptry.per_rule_ignores]
+DEP002 = [
+    "pyrig",
 ]

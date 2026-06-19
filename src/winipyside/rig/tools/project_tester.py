@@ -1,6 +1,6 @@
 """Override pyrig's ProjectTester to add custom dev dependencies."""
 
-from pyrig.rig.tools.project_tester import ProjectTester as BaseProjectTester
+from pyrig.rig.tools.testers.project import ProjectTester as BaseProjectTester
 
 
 class ProjectTester(BaseProjectTester):

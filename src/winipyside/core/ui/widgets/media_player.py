@@ -142,13 +142,13 @@ class MediaPlayer(QMediaPlayer):
         self.media_controls_widget_above = QWidget()
         self.media_controls_layout_above = QHBoxLayout(self.media_controls_widget_above)
         self.media_player_layout.addWidget(self.media_controls_widget_above)
-        # left contorls
+        # left controls
         self.left_controls_widget = QWidget()
         self.left_controls_layout = QHBoxLayout(self.left_controls_widget)
         self.media_controls_layout_above.addWidget(
             self.left_controls_widget, alignment=Qt.AlignmentFlag.AlignLeft
         )
-        # center contorls
+        # center controls
         self.center_controls_widget = QWidget()
         self.center_controls_layout = QHBoxLayout(self.center_controls_widget)
         self.media_controls_layout_above.addWidget(
