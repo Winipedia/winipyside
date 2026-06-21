@@ -38,19 +38,14 @@ jobs:
       run: uv sync
     - name: Install Pyside System Dependencies
       id: install-pyside-system-dependencies
-      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
       if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
     - name: Run Pre Commit Hooks
       id: run-pre-commit-hooks
       run: uv run prek run --all-files --hook-stage pre-commit
     - name: Run Dependency Audit
       id: run-dependency-audit
       run: uv run pip-audit
-    - name: Protect Repository
-      id: protect-repository
-      run: uv run pyrig-dev protect-repo
-      env:
-        REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
   matrix-health-checks:
     strategy:
       matrix:
@@ -80,8 +75,8 @@ jobs:
       run: uv sync
     - name: Install Pyside System Dependencies
       id: install-pyside-system-dependencies
-      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
       if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
     - name: Run Tests
       id: run-tests
       run: uv run pytest
