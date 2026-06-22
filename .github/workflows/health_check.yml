@@ -40,6 +40,9 @@ jobs:
       id: install-pyside-system-dependencies
       if: runner.os == 'Linux'
       run: sudo apt-get update && sudo apt-get install -y libegl1 libpulse0
+    - name: Create Version Control Ignored Files
+      id: create-version-control-ignored-files
+      run: uv run pyrig mk local
     - name: Run Pre Commit Hooks
       id: run-pre-commit-hooks
       run: uv run prek run --all-files --hook-stage pre-commit
