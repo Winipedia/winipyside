@@ -5,13 +5,13 @@ All subclasses of ConfigFile in the configs package are automatically called.
 
 from typing import Any
 
-from pyrig_dev.rig.configs.base.workflow import (  # deptry: ignore[DEP004]
+from pyrig.rig.configs.base.workflow import (  # deptry: ignore[DEP004]
     WorkflowConfigFile as PyrigWorkflowConfigFile,
 )
-from pyrig_dev.rig.configs.remote_version_control.workflows.health_check import (  # deptry: ignore[DEP004]  # noqa: E501
+from pyrig.rig.configs.version_control.remote.workflows.health_check import (  # deptry: ignore[DEP004]  # noqa: E501
     HealthCheckWorkflowConfigFile as PyrigHealthCheckWorkflowConfigFile,
 )
-from pyrig_dev.rig.configs.remote_version_control.workflows.release import (  # deptry: ignore[DEP004]  # noqa: E501
+from pyrig.rig.configs.version_control.remote.workflows.release import (  # deptry: ignore[DEP004]  # noqa: E501
     ReleaseWorkflowConfigFile as PyrigReleaseWorkflowConfigFile,
 )
 
