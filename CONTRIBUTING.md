@@ -15,7 +15,7 @@ Before opening an issue, please search existing ones to avoid duplicates.
 ## Pull Requests
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/your-feature`)
+2. Create a feature branch (`git switch -c feature/your-feature`)
 3. Commit your changes with clear messages
 4. Push to your fork
 5. Open a pull request
