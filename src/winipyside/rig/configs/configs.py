@@ -45,7 +45,7 @@ class PySideWorkflowConfigFileMixin(PyrigWorkflowConfigFile):
     def step_install_pyside_system_dependencies(self) -> dict[str, Any]:
         """Get the step to install PySide6 dependencies."""
         return self.step(
-            step_func=self.step_install_pyside_system_dependencies,
+            self.step_install_pyside_system_dependencies,
             run="sudo apt-get update && sudo apt-get install -y libegl1 libpulse0",
             if_condition="runner.os == 'Linux'",
         )
