@@ -13,7 +13,9 @@ from pyrig.core.strings import split_on_uppercase
 from pyrig_runtime.core.introspection.classes import (
     discard_parent_classes,
 )
-from pyrig_runtime.core.introspection.packages import discover_subclasses_across_package
+from pyrig_runtime.core.introspection.packages import (
+    discover_subclasses_across_module,
+)
 from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QStackedWidget
@@ -135,7 +137,7 @@ class Base(metaclass=QABCLoggingMeta):
             package = sys.modules[__name__]
 
         children = discard_parent_classes(
-            discover_subclasses_across_package(cls, package=package)
+            discover_subclasses_across_module(cls, package)
         )
         return sorted(children, key=lambda cls: cls.__name__)
 
