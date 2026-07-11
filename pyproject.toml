@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "4.0.16"
+version = "4.1.0"
 description = "A utilities package for PySide6"
 license = "MIT"
 readme = "README.md"
@@ -75,47 +75,40 @@ requires = [
 ]
 build-backend = "uv_build"
 
-[tool.ruff]
-exclude = [
-    "**/migrations/*.py",
-]
-
 [tool.ruff.lint]
 select = [
     "ALL",
 ]
 ignore = [
-    "D203",
-    "D213",
     "COM812",
     "ANN401",
 ]
-fixable = [
-    "ALL",
-]
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
     "S101",
 ]
 
-[tool.mypy]
-strict = true
-warn_unreachable = true
-show_error_codes = true
-files = "."
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
-[tool.pytest.ini_options]
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest]
 testpaths = [
     "tests",
 ]
-addopts = "--cov=winipyside --cov-branch --cov-report=term-missing --cov-fail-under=90"
-
-[tool.ty.terminal]
-error-on-warning = true
+addopts = [
+    "--cov=winipyside",
+    "--cov-branch",
+    "--cov-fail-under=90",
+    "--cov-report=term-missing:skip-covered",
+]
+filterwarnings = [
+    "error",
+]
+strict = true
 
 [tool.deptry]
 root = "src"

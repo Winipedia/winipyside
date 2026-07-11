@@ -1,4 +1,4 @@
-# winipyside Documentation
+# Home
 
 <!-- ci/cd -->
 [![CI](https://img.shields.io/github/actions/workflow/status/Winipedia/winipyside/health_check.yml?label=CI&logo=github)](https://github.com/Winipedia/winipyside/actions/workflows/health_check.yml)
@@ -77,8 +77,8 @@ a PySide6 utilities package for building modern Qt desktop applications.
 
 ### Getting Started
 
-1. [Installation](../README.md#installation)
-2. [Quick Start](../README.md#quick-start)
+1. [Installation](https://github.com/Winipedia/winipyside/blob/main/README.md#installation)
+2. [Quick Start](https://github.com/Winipedia/winipyside/blob/main/README.md#quick-start)
 3. [Basic Application Example](examples.md#basic-application)
 
 ### Common Use Cases
@@ -140,7 +140,7 @@ Transparent encryption/decryption using AES-GCM:
 
 ## Contributing
 
-See the [Contributing Guide](../README.md#contributing) for information on:
+See the [Contributing Guide](https://github.com/Winipedia/winipyside/blob/main/README.md#contributing) for information on:
 
 - Setting up the development environment
 - Running tests
