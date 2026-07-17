@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "4.1.6"
+version = "4.2.0"
 description = "A utilities package for PySide6"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
