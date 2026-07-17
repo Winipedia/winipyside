@@ -47,20 +47,18 @@ class PySideWorkflowConfigFileMixin(PyrigWorkflowConfigFile):
         """Get the step to install PySide6 dependencies."""
         return self.step(
             self.step_install_pyside_system_dependencies,
-            run=" \\\n".join(
-                Args(
-                    "sudo",
-                    "apt-get",
-                    "update",
-                    "&&",
-                    "sudo",
-                    "apt-get",
-                    "install",
-                    "-y",
-                    "libegl1",
-                    "libpulse0",
-                ),
-            ),
+            run=Args(
+                "sudo",
+                "apt-get",
+                "update",
+                "&&",
+                "sudo",
+                "apt-get",
+                "install",
+                "-y",
+                "libegl1",
+                "libpulse0",
+            ).multiline(),
             if_condition="runner.os == 'Linux'",
         )
 
@@ -91,14 +89,12 @@ class HealthCheckWorkflowConfigFile(
             {
                 "QT_QPA_PLATFORM": "offscreen",
                 "QTWEBENGINE_DISABLE_SANDBOX": "1",
-                "QTWEBENGINE_CHROMIUM_FLAGS": " \\\n".join(
-                    Args(
-                        "--no-sandbox",
-                        "--disable-gpu",
-                        "--disable-software-rasterizer",
-                        "--disable-dev-shm-usage",
-                    ),
-                ),
+                "QTWEBENGINE_CHROMIUM_FLAGS": Args(
+                    "--no-sandbox",
+                    "--disable-gpu",
+                    "--disable-software-rasterizer",
+                    "--disable-dev-shm-usage",
+                ).multiline(),
             },
         )
         return step
