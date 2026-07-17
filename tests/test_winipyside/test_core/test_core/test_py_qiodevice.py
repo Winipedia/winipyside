@@ -298,7 +298,9 @@ class TestEncryptedPyQFile:
         mocker.patch.object(encrypted_file, "seek")
         mocker.patch.object(encrypted_file, "get_decrypted_pos", return_value=0)
         mocker.patch.object(
-            encrypted_file, "decrypt_data", return_value=b"decrypted test data"
+            encrypted_file,
+            "decrypt_data",
+            return_value=b"decrypted test data",
         )
 
         # Mock the parent readData method
@@ -323,7 +325,9 @@ class TestEncryptedPyQFile:
         mocker.patch.object(encrypted_file, "encrypt_data", return_value=encrypted_data)
 
         mock_parent_write = mocker.patch.object(
-            PyQFile, "writeData", return_value=len(encrypted_data)
+            PyQFile,
+            "writeData",
+            return_value=len(encrypted_data),
         )
         result = encrypted_file.writeData(test_data, len(test_data))
 
@@ -505,7 +509,7 @@ class TestEncryptedPyQFile:
         # Test with encrypted data
         encrypted_data = b"b" * 200000
         encrypted_chunks = list(
-            EncryptedPyQFile.chunk_generator(encrypted_data, is_encrypted=True)
+            EncryptedPyQFile.chunk_generator(encrypted_data, is_encrypted=True),
         )
 
         expected_count = (
@@ -550,10 +554,14 @@ class TestEncryptedPyQFile:
         encrypted_chunks = [b"enc_chunk1", b"enc_chunk2"]
 
         mock_generator = mocker.patch.object(
-            EncryptedPyQFile, "chunk_generator", return_value=mock_chunks
+            EncryptedPyQFile,
+            "chunk_generator",
+            return_value=mock_chunks,
         )
         mock_encrypt_chunk = mocker.patch.object(
-            EncryptedPyQFile, "encrypt_chunk_static", side_effect=encrypted_chunks
+            EncryptedPyQFile,
+            "encrypt_chunk_static",
+            side_effect=encrypted_chunks,
         )
         result = EncryptedPyQFile.encrypt_data_static(test_data, aes_gcm)
 
@@ -589,7 +597,9 @@ class TestEncryptedPyQFile:
         assert result == expected, expected_msg
         mock_urandom.assert_called_once_with(nonce_size)
         mock_aes_gcm.encrypt.assert_called_once_with(
-            b"test_nonce12", test_data, b"EncryptedPyQFile"
+            b"test_nonce12",
+            test_data,
+            b"EncryptedPyQFile",
         )
 
     def test_decrypt_data(self, mocker: MockerFixture) -> None:
@@ -629,10 +639,14 @@ class TestEncryptedPyQFile:
         expected_chunk_count = len(mock_chunks)
 
         mock_generator = mocker.patch.object(
-            EncryptedPyQFile, "chunk_generator", return_value=mock_chunks
+            EncryptedPyQFile,
+            "chunk_generator",
+            return_value=mock_chunks,
         )
         mock_decrypt_chunk = mocker.patch.object(
-            EncryptedPyQFile, "decrypt_chunk_static", side_effect=decrypted_chunks
+            EncryptedPyQFile,
+            "decrypt_chunk_static",
+            side_effect=decrypted_chunks,
         )
         result = EncryptedPyQFile.decrypt_data_static(encrypted_data, aes_gcm)
 
@@ -664,5 +678,7 @@ class TestEncryptedPyQFile:
         )
         assert result == decrypted_content, expected_msg
         mock_aes_gcm.decrypt.assert_called_once_with(
-            nonce, cipher_and_tag, b"EncryptedPyQFile"
+            nonce,
+            cipher_and_tag,
+            b"EncryptedPyQFile",
         )

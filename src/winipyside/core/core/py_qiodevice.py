@@ -24,7 +24,7 @@ class PyQIODevice(QIODevice):
     processing layers (e.g., encryption/decryption in subclasses).
     """
 
-    def __init__(self, q_device: QIODevice, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, q_device: QIODevice, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         """Initialize the PyQIODevice wrapper.
 
         Args:
@@ -209,7 +209,7 @@ class PyQFile(PyQIODevice):
     operations throughout the application.
     """
 
-    def __init__(self, path: Path, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, path: Path, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         """Initialize the PyQFile with a file path.
 
         Args:
@@ -249,7 +249,7 @@ class EncryptedPyQFile(PyQFile):
     CHUNK_SIZE = CIPHER_SIZE + NONCE_SIZE + TAG_SIZE
     CHUNK_OVERHEAD = NONCE_SIZE + TAG_SIZE
 
-    def __init__(self, path: Path, aes_gcm: AESGCM, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, path: Path, aes_gcm: AESGCM, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         """Initialize the encrypted file wrapper.
 
         Args:
@@ -423,7 +423,10 @@ class EncryptedPyQFile(PyQFile):
 
     @classmethod
     def chunk_generator(
-        cls, data: bytes, *, is_encrypted: bool
+        cls,
+        data: bytes,
+        *,
+        is_encrypted: bool,
     ) -> Generator[bytes, None, None]:
         """Generate fixed-size chunks from data for streaming processing.
 
@@ -474,7 +477,8 @@ class EncryptedPyQFile(PyQFile):
         """
         decrypted_chunks = cls.chunk_generator(data, is_encrypted=False)
         encrypted_chunks = map(
-            partial(cls.encrypt_chunk_static, aes_gcm=aes_gcm), decrypted_chunks
+            partial(cls.encrypt_chunk_static, aes_gcm=aes_gcm),
+            decrypted_chunks,
         )
         return b"".join(encrypted_chunks)
 
@@ -536,7 +540,8 @@ class EncryptedPyQFile(PyQFile):
         """
         encrypted_chunks = cls.chunk_generator(data, is_encrypted=True)
         decrypted_chunks = map(
-            partial(cls.decrypt_chunk_static, aes_gcm=aes_gcm), encrypted_chunks
+            partial(cls.decrypt_chunk_static, aes_gcm=aes_gcm),
+            encrypted_chunks,
         )
         return b"".join(decrypted_chunks)
 

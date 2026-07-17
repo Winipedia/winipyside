@@ -52,7 +52,7 @@ class Base(metaclass=QABCLoggingMeta):
     base_setup() → pre_setup() → setup() → post_setup()
     """
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         """Initialize the UI component and execute all setup lifecycle hooks.
 
         Calls setup methods in a fixed order: base_setup(), pre_setup(), setup(),
@@ -137,7 +137,7 @@ class Base(metaclass=QABCLoggingMeta):
             package = sys.modules[__name__]
 
         children = discard_parent_classes(
-            discover_subclasses_across_module(cls, package)
+            discover_subclasses_across_module(cls, package),
         )
         return sorted(children, key=lambda cls: cls.__name__)
 

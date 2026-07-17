@@ -49,7 +49,7 @@ class Player(BasePage):
         play_func: Callable[..., Any],
         path: Path,
         position: int = 0,
-        **kwargs: Any,
+        **kwargs: Any,  # noqa: ANN401
     ) -> None:
         """Play a file using a provided playback function with page navigation.
 
@@ -81,11 +81,16 @@ class Player(BasePage):
             position: The position to start playback from in milliseconds (default 0).
         """
         self.play_file_from_func(
-            self.media_player.play_file, path=path, position=position
+            self.media_player.play_file,
+            path=path,
+            position=position,
         )
 
     def play_encrypted_file(
-        self, path: Path, aes_gcm: AESGCM, position: int = 0
+        self,
+        path: Path,
+        aes_gcm: AESGCM,
+        position: int = 0,
     ) -> None:
         """Play an AES-GCM encrypted video file with transparent decryption.
 

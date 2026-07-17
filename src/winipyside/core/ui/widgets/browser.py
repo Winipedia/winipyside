@@ -44,7 +44,7 @@ class Browser(QWebEngineView):
         go_button: QPushButton to navigate to the URL in the address bar.
     """
 
-    def __init__(self, parent_layout: QLayout, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, parent_layout: QLayout, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         """Initialize the browser widget and add it to the parent layout.
 
         Creates the browser UI (address bar, buttons), connects signals for navigation
@@ -188,7 +188,7 @@ class Browser(QWebEngineView):
         self.cookies: dict[str, list[QNetworkCookie]] = defaultdict(list)
         self.page().profile().cookieStore().cookieAdded.connect(self.on_cookie_added)
 
-    def on_cookie_added(self, cookie: Any) -> None:
+    def on_cookie_added(self, cookie: Any) -> None:  # noqa: ANN401
         """Handle new cookie added to the store and track it by domain.
 
         Called automatically when a cookie is set during web browsing. Stores the

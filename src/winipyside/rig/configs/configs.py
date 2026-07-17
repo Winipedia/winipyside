@@ -5,6 +5,7 @@ All subclasses of ConfigFile in the configs package are automatically called.
 
 from typing import Any
 
+from pyrig.core.subprocesses import Args
 from pyrig.rig.configs.base.workflow import (  # deptry: ignore[DEP004]
     WorkflowConfigFile as PyrigWorkflowConfigFile,
 )
@@ -25,8 +26,8 @@ class PySideWorkflowConfigFileMixin(PyrigWorkflowConfigFile):
 
     def steps_core_installed_setup(
         self,
-        *args: Any,
-        **kwargs: Any,
+        *args: Any,  # noqa: ANN401
+        **kwargs: Any,  # noqa: ANN401
     ) -> list[dict[str, Any]]:
         """Get the core installed setup steps.
 
@@ -46,13 +47,27 @@ class PySideWorkflowConfigFileMixin(PyrigWorkflowConfigFile):
         """Get the step to install PySide6 dependencies."""
         return self.step(
             self.step_install_pyside_system_dependencies,
-            run="sudo apt-get update && sudo apt-get install -y libegl1 libpulse0",
+            run=" \\\n".join(
+                Args(
+                    "sudo",
+                    "apt-get",
+                    "update",
+                    "&&",
+                    "sudo",
+                    "apt-get",
+                    "install",
+                    "-y",
+                    "libegl1",
+                    "libpulse0",
+                ),
+            ),
             if_condition="runner.os == 'Linux'",
         )
 
 
 class HealthCheckWorkflowConfigFile(
-    PySideWorkflowConfigFileMixin, PyrigHealthCheckWorkflowConfigFile
+    PySideWorkflowConfigFileMixin,
+    PyrigHealthCheckWorkflowConfigFile,
 ):
     """Health check workflow.
 
@@ -76,14 +91,22 @@ class HealthCheckWorkflowConfigFile(
             {
                 "QT_QPA_PLATFORM": "offscreen",
                 "QTWEBENGINE_DISABLE_SANDBOX": "1",
-                "QTWEBENGINE_CHROMIUM_FLAGS": "--no-sandbox --disable-gpu --disable-software-rasterizer --disable-dev-shm-usage",  # noqa: E501
-            }
+                "QTWEBENGINE_CHROMIUM_FLAGS": " \\\n".join(
+                    Args(
+                        "--no-sandbox",
+                        "--disable-gpu",
+                        "--disable-software-rasterizer",
+                        "--disable-dev-shm-usage",
+                    ),
+                ),
+            },
         )
         return step
 
 
 class ReleaseWorkflowConfigFile(
-    PySideWorkflowConfigFileMixin, PyrigReleaseWorkflowConfigFile
+    PySideWorkflowConfigFileMixin,
+    PyrigReleaseWorkflowConfigFile,
 ):
     """Release workflow.
 

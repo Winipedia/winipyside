@@ -98,7 +98,8 @@ class TestClickableVideoWidget:
 
         # Mock the parent mousePressEvent (QVideoWidget's mousePressEvent)
         mock_super = mocker.patch.object(
-            ClickableVideoWidget.__bases__[0], "mousePressEvent"
+            ClickableVideoWidget.__bases__[0],
+            "mousePressEvent",
         )
 
         # Create a left mouse button press event

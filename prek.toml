@@ -1,165 +1,501 @@
 default_install_hook_types = [
-    "post-checkout",
-    "post-merge",
-    "post-rewrite",
-    "pre-commit",
-    "pre-push",
+  "post-checkout",
+  "post-merge",
+  "post-rewrite",
+  "pre-commit",
+  "pre-push",
 ]
 
 [[repos]]
 repo = "local"
 
 [[repos.hooks]]
-id = "format-code"
-name = "format-code"
-entry = "uv run ruff format"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "lint-code"
-name = "lint-code"
-entry = "uv run ruff check --fix"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "lint-markdown"
-name = "lint-markdown"
-entry = "uv run rumdl check --fix"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "fix-spelling"
-name = "fix-spelling"
-entry = "uv run typos --write-changes"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "check-secrets"
-name = "check-secrets"
-entry = "uv run detect-secrets-hook"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "check-security"
-name = "check-security"
-entry = "uv run bandit -r src/winipyside"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "check-types"
-name = "check-types"
-entry = "uv run ty check"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "check-dependencies"
-name = "check-dependencies"
-entry = "uv run deptry"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "synchronize-project"
-name = "synchronize-project"
-entry = "uv run pyrig sync"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-commit",
-]
-
-[[repos.hooks]]
-id = "update-package-manager"
-name = "update-package-manager"
-entry = "uv self update"
-language = "system"
-always_run = true
-pass_filenames = false
-stages = [
-    "pre-push",
-    "post-checkout",
-    "post-merge",
-    "post-rewrite",
-]
-
-[[repos.hooks]]
 id = "update-dependencies"
-name = "update-dependencies"
-entry = "uv lock --upgrade"
+name = "update dependencies"
 language = "system"
+entry = "uv lock --upgrade"
+stages = [
+  "post-checkout",
+  "post-merge",
+  "post-rewrite",
+  "pre-push",
+]
+groups = [
+  "all",
+]
+priority = 0
 always_run = true
 pass_filenames = false
-stages = [
-    "pre-push",
-    "post-checkout",
-    "post-merge",
-    "post-rewrite",
-]
 
 [[repos.hooks]]
 id = "install-dependencies"
-name = "install-dependencies"
-entry = "uv sync"
+name = "install dependencies"
 language = "system"
+entry = "uv sync"
+stages = [
+  "post-checkout",
+  "post-merge",
+  "post-rewrite",
+  "pre-push",
+]
+groups = [
+  "all",
+]
+priority = 1
 always_run = true
 pass_filenames = false
-stages = [
-    "pre-push",
-    "post-checkout",
-    "post-merge",
-    "post-rewrite",
-]
 
 [[repos.hooks]]
 id = "audit-dependencies"
-name = "audit-dependencies"
-entry = "uv run pip-audit"
+name = "audit dependencies"
 language = "system"
+entry = "pip-audit"
+stages = [
+  "post-checkout",
+  "post-merge",
+  "post-rewrite",
+  "pre-push",
+]
+groups = [
+  "all",
+]
+priority = 10
 always_run = true
 pass_filenames = false
+
+[[repos.hooks]]
+id = "synchronize-project"
+name = "synchronize project"
+language = "system"
+entry = "pyrig sync"
 stages = [
-    "pre-push",
-    "post-checkout",
-    "post-merge",
-    "post-rewrite",
+  "pre-commit",
 ]
+groups = [
+  "all",
+]
+priority = 2
+always_run = true
+pass_filenames = false
+
+[[repos.hooks]]
+id = "fix-byte-order-marker"
+name = "fix byte order marker"
+language = "system"
+entry = "fix-byte-order-marker"
+types = [
+  "text",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 3
+
+[[repos.hooks]]
+id = "fix-spelling"
+name = "fix spelling"
+language = "system"
+entry = "typos"
+args = [
+  "--write-changes",
+]
+types = [
+  "text",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 4
+
+[[repos.hooks]]
+id = "fix-mixed-line-ending"
+name = "fix mixed line ending"
+language = "system"
+entry = "mixed-line-ending"
+args = [
+  "--fix=lf",
+]
+types = [
+  "text",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 5
+
+[[repos.hooks]]
+id = "fix-trailing-whitespace"
+name = "fix trailing whitespace"
+language = "system"
+entry = "trailing-whitespace-fixer"
+types = [
+  "text",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 6
+
+[[repos.hooks]]
+id = "fix-end-of-file"
+name = "fix end of file"
+language = "system"
+entry = "end-of-file-fixer"
+types = [
+  "text",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 7
+
+[[repos.hooks]]
+id = "format-json"
+name = "format json"
+language = "system"
+entry = "pretty-format-json"
+args = [
+  "--autofix",
+  "--no-ensure-ascii",
+  "--no-sort-keys",
+]
+types = [
+  "json",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 8
+
+[[repos.hooks]]
+id = "format-markdown"
+name = "format markdown"
+language = "system"
+entry = "rumdl fmt"
+types = [
+  "markdown",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 8
+
+[[repos.hooks]]
+id = "format-shell"
+name = "format shell"
+language = "system"
+entry = "shfmt"
+args = [
+  "--case-indent",
+  "--indent=2",
+  "--language-dialect=bash",
+  "--write",
+]
+types = [
+  "shell",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 8
+
+[[repos.hooks]]
+id = "format-toml"
+name = "format toml"
+language = "system"
+entry = "tombi format"
+types = [
+  "toml",
+]
+exclude = "^uv\\.lock$"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 8
+
+[[repos.hooks]]
+id = "lint-python"
+name = "lint python"
+language = "system"
+entry = "ruff check"
+args = [
+  "--fix",
+]
+types = [
+  "python",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 8
+
+[[repos.hooks]]
+id = "lint-yaml"
+name = "lint yaml"
+language = "system"
+entry = "ryl check"
+args = [
+  "--config-data=extends: default",
+  "--fix",
+]
+types = [
+  "yaml",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 8
+
+[[repos.hooks]]
+id = "format-python"
+name = "format python"
+language = "system"
+entry = "ruff format"
+types = [
+  "python",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 9
+
+[[repos.hooks]]
+id = "check-case-conflict"
+name = "check case conflict"
+language = "system"
+entry = "check-case-conflict"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "check-dependencies"
+name = "check dependencies"
+language = "system"
+entry = "deptry"
+types_or = [
+  "pyproject",
+  "python",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+pass_filenames = false
+
+[[repos.hooks]]
+id = "check-large-files"
+name = "check large files"
+language = "system"
+entry = "check-added-large-files"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "check-merge-conflict"
+name = "check merge conflict"
+language = "system"
+entry = "check-merge-conflict"
+types = [
+  "text",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "check-secrets"
+name = "check secrets"
+language = "system"
+entry = "detect-secrets-hook"
+types = [
+  "text",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "check-security"
+name = "check security"
+language = "system"
+entry = "bandit"
+args = [
+  "--exclude=tests",
+]
+types = [
+  "python",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "check-test-naming"
+name = "check test naming"
+language = "system"
+entry = "name-tests-test"
+args = [
+  "--pytest-test-first",
+]
+types = [
+  "python",
+]
+files = "^tests/"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "check-types"
+name = "check types"
+language = "system"
+entry = "ty check"
+types = [
+  "python",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+pass_filenames = false
+
+[[repos.hooks]]
+id = "lint-json"
+name = "lint json"
+language = "system"
+entry = "check-json"
+types = [
+  "json",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "lint-markdown"
+name = "lint markdown"
+language = "system"
+entry = "rumdl check"
+types = [
+  "markdown",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "lint-shell"
+name = "lint shell"
+language = "system"
+entry = "shellcheck"
+args = [
+  "--enable=all",
+  "--severity=style",
+  "--shell=bash",
+]
+types = [
+  "shell",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "lint-toml"
+name = "lint toml"
+language = "system"
+entry = "tombi lint"
+args = [
+  "--error-on-warnings",
+]
+types = [
+  "toml",
+]
+exclude = "^uv\\.lock$"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10

@@ -52,7 +52,7 @@ class MediaPlayer(QMediaPlayer):
         fullscreen_button: Fullscreen mode toggle button.
     """
 
-    def __init__(self, parent_layout: QLayout, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, parent_layout: QLayout, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         """Initialize the media player and create its UI.
 
         Creates the complete player widget with video display and control bars
@@ -97,7 +97,8 @@ class MediaPlayer(QMediaPlayer):
         self.video_widget = ClickableVideoWidget()
         self.video_widget.clicked.connect(self.on_video_clicked)
         self.video_widget.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
         )
         self.setVideoOutput(self.video_widget)
 
@@ -146,18 +147,21 @@ class MediaPlayer(QMediaPlayer):
         self.left_controls_widget = QWidget()
         self.left_controls_layout = QHBoxLayout(self.left_controls_widget)
         self.media_controls_layout_above.addWidget(
-            self.left_controls_widget, alignment=Qt.AlignmentFlag.AlignLeft
+            self.left_controls_widget,
+            alignment=Qt.AlignmentFlag.AlignLeft,
         )
         # center controls
         self.center_controls_widget = QWidget()
         self.center_controls_layout = QHBoxLayout(self.center_controls_widget)
         self.media_controls_layout_above.addWidget(
-            self.center_controls_widget, alignment=Qt.AlignmentFlag.AlignCenter
+            self.center_controls_widget,
+            alignment=Qt.AlignmentFlag.AlignCenter,
         )
         self.right_controls_widget = QWidget()
         self.right_controls_layout = QHBoxLayout(self.right_controls_widget)
         self.media_controls_layout_above.addWidget(
-            self.right_controls_widget, alignment=Qt.AlignmentFlag.AlignRight
+            self.right_controls_widget,
+            alignment=Qt.AlignmentFlag.AlignRight,
         )
 
         self.add_speed_control()
@@ -393,7 +397,9 @@ class MediaPlayer(QMediaPlayer):
         QTimer.singleShot(
             100,
             partial(
-                self.set_source_and_play, io_device=io_device, source_url=source_url
+                self.set_source_and_play,
+                io_device=io_device,
+                source_url=source_url,
             ),
         )
 
@@ -408,7 +414,9 @@ class MediaPlayer(QMediaPlayer):
             self.io_device.close()
 
     def resume_to_position(
-        self, status: QMediaPlayer.MediaStatus, position: int
+        self,
+        status: QMediaPlayer.MediaStatus,
+        position: int,
     ) -> None:
         """Seek to the target position once media is buffered and ready.
 
@@ -469,7 +477,10 @@ class MediaPlayer(QMediaPlayer):
         )
 
     def play_encrypted_file(
-        self, path: Path, aes_gcm: AESGCM, position: int = 0
+        self,
+        path: Path,
+        aes_gcm: AESGCM,
+        position: int = 0,
     ) -> None:
         """Play an AES-GCM encrypted video file with transparent decryption.
 

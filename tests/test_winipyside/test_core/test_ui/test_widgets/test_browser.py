@@ -37,7 +37,10 @@ class TestBrowser:
         mock_load_first_url.assert_called_once()
 
     def test_make_address_bar(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture, qtbot: QtBot
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
+        qtbot: QtBot,
     ) -> None:
         """Test method for make_address_bar."""
         mocker.patch.object(Browser, "make_widget")
@@ -69,7 +72,9 @@ class TestBrowser:
         )
 
     def test_navigate_to_url(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for navigate_to_url."""
         mocker.patch.object(Browser, "make_widget")
@@ -117,7 +122,9 @@ class TestBrowser:
         )
 
     def test_set_size_policy(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for set_size_policy."""
         mocker.patch.object(Browser, "make_widget")
@@ -129,18 +136,22 @@ class TestBrowser:
         browser.set_size_policy()
 
         mock_set_size_policy.assert_called_once_with(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
         )
 
     def test_connect_signals(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for connect_signals."""
         mocker.patch.object(Browser, "make_widget")
         mocker.patch.object(Browser, "load_first_url")
         mock_connect_load = mocker.patch.object(Browser, "connect_load_finished_signal")
         mock_connect_cookie = mocker.patch.object(
-            Browser, "connect_on_cookie_added_signal"
+            Browser,
+            "connect_on_cookie_added_signal",
         )
 
         browser = Browser(parent_layout)
@@ -154,7 +165,9 @@ class TestBrowser:
         mock_connect_cookie.assert_called_once()
 
     def test_connect_load_finished_signal(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for connect_load_finished_signal."""
         mocker.patch.object(Browser, "make_widget")
@@ -172,7 +185,9 @@ class TestBrowser:
         mock_load_finished.connect.assert_called_once_with(browser.on_load_finished)
 
     def test_on_load_finished(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for on_load_finished."""
         mocker.patch.object(Browser, "make_widget")
@@ -180,7 +195,9 @@ class TestBrowser:
         mocker.patch.object(Browser, "load_first_url")
         mock_update_address = mocker.patch.object(Browser, "update_address_bar")
         mock_url = mocker.patch.object(
-            Browser, "url", return_value=QUrl("https://test.com")
+            Browser,
+            "url",
+            return_value=QUrl("https://test.com"),
         )
 
         browser = Browser(parent_layout)
@@ -189,7 +206,9 @@ class TestBrowser:
         mock_update_address.assert_called_once_with(mock_url.return_value)
 
     def test_update_address_bar(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for update_address_bar."""
         mocker.patch.object(Browser, "make_widget")
@@ -207,7 +226,9 @@ class TestBrowser:
         )
 
     def test_connect_on_cookie_added_signal(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for connect_on_cookie_added_signal."""
         mocker.patch.object(Browser, "make_widget")
@@ -230,11 +251,13 @@ class TestBrowser:
             "Cookies should be defaultdict"
         )
         mock_cookie_store.cookieAdded.connect.assert_called_once_with(
-            browser.on_cookie_added
+            browser.on_cookie_added,
         )
 
     def test_on_cookie_added(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for on_cookie_added."""
         mocker.patch.object(Browser, "make_widget")
@@ -255,7 +278,9 @@ class TestBrowser:
         )
 
     def test_load_first_url(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for load_first_url."""
         mocker.patch.object(Browser, "make_widget")
@@ -275,7 +300,9 @@ class TestBrowser:
         )
 
     def test_http_cookies(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for http_cookies."""
         mocker.patch.object(Browser, "make_widget")
@@ -287,7 +314,9 @@ class TestBrowser:
         browser.cookies = {"example.com": [mocker.MagicMock()]}
 
         mock_convert = mocker.patch.object(
-            browser, "qcookies_to_httpcookies", return_value=[mocker.MagicMock()]
+            browser,
+            "qcookies_to_httpcookies",
+            return_value=[mocker.MagicMock()],
         )
 
         result = browser.http_cookies
@@ -297,7 +326,9 @@ class TestBrowser:
         mock_convert.assert_called_once()
 
     def test_qcookies_to_httpcookies(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for qcookies_to_httpcookies."""
         mocker.patch.object(Browser, "make_widget")
@@ -309,7 +340,9 @@ class TestBrowser:
         mock_httpcookie = mocker.MagicMock()
 
         mock_convert = mocker.patch.object(
-            browser, "qcookie_to_httpcookie", return_value=mock_httpcookie
+            browser,
+            "qcookie_to_httpcookie",
+            return_value=mock_httpcookie,
         )
 
         result = browser.qcookies_to_httpcookies([mock_qcookie])
@@ -320,7 +353,9 @@ class TestBrowser:
         mock_convert.assert_called_once_with(mock_qcookie)
 
     def test_qcookie_to_httpcookie(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for qcookie_to_httpcookie."""
         mocker.patch.object(Browser, "make_widget")
@@ -347,7 +382,9 @@ class TestBrowser:
         assert result.domain == "example.com", "Should set correct domain"
 
     def test_get_domain_cookies(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for get_domain_cookies."""
         mocker.patch.object(Browser, "make_widget")
@@ -364,7 +401,9 @@ class TestBrowser:
         assert result is test_cookies, "Should return cookies for domain"
 
     def test_get_domain_http_cookies(
-        self, parent_layout: QVBoxLayout, mocker: MockFixture
+        self,
+        parent_layout: QVBoxLayout,
+        mocker: MockFixture,
     ) -> None:
         """Test method for get_domain_http_cookies."""
         mocker.patch.object(Browser, "make_widget")
@@ -376,10 +415,14 @@ class TestBrowser:
         test_httpcookies = [mocker.MagicMock()]
 
         mock_get_domain = mocker.patch.object(
-            browser, "get_domain_cookies", return_value=test_qcookies
+            browser,
+            "get_domain_cookies",
+            return_value=test_qcookies,
         )
         mock_convert = mocker.patch.object(
-            browser, "qcookies_to_httpcookies", return_value=test_httpcookies
+            browser,
+            "qcookies_to_httpcookies",
+            return_value=test_httpcookies,
         )
 
         result = browser.get_domain_http_cookies("example.com")

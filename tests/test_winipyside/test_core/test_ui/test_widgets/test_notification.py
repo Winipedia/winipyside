@@ -15,7 +15,7 @@ class TestNotification:
         # Mock the Toast parent class and its methods
         mock_toast_init = mocker.patch("pyqttoast.Toast.__init__")
         mock_active_window = mocker.patch(
-            notification.__name__ + ".QApplication.activeWindow"
+            notification.__name__ + ".QApplication.activeWindow",
         )
         mock_window = mocker.MagicMock()
         mock_active_window.return_value = mock_window
@@ -70,7 +70,8 @@ class TestNotification:
 
         # Mock the methods we want to test
         mock_str_to_half_window_width = mocker.patch.object(
-            Notification, "str_to_half_window_width"
+            Notification,
+            "str_to_half_window_width",
         )
         mock_set_title_qt = mocker.patch.object(Notification, "setTitle")
 
@@ -97,7 +98,8 @@ class TestNotification:
 
         # Mock the methods we want to test
         mock_str_to_half_window_width = mocker.patch.object(
-            Notification, "str_to_half_window_width"
+            Notification,
+            "str_to_half_window_width",
         )
         mock_set_text_qt = mocker.patch.object(Notification, "setText")
 
@@ -125,10 +127,10 @@ class TestNotification:
 
         # Mock QApplication.activeWindow and value_to_truncated_string
         mock_active_window = mocker.patch(
-            notification.__name__ + ".QApplication.activeWindow"
+            notification.__name__ + ".QApplication.activeWindow",
         )
         mock_truncate = mocker.patch(
-            notification.__name__ + ".value_to_truncated_string"
+            notification.__name__ + ".value_to_truncated_string",
         )
 
         notification_new = Notification("title", "text")

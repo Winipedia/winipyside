@@ -1,36 +1,41 @@
-site_name: winipyside
-site_url: https://Winipedia.github.io/winipyside
-repo_url: https://github.com/Winipedia/winipyside
-edit_uri: edit/main/docs
-strict: true
-validation:
-  omitted_files: warn
-  absolute_links: warn
-  unrecognized_links: warn
-  anchors: warn
-theme:
-  name: material
-  features:
-  - content.action.edit
-  - content.action.view
-  palette:
-  - scheme: slate
-    toggle:
-      icon: material/brightness-4
-      name: Light mode
-  - scheme: default
-    toggle:
-      icon: material/brightness-7
-      name: Dark mode
-plugins:
-- search
-- mermaid2
-- mkdocstrings:
-    handlers:
-      python:
-        options:
-          members: true
-          inherited_members: true
-          show_submodules: true
-          relative_crossrefs: true
-          scoped_crossrefs: true
+---
+"site_name": "winipyside"
+"site_url": "https://Winipedia.github.io/winipyside"
+"repo_url": "https://github.com/Winipedia/winipyside"
+"edit_uri": "edit/main/docs"
+"plugins":
+  - "search"
+  - "mermaid2"
+  -
+    "mkdocstrings":
+      "handlers":
+        "python":
+          "options":
+            "inherited_members": true
+            "members": true
+            "relative_crossrefs": true
+            "scoped_crossrefs": true
+            "show_submodules": true
+"strict": true
+"theme":
+  "name": "material"
+  "features":
+    - "content.action.edit"
+    - "content.action.view"
+  "palette":
+    -
+      "scheme": "slate"
+      "toggle":
+        "icon": "material/brightness-4"
+        "name": "Light mode"
+    -
+      "scheme": "default"
+      "toggle":
+        "icon": "material/brightness-7"
+        "name": "Dark mode"
+"validation":
+  "absolute_links": "warn"
+  "anchors": "warn"
+  "omitted_files": "warn"
+  "unrecognized_links": "warn"
+...

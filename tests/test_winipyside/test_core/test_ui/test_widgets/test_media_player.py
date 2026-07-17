@@ -28,11 +28,13 @@ class TestMediaPlayer:
         """Test method for make_widget."""
         # Mock the widget creation methods to avoid Qt widget issues
         mock_add_controls_above = mocker.patch.object(
-            MediaPlayer, "add_media_controls_above"
+            MediaPlayer,
+            "add_media_controls_above",
         )
         mock_make_video_widget = mocker.patch.object(MediaPlayer, "make_video_widget")
         mock_add_controls_below = mocker.patch.object(
-            MediaPlayer, "add_media_controls_below"
+            MediaPlayer,
+            "add_media_controls_below",
         )
 
         # Mock QWidget and QVBoxLayout to avoid Qt issues
@@ -52,7 +54,7 @@ class TestMediaPlayer:
     def test_make_video_widget(self, mocker: MockFixture) -> None:
         """Test method for make_video_widget."""
         mock_clickable_widget = mocker.patch(
-            media_player.__name__ + ".ClickableVideoWidget"
+            media_player.__name__ + ".ClickableVideoWidget",
         )
         mock_audio_output = mocker.patch(media_player.__name__ + ".QAudioOutput")
 

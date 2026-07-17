@@ -107,7 +107,9 @@ class TestBase:
         mock_make_pages = mocker.patch.object(TestWindow, "make_pages")
         mock_set_start_page = mocker.patch.object(TestWindow, "set_start_page")
         mock_get_display_name = mocker.patch.object(
-            TestWindow, "get_display_name", return_value="Test Window"
+            TestWindow,
+            "get_display_name",
+            return_value="Test Window",
         )
 
         # Create window instance without calling __init__

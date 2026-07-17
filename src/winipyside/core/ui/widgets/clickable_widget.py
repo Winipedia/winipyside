@@ -24,7 +24,7 @@ class ClickableWidget(QWidget):
 
     clicked = Signal()
 
-    def mousePressEvent(self, event: Any) -> None:  # noqa: N802
+    def mousePressEvent(self, event: Any) -> None:  # noqa: ANN401, N802
         """Handle left mouse button press and emit clicked signal.
 
         Emits the clicked signal when the left mouse button is pressed on the widget,
@@ -51,7 +51,7 @@ class ClickableVideoWidget(QVideoWidget):
 
     clicked = Signal()
 
-    def mousePressEvent(self, event: Any) -> None:  # noqa: N802
+    def mousePressEvent(self, event: Any) -> None:  # noqa: ANN401, N802
         """Handle left mouse button press on video and emit clicked signal.
 
         Emits the clicked signal

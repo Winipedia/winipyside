@@ -38,7 +38,7 @@ class Base(BaseUI, QWidget):
         base_window: Reference to the containing BaseWindow.
     """
 
-    def __init__(self, base_window: "BaseWindow", *args: Any, **kwargs: Any) -> None:
+    def __init__(self, base_window: "BaseWindow", *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         """Initialize the page with a reference to the base window.
 
         Args:
@@ -84,7 +84,8 @@ class Base(BaseUI, QWidget):
         self.menu_button = QPushButton("Menu")
         self.menu_button.setIcon(self.get_svg_icon("menu_icon"))
         self.menu_button.setSizePolicy(
-            QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum,
         )
         self.h_layout.addWidget(
             self.menu_button,
@@ -98,7 +99,9 @@ class Base(BaseUI, QWidget):
             action.triggered.connect(partial(self.set_current_page, page_cls))
 
     def add_to_page_button(
-        self, to_page_cls: type["Base"], layout: QLayout
+        self,
+        to_page_cls: type["Base"],
+        layout: QLayout,
     ) -> QPushButton:
         """Create a navigation button that switches to the specified page.
 

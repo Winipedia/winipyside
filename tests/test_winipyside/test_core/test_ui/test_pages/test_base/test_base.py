@@ -173,7 +173,9 @@ class TestBase:
 
         # Mock dependencies
         mock_get_display_name = mocker.patch.object(
-            TargetPage, "get_display_name", return_value="Target Page"
+            TargetPage,
+            "get_display_name",
+            return_value="Target Page",
         )
         mock_layout = mocker.MagicMock()
 

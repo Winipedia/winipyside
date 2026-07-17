@@ -84,7 +84,9 @@ class TestPlayer:
 
         # Verify the play function was called with correct arguments
         mock_play_func.assert_called_once_with(
-            path=test_path, position=test_position, extra_arg="test_value"
+            path=test_path,
+            position=test_position,
+            extra_arg="test_value",
         )
 
         # Test that the method exists and is final
@@ -104,7 +106,8 @@ class TestPlayer:
 
         # Mock the play_file_from_func method
         mock_play_file_from_func = mocker.patch.object(
-            mock_player, "play_file_from_func"
+            mock_player,
+            "play_file_from_func",
         )
 
         # Test data
@@ -116,7 +119,9 @@ class TestPlayer:
 
         # Verify play_file_from_func was called with media_player.play_file
         mock_play_file_from_func.assert_called_once_with(
-            mock_media_player.play_file, path=test_path, position=test_position
+            mock_media_player.play_file,
+            path=test_path,
+            position=test_position,
         )
 
         # Test that the method exists and is final
@@ -132,7 +137,8 @@ class TestPlayer:
 
         # Mock the play_file_from_func method
         mock_play_file_from_func = mocker.patch.object(
-            mock_player, "play_file_from_func"
+            mock_player,
+            "play_file_from_func",
         )
 
         # Test data
@@ -142,7 +148,10 @@ class TestPlayer:
 
         # Call play_encrypted_file method directly on the class
         Player.play_encrypted_file(
-            mock_player, path=test_path, aes_gcm=test_aes_gcm, position=test_position
+            mock_player,
+            path=test_path,
+            aes_gcm=test_aes_gcm,
+            position=test_position,
         )
 
         # Verify play_file_from_func was called with media_player.play_encrypted_file
