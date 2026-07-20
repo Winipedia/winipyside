@@ -12,9 +12,11 @@ from pyrig.core.resources import resource_path
 from pyrig.core.strings import split_on_uppercase
 from pyrig_runtime.core.introspection.classes import (
     discard_parent_classes,
+    discover_subclasses,
 )
 from pyrig_runtime.core.introspection.packages import (
-    discover_subclasses_across_module,
+    is_package,
+    register_package_modules,
 )
 from PySide6.QtCore import QObject
 from PySide6.QtGui import QIcon
@@ -136,8 +138,11 @@ class Base(metaclass=QABCLoggingMeta):
             # find the main package
             package = sys.modules[__name__]
 
+        if is_package(package):
+            register_package_modules(package)
+
         children = discard_parent_classes(
-            discover_subclasses_across_module(cls, package),
+            discover_subclasses(cls),
         )
         return sorted(children, key=lambda cls: cls.__name__)
 
