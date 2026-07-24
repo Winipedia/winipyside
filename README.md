@@ -7,7 +7,6 @@
 <!-- code-quality -->
 [![ByteOrderMarkerFormatter](https://img.shields.io/badge/BOM-fix--byte--order--marker-orange)](https://github.com/pre-commit/pre-commit-hooks)
 [![CaseConflictChecker](https://img.shields.io/badge/case--conflict-check--case--conflict-blue)](https://github.com/pre-commit/pre-commit-hooks)
-[![DependencyAuditor](https://img.shields.io/badge/security-pip--audit-blue?logo=python)](https://github.com/pypa/pip-audit)
 [![DependencyChecker](https://img.shields.io/badge/dependencies-deptry-blue)](https://github.com/osprey-oss/deptry)
 [![EndOfFileFormatter](https://img.shields.io/badge/EOF-end--of--file--fixer-orange)](https://github.com/pre-commit/pre-commit-hooks)
 [![EndOfLineFormatter](https://img.shields.io/badge/EOL-mixed--line--ending-orange)](https://github.com/pre-commit/pre-commit-hooks)
@@ -151,6 +150,7 @@ from PySide6.QtWidgets import QApplication
 from winipyside.src.ui.windows.base.base import Base as BaseWindow
 from winipyside.src.ui.pages.browser import Browser
 
+
 class MyApp(BaseWindow):
     @classmethod
     def get_all_page_classes(cls):
@@ -168,6 +168,7 @@ class MyApp(BaseWindow):
 
     def post_setup(self) -> None:
         pass
+
 
 if __name__ == "__main__":
     app = QApplication([])
@@ -210,7 +211,7 @@ Notification(
     title="Success",
     text="Operation completed successfully!",
     icon=ToastIcon.SUCCESS,
-    duration=5000
+    duration=5000,
 )
 ```
 
