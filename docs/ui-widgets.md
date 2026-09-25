@@ -63,7 +63,7 @@ Notification(
     title="Info",
     text="This is an information message",
     icon=ToastIcon.INFORMATION,
-    duration=5000
+    duration=5000,
 )
 
 # Success notification
@@ -71,7 +71,7 @@ Notification(
     title="Success",
     text="Operation completed successfully!",
     icon=ToastIcon.SUCCESS,
-    duration=3000
+    duration=3000,
 )
 
 # Warning notification
@@ -79,7 +79,7 @@ Notification(
     title="Warning",
     text="Please check your input",
     icon=ToastIcon.WARNING,
-    duration=7000
+    duration=7000,
 )
 
 # Error notification
@@ -87,7 +87,7 @@ Notification(
     title="Error",
     text="An error occurred while processing your request",
     icon=ToastIcon.ERROR,
-    duration=10000
+    duration=10000,
 )
 ```
 
@@ -162,12 +162,14 @@ player = QMediaPlayer()
 player.setAudioOutput(QAudioOutput())
 player.setVideoOutput(video_widget)
 
+
 # Toggle play/pause on click
 def toggle_playback():
     if player.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
         player.pause()
     else:
         player.play()
+
 
 video_widget.clicked.connect(toggle_playback)
 ```
@@ -277,6 +279,7 @@ python_cookies = browser.get_domain_http_cookies("example.com")
 
 # Use Python cookies with requests
 import requests
+
 session = requests.Session()
 for cookie in python_cookies:
     session.cookies.set_cookie(cookie)

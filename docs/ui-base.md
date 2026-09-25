@@ -198,6 +198,7 @@ Get the human-readable display name derived from the class name.
 class MyCustomWidget(Base, QWidget):
     pass
 
+
 print(MyCustomWidget.get_display_name())  # "My Custom Widget"
 ```
 
@@ -261,7 +262,7 @@ To use both together, we need a metaclass that inherits from both.
 ```python
 class QABCLoggingMeta(
     ABCLoggingMeta,  # From winiutils
-    type(QObject),   # Qt's metaclass
+    type(QObject),  # Qt's metaclass
 ):
     """Metaclass for Qt classes with ABC functionality."""
 ```
@@ -275,6 +276,7 @@ The metaclass is automatically applied to the
 from winipyside.src.ui.base.base import Base
 from PySide6.QtWidgets import QWidget
 from abc import abstractmethod
+
 
 class MyWidget(Base, QWidget):
     @abstractmethod
@@ -290,6 +292,7 @@ Here's a complete example showing all lifecycle hooks and utility methods:
 from winipyside.src.ui.base.base import Base
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
 from abc import abstractmethod
+
 
 class CustomWidget(Base, QWidget):
     """A custom widget demonstrating the Base class."""
@@ -332,6 +335,7 @@ class CustomWidget(Base, QWidget):
         """Handle button click."""
         print("Button clicked!")
 
+
 # Usage
 from PySide6.QtWidgets import QApplication
 
@@ -365,9 +369,11 @@ def base_setup(self) -> None:
     self.layout = QVBoxLayout()
     self.setLayout(self.layout)
 
+
 def setup(self) -> None:
     self.add_widgets()
     self.connect_signals()
+
 
 # Bad - mixing concerns
 def base_setup(self) -> None:
@@ -382,6 +388,7 @@ Mark methods that subclasses must implement as abstract:
 
 ```python
 from abc import abstractmethod
+
 
 class CustomBase(Base, QWidget):
     @abstractmethod
@@ -431,6 +438,7 @@ def setup(self) -> None:
     # Create widgets on demand
     pass
 
+
 def get_or_create_widget(self) -> QWidget:
     """Get widget, creating it if necessary."""
     if not hasattr(self, "_widget"):
@@ -446,9 +454,11 @@ def setup(self) -> None:
     self.button.clicked.connect(self.on_button_clicked)
     self.slider.valueChanged.connect(self.on_slider_changed)
 
+
 def on_button_clicked(self) -> None:
     """Handle button click."""
     pass
+
 
 def on_slider_changed(self, value: int) -> None:
     """Handle slider change."""

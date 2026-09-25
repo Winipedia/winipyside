@@ -168,7 +168,11 @@ class EncryptedPyQFile(PyQFile):
     """Encrypted file wrapper with AES-GCM encryption."""
 
     def __init__(
-        self, path: Path, aes_gcm: AESGCM, *args: Any, **kwargs: Any
+        self,
+        path: Path,
+        aes_gcm: AESGCM,
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         """Initialize the encrypted file wrapper.
 
@@ -189,8 +193,8 @@ class EncryptedPyQFile(PyQFile):
 ### Encryption Constants
 
 ```python
-NONCE_SIZE = 12      # 12-byte nonce for AES-GCM
-TAG_SIZE = 16        # 16-byte authentication tag
+NONCE_SIZE = 12  # 12-byte nonce for AES-GCM
+TAG_SIZE = 16  # 16-byte authentication tag
 CIPHER_SIZE = 64 * 1024  # 64KB cipher chunks
 CHUNK_SIZE = NONCE_SIZE + CIPHER_SIZE + TAG_SIZE  # 65564 bytes total
 ```
@@ -289,11 +293,7 @@ key = AESGCM.generate_key(bit_length=256)
 aes_gcm = AESGCM(key)
 
 # Encrypt file
-EncryptedPyQFile.encrypt_file(
-    Path("video.mp4"),
-    Path("video_encrypted.mp4"),
-    aes_gcm
-)
+EncryptedPyQFile.encrypt_file(Path("video.mp4"), Path("video_encrypted.mp4"), aes_gcm)
 ```
 
 ##### `decrypt_file(...) -> None`
@@ -311,9 +311,7 @@ Decrypt a file encrypted with AES-GCM.
 ```python
 # Decrypt file
 EncryptedPyQFile.decrypt_file(
-    Path("video_encrypted.mp4"),
-    Path("video_decrypted.mp4"),
-    aes_gcm
+    Path("video_encrypted.mp4"), Path("video_decrypted.mp4"), aes_gcm
 )
 ```
 

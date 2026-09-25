@@ -11,6 +11,7 @@ from PySide6.QtWidgets import QApplication, QLabel
 from winipyside.src.ui.windows.base.base import Base as BaseWindow
 from winipyside.src.ui.pages.base.base import Base as BasePage
 
+
 class HomePage(BasePage):
     def pre_setup(self) -> None:
         pass
@@ -21,6 +22,7 @@ class HomePage(BasePage):
 
     def post_setup(self) -> None:
         pass
+
 
 class MyApp(BaseWindow):
     @classmethod
@@ -40,6 +42,7 @@ class MyApp(BaseWindow):
     def post_setup(self) -> None:
         pass
 
+
 if __name__ == "__main__":
     app = QApplication([])
     window = MyApp()
@@ -57,6 +60,7 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from PySide6.QtWidgets import QApplication, QPushButton, QFileDialog
 from winipyside.src.ui.windows.base.base import Base as BaseWindow
 from winipyside.src.ui.pages.player import Player
+
 
 class VideoPlayerPage(Player):
     def __init__(self, base_window, *args, **kwargs):
@@ -95,13 +99,11 @@ class VideoPlayerPage(Player):
     def select_video(self):
         """Open file dialog to select video."""
         path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Select Video",
-            "",
-            "Video Files (*.mp4 *.mkv *.avi)"
+            self, "Select Video", "", "Video Files (*.mp4 *.mkv *.avi)"
         )
         if path:
             self.start_playback(Path(path))
+
 
 class VideoPlayerApp(BaseWindow):
     @classmethod
@@ -122,6 +124,7 @@ class VideoPlayerApp(BaseWindow):
     def post_setup(self) -> None:
         pass
 
+
 if __name__ == "__main__":
     app = QApplication([])
     window = VideoPlayerApp()
@@ -139,6 +142,7 @@ from PySide6.QtCore import QUrl
 from winipyside.src.ui.windows.base.base import Base as BaseWindow
 from winipyside.src.ui.pages.browser import Browser
 import json
+
 
 class BrowserPage(Browser):
     def pre_setup(self) -> None:
@@ -159,10 +163,7 @@ class BrowserPage(Browser):
     def export_cookies(self):
         """Export cookies to JSON file."""
         path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Export Cookies",
-            "cookies.json",
-            "JSON Files (*.json)"
+            self, "Export Cookies", "cookies.json", "JSON Files (*.json)"
         )
         if path:
             # Get all cookies
@@ -189,6 +190,7 @@ class BrowserPage(Browser):
         # In practice, you'd track domains as you browse
         return ["example.com"]
 
+
 class BrowserApp(BaseWindow):
     @classmethod
     def get_all_page_classes(cls):
@@ -207,6 +209,7 @@ class BrowserApp(BaseWindow):
 
     def post_setup(self) -> None:
         pass
+
 
 if __name__ == "__main__":
     app = QApplication([])

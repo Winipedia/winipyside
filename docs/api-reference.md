@@ -292,10 +292,10 @@ class Base(BaseUI, QMainWindow):
 ### Encryption Constants
 
 ```python
-NONCE_SIZE = 12      # 12-byte nonce for AES-GCM
-TAG_SIZE = 16        # 16-byte authentication tag
+NONCE_SIZE = 12  # 12-byte nonce for AES-GCM
+TAG_SIZE = 16  # 16-byte authentication tag
 CIPHER_SIZE = 64 * 1024  # 64KB cipher chunks
-CHUNK_SIZE = 65564   # Total chunk size (nonce + cipher + tag)
+CHUNK_SIZE = 65564  # Total chunk size (nonce + cipher + tag)
 ```
 
 ## See Also

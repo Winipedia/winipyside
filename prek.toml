@@ -20,9 +20,9 @@ stages = [
 groups = [
   "all",
 ]
-priority = 0
 always_run = true
 pass_filenames = false
+priority = 0
 
 [[repos.hooks]]
 id = "install-dependencies"
@@ -38,9 +38,9 @@ stages = [
 groups = [
   "all",
 ]
-priority = 1
 always_run = true
 pass_filenames = false
+priority = 1
 
 [[repos.hooks]]
 id = "audit-dependencies"
@@ -56,9 +56,9 @@ stages = [
 groups = [
   "all",
 ]
-priority = 2
 always_run = true
 pass_filenames = false
+priority = 2
 
 [[repos.hooks]]
 id = "synchronize-project"
@@ -72,22 +72,6 @@ groups = [
   "all",
 ]
 priority = 3
-
-[[repos.hooks]]
-id = "fix-byte-order-marker"
-name = "fix byte order marker"
-language = "system"
-entry = "uv run fix-byte-order-marker"
-types = [
-  "text",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 4
 
 [[repos.hooks]]
 id = "fix-spelling"
@@ -109,69 +93,33 @@ groups = [
 priority = 5
 
 [[repos.hooks]]
-id = "fix-end-of-line"
-name = "fix end of line"
+id = "check-secrets"
+name = "check secrets"
 language = "system"
-entry = "uv run mixed-line-ending"
+entry = "uv run detect-secrets-hook"
+types = [
+  "text",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 9
+
+[[repos.hooks]]
+id = "check-test-naming"
+name = "check test naming"
+language = "system"
+entry = "uv run name-tests-test"
 args = [
-  "--fix=lf",
+  "--pytest-test-first",
 ]
 types = [
-  "text",
+  "python",
 ]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 6
-
-[[repos.hooks]]
-id = "fix-trailing-whitespace"
-name = "fix trailing whitespace"
-language = "system"
-entry = "uv run trailing-whitespace-fixer"
-types = [
-  "text",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 7
-
-[[repos.hooks]]
-id = "fix-end-of-file"
-name = "fix end of file"
-language = "system"
-entry = "uv run end-of-file-fixer"
-types = [
-  "text",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 8
-
-[[repos.hooks]]
-id = "format-json"
-name = "format json"
-language = "system"
-entry = "uv run pretty-format-json"
-args = [
-  "--autofix",
-  "--no-ensure-ascii",
-  "--no-sort-keys",
-]
-types = [
-  "json",
-]
+files = "^tests/"
 stages = [
   "pre-commit",
 ]
@@ -197,7 +145,7 @@ stages = [
 groups = [
   "all",
 ]
-priority = 9
+priority = 10
 
 [[repos.hooks]]
 id = "format-shell"
@@ -221,7 +169,7 @@ stages = [
 groups = [
   "all",
 ]
-priority = 9
+priority = 10
 
 [[repos.hooks]]
 id = "format-toml"
@@ -238,7 +186,7 @@ stages = [
 groups = [
   "all",
 ]
-priority = 9
+priority = 10
 
 [[repos.hooks]]
 id = "lint-python"
@@ -257,7 +205,7 @@ stages = [
 groups = [
   "all",
 ]
-priority = 9
+priority = 10
 
 [[repos.hooks]]
 id = "lint-yaml"
@@ -277,36 +225,7 @@ stages = [
 groups = [
   "all",
 ]
-priority = 9
-
-[[repos.hooks]]
-id = "format-python"
-name = "format python"
-language = "system"
-entry = "uv run ruff format"
-types = [
-  "python",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
 priority = 10
-
-[[repos.hooks]]
-id = "check-case-conflict"
-name = "check case conflict"
-language = "system"
-entry = "uv run check-case-conflict"
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
 
 [[repos.hooks]]
 id = "check-ci-cd"
@@ -331,178 +250,13 @@ groups = [
 priority = 11
 
 [[repos.hooks]]
-id = "check-dependencies"
-name = "check dependencies"
+id = "format-python"
+name = "format python"
 language = "system"
-entry = "uv run deptry"
+entry = "uv run ruff format"
 types_or = [
-  "pyproject",
-  "python",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-pass_filenames = false
-
-[[repos.hooks]]
-id = "check-large-files"
-name = "check large files"
-language = "system"
-entry = "uv run check-added-large-files"
-args = [
-  "--enforce-all",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-
-[[repos.hooks]]
-id = "check-merge-conflict"
-name = "check merge conflict"
-language = "system"
-entry = "uv run check-merge-conflict"
-args = [
-  "--assume-in-merge",
-]
-types = [
-  "text",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-
-[[repos.hooks]]
-id = "check-secrets"
-name = "check secrets"
-language = "system"
-entry = "uv run detect-secrets-hook"
-types = [
-  "text",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-
-[[repos.hooks]]
-id = "check-security"
-name = "check security"
-language = "system"
-entry = "uv run bandit"
-args = [
-  "--exclude=tests",
-]
-types = [
-  "python",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-
-[[repos.hooks]]
-id = "check-test-naming"
-name = "check test naming"
-language = "system"
-entry = "uv run name-tests-test"
-args = [
-  "--pytest-test-first",
-]
-types = [
-  "python",
-]
-files = "^tests/"
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-
-[[repos.hooks]]
-id = "check-types"
-name = "check types"
-language = "system"
-entry = "uv run ty check"
-types = [
-  "python",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-pass_filenames = false
-
-[[repos.hooks]]
-id = "lint-ci-cd"
-name = "lint ci cd"
-language = "system"
-entry = "uv run actionlint"
-args = [
-  "--ignore=reusable workflow call \"\\$/.*\" at \"uses\" is not following the format",
-  "--pyflakes=pyflakes",
-  "--shellcheck=uv run shellcheck --check-sourced --enable=all --external-sources --norc --shell=bash",
-]
-types = [
-  "yaml",
-]
-files = "^\\.github/workflows/"
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-
-[[repos.hooks]]
-id = "lint-json"
-name = "lint json"
-language = "system"
-entry = "uv run check-json"
-types = [
-  "json",
-]
-stages = [
-  "pre-commit",
-]
-groups = [
-  "all",
-]
-priority = 11
-
-[[repos.hooks]]
-id = "lint-markdown"
-name = "lint markdown"
-language = "system"
-entry = "uv run rumdl check"
-args = [
-  "--deny-config-warnings",
-]
-types = [
   "markdown",
+  "python",
 ]
 stages = [
   "pre-commit",
@@ -547,6 +301,208 @@ types = [
   "toml",
 ]
 exclude = "^uv\\.lock$"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 11
+
+[[repos.hooks]]
+id = "check-dependencies"
+name = "check dependencies"
+language = "system"
+entry = "uv run deptry"
+types_or = [
+  "pyproject",
+  "python",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+pass_filenames = false
+priority = 12
+
+[[repos.hooks]]
+id = "check-security"
+name = "check security"
+language = "system"
+entry = "uv run bandit"
+args = [
+  "--exclude=tests",
+]
+types = [
+  "python",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 12
+
+[[repos.hooks]]
+id = "check-types"
+name = "check types"
+language = "system"
+entry = "uv run ty check"
+types = [
+  "python",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+pass_filenames = false
+priority = 12
+
+[[repos.hooks]]
+id = "lint-ci-cd"
+name = "lint ci cd"
+language = "system"
+entry = "uv run actionlint"
+args = [
+  "--ignore=reusable workflow call \"\\$/.*\" at \"uses\" is not following the format",
+  "--pyflakes=pyflakes",
+  "--shellcheck=uv run shellcheck --check-sourced --enable=all --external-sources --norc --shell=bash",
+]
+types = [
+  "yaml",
+]
+files = "^\\.github/workflows/"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 12
+
+[[repos.hooks]]
+id = "lint-markdown"
+name = "lint markdown"
+language = "system"
+entry = "uv run rumdl check"
+args = [
+  "--deny-config-warnings",
+]
+types = [
+  "markdown",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 12
+
+[[repos]]
+repo = "builtin"
+
+[[repos.hooks]]
+id = "fix-byte-order-marker"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 4
+
+[[repos.hooks]]
+id = "mixed-line-ending"
+args = [
+  "--fix=lf",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 6
+
+[[repos.hooks]]
+id = "trailing-whitespace"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 7
+
+[[repos.hooks]]
+id = "end-of-file-fixer"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 8
+
+[[repos.hooks]]
+id = "check-added-large-files"
+args = [
+  "--enforce-all",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 9
+
+[[repos.hooks]]
+id = "check-case-conflict"
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 9
+
+[[repos.hooks]]
+id = "check-merge-conflict"
+args = [
+  "--assume-in-merge",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 9
+
+[[repos.hooks]]
+id = "pretty-format-json"
+args = [
+  "--autofix",
+  "--no-ensure-ascii",
+  "--no-sort-keys",
+]
+stages = [
+  "pre-commit",
+]
+groups = [
+  "all",
+]
+priority = 10
+
+[[repos.hooks]]
+id = "check-json"
 stages = [
   "pre-commit",
 ]

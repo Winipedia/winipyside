@@ -12,19 +12,26 @@ Keep your application well-organized by separating concerns:
 # Good - each page has a single responsibility
 class VideoLibraryPage(BasePage):
     """Displays and manages video library."""
+
     pass
+
 
 class VideoPlayerPage(Player):
     """Plays videos."""
+
     pass
+
 
 class SettingsPage(BasePage):
     """Manages application settings."""
+
     pass
+
 
 # Bad - one page doing everything
 class MainPage(BasePage):
     """Does everything - library, playback, settings."""
+
     pass
 ```
 
@@ -67,6 +74,7 @@ Never hardcode encryption keys:
 # Bad - hardcoded key
 key = b"my_secret_key_123"
 
+
 # Good - load from secure storage
 def load_key() -> bytes:
     key_path = Path.home() / ".myapp" / "encryption.key"
@@ -89,9 +97,7 @@ def play_video(self, path: Path):
     # Validate path
     if not path.exists():
         Notification(
-            title="Error",
-            text=f"File not found: {path}",
-            icon=ToastIcon.ERROR
+            title="Error", text=f"File not found: {path}", icon=ToastIcon.ERROR
         )
         return
 
@@ -100,7 +106,7 @@ def play_video(self, path: Path):
         Notification(
             title="Warning",
             text="File is very large and may take time to load",
-            icon=ToastIcon.WARNING
+            icon=ToastIcon.WARNING,
         )
 
     # Play video
@@ -108,9 +114,7 @@ def play_video(self, path: Path):
         self.player.play_file(path)
     except Exception as e:
         Notification(
-            title="Error",
-            text=f"Failed to play video: {e}",
-            icon=ToastIcon.ERROR
+            title="Error", text=f"Failed to play video: {e}", icon=ToastIcon.ERROR
         )
 ```
 
@@ -162,6 +166,7 @@ Prevent excessive updates:
 ```python
 from PySide6.QtCore import QTimer
 
+
 class MyPage(BasePage):
     def setup(self) -> None:
         # Throttle slider updates
@@ -197,7 +202,7 @@ def save_file(self, path: Path):
         title="Saving",
         text=f"Saving to {path.name}...",
         icon=ToastIcon.INFORMATION,
-        duration=3000
+        duration=3000,
     )
 
     try:
@@ -209,7 +214,7 @@ def save_file(self, path: Path):
             title="Success",
             text=f"Saved to {path.name}",
             icon=ToastIcon.SUCCESS,
-            duration=3000
+            duration=3000,
         )
     except Exception as e:
         # Show error
@@ -217,7 +222,7 @@ def save_file(self, path: Path):
             title="Error",
             text=f"Failed to save: {e}",
             icon=ToastIcon.ERROR,
-            duration=5000
+            duration=5000,
         )
 ```
 
@@ -231,25 +236,14 @@ def load_video(self, path: Path):
     try:
         self.player.play_file(path)
     except FileNotFoundError:
-        Notification(
-            title="Error",
-            text="Video file not found",
-            icon=ToastIcon.ERROR
-        )
+        Notification(title="Error", text="Video file not found", icon=ToastIcon.ERROR)
     except PermissionError:
-        Notification(
-            title="Error",
-            text="Permission denied",
-            icon=ToastIcon.ERROR
-        )
+        Notification(title="Error", text="Permission denied", icon=ToastIcon.ERROR)
     except Exception as e:
-        Notification(
-            title="Error",
-            text=f"Unexpected error: {e}",
-            icon=ToastIcon.ERROR
-        )
+        Notification(title="Error", text=f"Unexpected error: {e}", icon=ToastIcon.ERROR)
         # Log error for debugging
         import logging
+
         logging.exception("Failed to load video")
 ```
 
@@ -286,6 +280,7 @@ class MyApp(BaseWindow):
         config_path = Path.home() / ".myapp" / "config.json"
         if config_path.exists():
             import json
+
             with open(config_path) as f:
                 return json.load(f)
         return {}
@@ -295,6 +290,7 @@ class MyApp(BaseWindow):
         config_path = Path.home() / ".myapp" / "config.json"
         config_path.parent.mkdir(parents=True, exist_ok=True)
         import json
+
         with open(config_path, "w") as f:
             json.dump(self.config, f, indent=2)
 ```
@@ -313,6 +309,7 @@ class VideoProcessor:
         # Processing logic
         return output_path
 
+
 class VideoPlayerPage(Player):
     def __init__(self, *args, **kwargs):
         self.processor = VideoProcessor()
@@ -321,6 +318,7 @@ class VideoPlayerPage(Player):
     def start_playback(self, path: Path, position: int = 0):
         processed_path = self.processor.process_video(path)
         self.play_file(processed_path, position)
+
 
 # Bad - hard to test
 class VideoPlayerPage(Player):

@@ -23,7 +23,10 @@ class Base(BaseUI, QWidget):
     """Base page class for the application."""
 
     def __init__(
-        self, base_window: "BaseWindow", *args: Any, **kwargs: Any
+        self,
+        base_window: "BaseWindow",
+        *args: Any,
+        **kwargs: Any,
     ) -> None:
         """Initialize the base page.
 
@@ -68,6 +71,7 @@ Add a button to the menu for navigating to a specific page.
 ```python
 from winipyside.src.ui.pages.base.base import Base as BasePage
 from PySide6.QtWidgets import QLabel, QPushButton
+
 
 class CustomPage(BasePage):
     def pre_setup(self) -> None:
@@ -171,6 +175,7 @@ from pathlib import Path
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from winipyside.src.ui.pages.player import Player
 
+
 class MyPlayerPage(Player):
     def __init__(self, base_window, *args, **kwargs):
         self.aes_gcm = self.load_encryption_key()
@@ -233,6 +238,7 @@ class Browser(BasePage):
 from winipyside.src.ui.pages.browser import Browser
 from PySide6.QtCore import QUrl
 
+
 class MyBrowserPage(Browser):
     def pre_setup(self) -> None:
         """Setup before main initialization."""
@@ -263,6 +269,7 @@ from winipyside.src.ui.windows.base.base import Base as BaseWindow
 from winipyside.src.ui.pages.player import Player
 from winipyside.src.ui.pages.browser import Browser
 
+
 # Custom player page
 class MyPlayerPage(Player):
     def __init__(self, base_window, *args, **kwargs):
@@ -288,6 +295,7 @@ class MyPlayerPage(Player):
     def post_setup(self) -> None:
         pass
 
+
 # Custom browser page
 class MyBrowserPage(Browser):
     def pre_setup(self) -> None:
@@ -296,10 +304,12 @@ class MyBrowserPage(Browser):
     def setup(self) -> None:
         # Load default page
         from PySide6.QtCore import QUrl
+
         self.browser.load(QUrl("https://example.com"))
 
     def post_setup(self) -> None:
         pass
+
 
 # Main window
 class MyApp(BaseWindow):
@@ -320,6 +330,7 @@ class MyApp(BaseWindow):
     def post_setup(self) -> None:
         pass
 
+
 # Run application
 if __name__ == "__main__":
     app = QApplication([])
@@ -337,12 +348,21 @@ Each page should represent a distinct feature or view
 
    ```python
    # Good
-   class VideoLibraryPage(BasePage): pass
-   class SettingsPage(BasePage): pass
-   class AboutPage(BasePage): pass
+   class VideoLibraryPage(BasePage):
+       pass
+
+
+   class SettingsPage(BasePage):
+       pass
+
+
+   class AboutPage(BasePage):
+       pass
+
 
    # Bad - too many features in one page
-   class EverythingPage(BasePage): pass
+   class EverythingPage(BasePage):
+       pass
    ```
 
 2. **Use descriptive names**:
@@ -350,12 +370,21 @@ Page class names should clearly indicate their purpose
 
    ```python
    # Good
-   class VideoPlayerPage(Player): pass
-   class WebBrowserPage(Browser): pass
+   class VideoPlayerPage(Player):
+       pass
+
+
+   class WebBrowserPage(Browser):
+       pass
+
 
    # Bad
-   class Page1(Player): pass
-   class MyPage(Browser): pass
+   class Page1(Player):
+       pass
+
+
+   class MyPage(Browser):
+       pass
    ```
 
 ### Player Page Best Practices
@@ -401,6 +430,7 @@ Page class names should clearly indicate their purpose
    ```python
    def setup(self) -> None:
        self.browser.urlChanged.connect(self.on_url_changed)
+
 
    def on_url_changed(self, url):
        print(f"Navigated to: {url.toString()}")

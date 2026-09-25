@@ -117,6 +117,7 @@ from winipyside.src.ui.windows.base.base import Base as BaseWindow
 from winipyside.src.ui.pages.base.base import Base as BasePage
 from PySide6.QtWidgets import QLabel
 
+
 # Define a simple page
 class HomePage(BasePage):
     def pre_setup(self) -> None:
@@ -128,6 +129,7 @@ class HomePage(BasePage):
 
     def post_setup(self) -> None:
         pass
+
 
 # Define the main window
 class MyApp(BaseWindow):
@@ -147,6 +149,7 @@ class MyApp(BaseWindow):
 
     def post_setup(self) -> None:
         pass
+
 
 # Run the application
 if __name__ == "__main__":
@@ -169,6 +172,7 @@ from winipyside.src.ui.windows.base.base import Base as BaseWindow
 from winipyside.src.ui.pages.base.base import Base as BasePage
 from winipyside.src.ui.pages.player import Player
 from winipyside.src.ui.pages.browser import Browser
+
 
 # Home page
 class HomePage(BasePage):
@@ -195,6 +199,7 @@ class HomePage(BasePage):
     def post_setup(self) -> None:
         pass
 
+
 # Browser page
 class BrowserPage(Browser):
     def pre_setup(self) -> None:
@@ -205,6 +210,7 @@ class BrowserPage(Browser):
 
     def post_setup(self) -> None:
         pass
+
 
 # Player page
 class PlayerPage(Player):
@@ -227,6 +233,7 @@ class PlayerPage(Player):
     def post_setup(self) -> None:
         pass
 
+
 # Settings page
 class SettingsPage(BasePage):
     def pre_setup(self) -> None:
@@ -242,6 +249,7 @@ class SettingsPage(BasePage):
 
     def post_setup(self) -> None:
         pass
+
 
 # Main window
 class MyApp(BaseWindow):
@@ -269,6 +277,7 @@ class MyApp(BaseWindow):
         if self.config["theme"] == "dark":
             self.setStyleSheet("background-color: #2b2b2b; color: white;")
 
+
 # Run the application
 if __name__ == "__main__":
     app = QApplication([])
@@ -290,6 +299,7 @@ The window should manage pages, not implement features
        def setup(self) -> None:
            self.resize(1280, 720)
            self.setWindowTitle("My App")
+
 
    # Bad - too much logic in window
    class MyApp(BaseWindow):
