@@ -8,7 +8,8 @@
     "allow_update_branch": true,
     "allow_merge_commit": false,
     "allow_rebase_merge": true,
-    "allow_squash_merge": true
+    "allow_squash_merge": true,
+    "visibility": "public"
   },
   "rulesets": [
     {
@@ -104,10 +105,10 @@
       ]
     }
   ],
-  "fork_pr_contributor_approval": {
-    "approval_policy": "all_external_contributors"
-  },
   "topics": [
     "pyrig"
-  ]
+  ],
+  "fork_pr_contributor_approval": {
+    "approval_policy": "all_external_contributors"
+  }
 }
