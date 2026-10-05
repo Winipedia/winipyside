@@ -1,4 +1,7 @@
 {
+  "fork_pr_contributor_approval": {
+    "approval_policy": "all_external_contributors"
+  },
   "repository": {
     "name": "winipyside",
     "description": "A utilities package for PySide6",
@@ -107,8 +110,5 @@
   ],
   "topics": [
     "pyrig"
-  ],
-  "fork_pr_contributor_approval": {
-    "approval_policy": "all_external_contributors"
-  }
+  ]
 }

@@ -24,6 +24,7 @@
       -
         "name": "Checkout Repository"
         "id": "checkout-repository"
+        # ryl disable-line rule:line-length
         "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"  # v7.0.1
         "with":
           "persist-credentials": false
@@ -45,12 +46,14 @@
       -
         "name": "Checkout Repository"
         "id": "checkout-repository"
+        # ryl disable-line rule:line-length
         "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"  # v7.0.1
         "with":
           "persist-credentials": false
       -
         "name": "Setup Package Manager"
         "id": "setup-package-manager"
+        # ryl disable-line rule:line-length
         "uses": "astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7"  # v10.2.0
         "with":
           "python-version": "3.13"
@@ -65,6 +68,7 @@
       -
         "name": "Configure Pages"
         "id": "configure-pages"
+        # ryl disable-line rule:line-length
         "uses": "actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d"  # v6.0.0
         "with":
           "enablement": "true"
@@ -72,12 +76,14 @@
       -
         "name": "Upload Documentation"
         "id": "upload-documentation"
+        # ryl disable-line rule:line-length
         "uses": "actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9"  # v5.0.0
         "with":
           "path": "site"
       -
         "name": "Deploy Documentation"
         "id": "deploy-documentation"
+        # ryl disable-line rule:line-length
         "uses": "actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346"  # v5.0.1
   "package":
     "name": "Package"
@@ -90,12 +96,14 @@
       -
         "name": "Checkout Repository"
         "id": "checkout-repository"
+        # ryl disable-line rule:line-length
         "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"  # v7.0.1
         "with":
           "persist-credentials": false
       -
         "name": "Setup Package Manager"
         "id": "setup-package-manager"
+        # ryl disable-line rule:line-length
         "uses": "astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7"  # v10.2.0
         "with":
           "python-version": "3.13"
