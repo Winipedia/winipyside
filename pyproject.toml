@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "4.14.121"
+version = "4.14.124"
 description = "A utilities package for PySide6"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
@@ -25,12 +25,12 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "cryptography>=50.0.1",
+  "cryptography>=50.0.2",
   "pyqt-toast-notification>=1.3.3",
-  "pyrig>=18.85.1",
-  "pyrig-runtime>=3.23.45",
-  "pyside6>=6.11.2",
-  "winiutils>=4.14.72",
+  "pyrig>=18.108.0",
+  "pyrig-runtime>=3.25.0",
+  "pyside6>=6.12.0",
+  "winiutils>=4.14.117",
 ]
 
 [project.urls]
@@ -49,31 +49,31 @@ dev = [
   "bandit>=1.9.4",
   "deptry>=0.25.1",
   "detect-secrets>=1.5.0",
-  "mkdocstrings[python]>=1.0.6",
+  "mkdocstrings[python]>=1.0.7",
   "pre-commit-hooks>=6.0.0",
-  "prek>=0.5.3",
-  "pyflakes>=3.4.0",
-  "pyrig-codeql>=1.0.0",
-  "pyrig-public>=1.0.1",
-  "pyrig-pypi>=3.20.28",
+  "prek>=0.5.5",
+  "pyflakes>=4.0.3",
+  "pyrig-codeql>=1.1.40",
+  "pyrig-public>=1.1.31",
+  "pyrig-pypi>=3.21.14",
   "pytest>=9.1.1",
   "pytest-cov>=7.1.0",
-  "pytest-mock>=3.15.1",
+  "pytest-mock>=3.16.0",
   "pytest-qt>=4.5.0",
   "pytest-randomly>=5.0.0",
   "pytest-xdist>=3.8.0",
-  "ruff>=0.16.8",
-  "rumdl>=0.2.75",
-  "ryl>=0.22.0",
+  "ruff>=0.17.0",
+  "rumdl>=0.2.79",
+  "ryl>=0.24.0",
   "shellcheck-py>=0.11.0.1",
   "shfmt-py>=4.2.0",
-  "tombi>=1.5.5",
-  "ty>=0.0.83",
+  "tombi>=1.8.4",
+  "ty>=0.0.86",
   "types-defusedxml>=0.7.0.20260504",
   "types-tqdm>=4.70.0.20260906",
-  "typos>=1.50.2",
+  "typos>=1.51.1",
   "vulture>=2.16",
-  "zensical>=0.0.64",
+  "zensical>=0.0.70",
   "zizmor>=1.30.1",
 ]
 
