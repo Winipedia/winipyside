@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "4.14.129"
+version = "4.14.130"
 description = "A utilities package for PySide6"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
@@ -128,7 +128,7 @@ select = [
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[tool.ryl.rules]
+[tool.ryl.lint.rules]
 ALL = "enable"
 key-ordering = "disable"
 
