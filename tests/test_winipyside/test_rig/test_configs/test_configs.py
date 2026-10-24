@@ -5,6 +5,22 @@ from winipyside.rig.configs.configs import (
 )
 
 
+class TestBuildWorkflowConfigFile:
+    """Test class."""
+
+
+class TestHealthCheckWorkflowConfigFile:
+    """Test class for HealthCheckWorkflowConfigFile."""
+
+    def test_step_run_tests(self) -> None:
+        """Test method."""
+        step = HealthCheckWorkflowConfigFile().step_run_tests()
+        assert "env" in step, "Step should have env vars"
+        assert step["env"]["QT_QPA_PLATFORM"] == "offscreen", (
+            "QT_QPA_PLATFORM should be offscreen"
+        )
+
+
 class TestPySideWorkflowConfigFileMixin:
     """Test class for PySide6WorkflowConfigFileMixin."""
 
@@ -24,21 +40,5 @@ class TestPySideWorkflowConfigFileMixin:
         assert "run" in step, "Step should have run command"
 
 
-class TestHealthCheckWorkflowConfigFile:
-    """Test class for HealthCheckWorkflowConfigFile."""
-
-    def test_step_run_tests(self) -> None:
-        """Test method."""
-        step = HealthCheckWorkflowConfigFile().step_run_tests()
-        assert "env" in step, "Step should have env vars"
-        assert step["env"]["QT_QPA_PLATFORM"] == "offscreen", (
-            "QT_QPA_PLATFORM should be offscreen"
-        )
-
-
 class TestReleaseWorkflowConfigFile:
     """Test class for ReleaseWorkflowConfigFile."""
-
-
-class TestBuildWorkflowConfigFile:
-    """Test class."""

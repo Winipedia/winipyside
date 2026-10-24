@@ -14,242 +14,6 @@ from winipyside.core.core.py_qiodevice import (
 )
 
 
-class TestPyQIODevice:
-    """Test class for PyQIODevice."""
-
-    def test___init__(self, mocker: MockerFixture) -> None:
-        """Test method for __init__."""
-        # Test basic initialization
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        py_device = PyQIODevice(mock_device)
-        assert py_device.q_device is mock_device, (
-            "q_device should be set to the provided device"
-        )
-
-    def test_atEnd(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for atEnd."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        mock_device.atEnd.return_value = True
-        py_device = PyQIODevice(mock_device)
-
-        result = py_device.atEnd()
-        assert result is True, (
-            "atEnd should return True when underlying device returns True"
-        )
-        mock_device.atEnd.assert_called_once()
-
-        # Test False case
-        mock_device.atEnd.return_value = False
-        result = py_device.atEnd()
-        assert result is False, (
-            "atEnd should return False when underlying device returns False"
-        )
-
-    def test_bytesAvailable(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for bytesAvailable."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        expected_bytes = 1024
-        mock_device.bytesAvailable.return_value = expected_bytes
-        py_device = PyQIODevice(mock_device)
-
-        result = py_device.bytesAvailable()
-        assert result == expected_bytes, (
-            f"bytesAvailable should return {expected_bytes}"
-        )
-        mock_device.bytesAvailable.assert_called_once()
-
-    def test_bytesToWrite(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for bytesToWrite."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        expected_bytes = 512
-        mock_device.bytesToWrite.return_value = expected_bytes
-        py_device = PyQIODevice(mock_device)
-
-        result = py_device.bytesToWrite()
-        assert result == expected_bytes, f"bytesToWrite should return {expected_bytes}"
-        mock_device.bytesToWrite.assert_called_once()
-
-    def test_canReadLine(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for canReadLine."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        mock_device.canReadLine.return_value = True
-        py_device = PyQIODevice(mock_device)
-
-        result = py_device.canReadLine()
-        assert result is True, (
-            "canReadLine should return True when underlying device returns True"
-        )
-        mock_device.canReadLine.assert_called_once()
-
-    def test_close(self, mocker: MockerFixture) -> None:
-        """Test method for close."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        py_device = PyQIODevice(mock_device)
-
-        py_device.close()
-        mock_device.close.assert_called_once()
-
-    def test_isSequential(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for isSequential."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        mock_device.isSequential.return_value = False
-        py_device = PyQIODevice(mock_device)
-
-        result = py_device.isSequential()
-        assert result is False, (
-            "isSequential should return False when underlying device returns False"
-        )
-        mock_device.isSequential.assert_called_once()
-
-    def test_open(self, mocker: MockerFixture) -> None:
-        """Test method for open."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        mock_device.open.return_value = True
-        py_device = PyQIODevice(mock_device)
-
-        mode = QIODevice.OpenModeFlag.ReadOnly
-        result = py_device.open(mode)
-        assert result is True, "open should return True when successful"
-        mock_device.open.assert_called_once_with(mode)
-
-    def test_pos(self, mocker: MockerFixture) -> None:
-        """Test method for pos."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        expected_pos = 100
-        mock_device.pos.return_value = expected_pos
-        py_device = PyQIODevice(mock_device)
-
-        result = py_device.pos()
-        assert result == expected_pos, f"pos should return {expected_pos}"
-        mock_device.pos.assert_called_once()
-
-    def test_readData(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for readData."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        test_data = b"test data"
-        mock_byte_array = mocker.MagicMock()
-        mock_byte_array.data.return_value = test_data
-        mock_device.read.return_value = mock_byte_array
-        py_device = PyQIODevice(mock_device)
-
-        maxlen = 100
-        result = py_device.readData(maxlen)
-        assert result == test_data, f"readData should return {test_data!r}"
-        mock_device.read.assert_called_once_with(maxlen)
-
-    def test_readLineData(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for readLineData."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        expected_line = "test line"
-        mock_device.readLine.return_value = expected_line
-        py_device = PyQIODevice(mock_device)
-
-        maxlen = 100
-        result = py_device.readLineData(maxlen)
-        assert result == expected_line, f"readLineData should return {expected_line}"
-        mock_device.readLine.assert_called_once_with(maxlen)
-
-    def test_reset(self, mocker: MockerFixture) -> None:
-        """Test method for reset."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        mock_device.reset.return_value = True
-        py_device = PyQIODevice(mock_device)
-
-        result = py_device.reset()
-        assert result is True, "reset should return True when successful"
-        mock_device.reset.assert_called_once()
-
-    def test_seek(self, mocker: MockerFixture) -> None:
-        """Test method for seek."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        mock_device.seek.return_value = True
-        py_device = PyQIODevice(mock_device)
-
-        pos = 50
-        result = py_device.seek(pos)
-        assert result is True, "seek should return True when successful"
-        mock_device.seek.assert_called_once_with(pos)
-
-    def test_size(self, mocker: MockerFixture) -> None:
-        """Test method for size."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        expected_size = 2048
-        mock_device.size.return_value = expected_size
-        py_device = PyQIODevice(mock_device)
-
-        result = py_device.size()
-        assert result == expected_size, f"size should return {expected_size}"
-        mock_device.size.assert_called_once()
-
-    def test_skipData(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for skipData."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        expected_skipped = 64
-        mock_device.skip.return_value = expected_skipped
-        py_device = PyQIODevice(mock_device)
-
-        max_size = 100
-        result = py_device.skipData(max_size)
-        assert result == expected_skipped, f"skipData should return {expected_skipped}"
-        mock_device.skip.assert_called_once_with(max_size)
-
-    def test_waitForBytesWritten(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for waitForBytesWritten."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        mock_device.waitForBytesWritten.return_value = True
-        py_device = PyQIODevice(mock_device)
-
-        msecs = 1000
-        result = py_device.waitForBytesWritten(msecs)
-        assert result is True, "waitForBytesWritten should return True when successful"
-        mock_device.waitForBytesWritten.assert_called_once_with(msecs)
-
-    def test_waitForReadyRead(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for waitForReadyRead."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        mock_device.waitForReadyRead.return_value = True
-        py_device = PyQIODevice(mock_device)
-
-        msecs = 1000
-        result = py_device.waitForReadyRead(msecs)
-        assert result is True, "waitForReadyRead should return True when successful"
-        mock_device.waitForReadyRead.assert_called_once_with(msecs)
-
-    def test_writeData(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for writeData."""
-        mock_device = mocker.MagicMock(spec=QIODevice)
-        expected_written = 10
-        mock_device.write.return_value = expected_written
-        py_device = PyQIODevice(mock_device)
-
-        test_data = b"test data"
-        result = py_device.writeData(test_data, len(test_data))
-        assert result == expected_written, f"writeData should return {expected_written}"
-        mock_device.write.assert_called_once_with(test_data)
-
-
-class TestPyQFile:
-    """Test class for PyQFile."""
-
-    def test___init__(self, mocker: MockerFixture) -> None:
-        """Test method for __init__."""
-        # Test basic initialization
-        test_path = Path("test_file.txt")
-        mock_qfile_class = mocker.patch(py_qiodevice.__name__ + ".QFile")
-        mock_qfile = mocker.MagicMock()
-        mock_qfile_class.return_value = mock_qfile
-
-        py_file = PyQFile(test_path)
-
-        assert py_file.q_device is mock_qfile, (
-            "q_device should be set to QFile instance"
-        )
-        mock_qfile_class.assert_called_once_with(test_path)
-
-        # Test that the QFile was created with the correct path
-        mock_qfile_class.assert_called_once_with(test_path)
-
-
 class TestEncryptedPyQFile:
     """Test class for EncryptedPyQFile."""
 
@@ -682,3 +446,239 @@ class TestEncryptedPyQFile:
             cipher_and_tag,
             b"EncryptedPyQFile",
         )
+
+
+class TestPyQFile:
+    """Test class for PyQFile."""
+
+    def test___init__(self, mocker: MockerFixture) -> None:
+        """Test method for __init__."""
+        # Test basic initialization
+        test_path = Path("test_file.txt")
+        mock_qfile_class = mocker.patch(py_qiodevice.__name__ + ".QFile")
+        mock_qfile = mocker.MagicMock()
+        mock_qfile_class.return_value = mock_qfile
+
+        py_file = PyQFile(test_path)
+
+        assert py_file.q_device is mock_qfile, (
+            "q_device should be set to QFile instance"
+        )
+        mock_qfile_class.assert_called_once_with(test_path)
+
+        # Test that the QFile was created with the correct path
+        mock_qfile_class.assert_called_once_with(test_path)
+
+
+class TestPyQIODevice:
+    """Test class for PyQIODevice."""
+
+    def test___init__(self, mocker: MockerFixture) -> None:
+        """Test method for __init__."""
+        # Test basic initialization
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        py_device = PyQIODevice(mock_device)
+        assert py_device.q_device is mock_device, (
+            "q_device should be set to the provided device"
+        )
+
+    def test_atEnd(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for atEnd."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        mock_device.atEnd.return_value = True
+        py_device = PyQIODevice(mock_device)
+
+        result = py_device.atEnd()
+        assert result is True, (
+            "atEnd should return True when underlying device returns True"
+        )
+        mock_device.atEnd.assert_called_once()
+
+        # Test False case
+        mock_device.atEnd.return_value = False
+        result = py_device.atEnd()
+        assert result is False, (
+            "atEnd should return False when underlying device returns False"
+        )
+
+    def test_bytesAvailable(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for bytesAvailable."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        expected_bytes = 1024
+        mock_device.bytesAvailable.return_value = expected_bytes
+        py_device = PyQIODevice(mock_device)
+
+        result = py_device.bytesAvailable()
+        assert result == expected_bytes, (
+            f"bytesAvailable should return {expected_bytes}"
+        )
+        mock_device.bytesAvailable.assert_called_once()
+
+    def test_bytesToWrite(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for bytesToWrite."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        expected_bytes = 512
+        mock_device.bytesToWrite.return_value = expected_bytes
+        py_device = PyQIODevice(mock_device)
+
+        result = py_device.bytesToWrite()
+        assert result == expected_bytes, f"bytesToWrite should return {expected_bytes}"
+        mock_device.bytesToWrite.assert_called_once()
+
+    def test_canReadLine(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for canReadLine."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        mock_device.canReadLine.return_value = True
+        py_device = PyQIODevice(mock_device)
+
+        result = py_device.canReadLine()
+        assert result is True, (
+            "canReadLine should return True when underlying device returns True"
+        )
+        mock_device.canReadLine.assert_called_once()
+
+    def test_close(self, mocker: MockerFixture) -> None:
+        """Test method for close."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        py_device = PyQIODevice(mock_device)
+
+        py_device.close()
+        mock_device.close.assert_called_once()
+
+    def test_isSequential(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for isSequential."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        mock_device.isSequential.return_value = False
+        py_device = PyQIODevice(mock_device)
+
+        result = py_device.isSequential()
+        assert result is False, (
+            "isSequential should return False when underlying device returns False"
+        )
+        mock_device.isSequential.assert_called_once()
+
+    def test_open(self, mocker: MockerFixture) -> None:
+        """Test method for open."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        mock_device.open.return_value = True
+        py_device = PyQIODevice(mock_device)
+
+        mode = QIODevice.OpenModeFlag.ReadOnly
+        result = py_device.open(mode)
+        assert result is True, "open should return True when successful"
+        mock_device.open.assert_called_once_with(mode)
+
+    def test_pos(self, mocker: MockerFixture) -> None:
+        """Test method for pos."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        expected_pos = 100
+        mock_device.pos.return_value = expected_pos
+        py_device = PyQIODevice(mock_device)
+
+        result = py_device.pos()
+        assert result == expected_pos, f"pos should return {expected_pos}"
+        mock_device.pos.assert_called_once()
+
+    def test_readData(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for readData."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        test_data = b"test data"
+        mock_byte_array = mocker.MagicMock()
+        mock_byte_array.data.return_value = test_data
+        mock_device.read.return_value = mock_byte_array
+        py_device = PyQIODevice(mock_device)
+
+        maxlen = 100
+        result = py_device.readData(maxlen)
+        assert result == test_data, f"readData should return {test_data!r}"
+        mock_device.read.assert_called_once_with(maxlen)
+
+    def test_readLineData(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for readLineData."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        expected_line = "test line"
+        mock_device.readLine.return_value = expected_line
+        py_device = PyQIODevice(mock_device)
+
+        maxlen = 100
+        result = py_device.readLineData(maxlen)
+        assert result == expected_line, f"readLineData should return {expected_line}"
+        mock_device.readLine.assert_called_once_with(maxlen)
+
+    def test_reset(self, mocker: MockerFixture) -> None:
+        """Test method for reset."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        mock_device.reset.return_value = True
+        py_device = PyQIODevice(mock_device)
+
+        result = py_device.reset()
+        assert result is True, "reset should return True when successful"
+        mock_device.reset.assert_called_once()
+
+    def test_seek(self, mocker: MockerFixture) -> None:
+        """Test method for seek."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        mock_device.seek.return_value = True
+        py_device = PyQIODevice(mock_device)
+
+        pos = 50
+        result = py_device.seek(pos)
+        assert result is True, "seek should return True when successful"
+        mock_device.seek.assert_called_once_with(pos)
+
+    def test_size(self, mocker: MockerFixture) -> None:
+        """Test method for size."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        expected_size = 2048
+        mock_device.size.return_value = expected_size
+        py_device = PyQIODevice(mock_device)
+
+        result = py_device.size()
+        assert result == expected_size, f"size should return {expected_size}"
+        mock_device.size.assert_called_once()
+
+    def test_skipData(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for skipData."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        expected_skipped = 64
+        mock_device.skip.return_value = expected_skipped
+        py_device = PyQIODevice(mock_device)
+
+        max_size = 100
+        result = py_device.skipData(max_size)
+        assert result == expected_skipped, f"skipData should return {expected_skipped}"
+        mock_device.skip.assert_called_once_with(max_size)
+
+    def test_waitForBytesWritten(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for waitForBytesWritten."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        mock_device.waitForBytesWritten.return_value = True
+        py_device = PyQIODevice(mock_device)
+
+        msecs = 1000
+        result = py_device.waitForBytesWritten(msecs)
+        assert result is True, "waitForBytesWritten should return True when successful"
+        mock_device.waitForBytesWritten.assert_called_once_with(msecs)
+
+    def test_waitForReadyRead(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for waitForReadyRead."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        mock_device.waitForReadyRead.return_value = True
+        py_device = PyQIODevice(mock_device)
+
+        msecs = 1000
+        result = py_device.waitForReadyRead(msecs)
+        assert result is True, "waitForReadyRead should return True when successful"
+        mock_device.waitForReadyRead.assert_called_once_with(msecs)
+
+    def test_writeData(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for writeData."""
+        mock_device = mocker.MagicMock(spec=QIODevice)
+        expected_written = 10
+        mock_device.write.return_value = expected_written
+        py_device = PyQIODevice(mock_device)
+
+        test_data = b"test data"
+        result = py_device.writeData(test_data, len(test_data))
+        assert result == expected_written, f"writeData should return {expected_written}"
+        mock_device.write.assert_called_once_with(test_data)

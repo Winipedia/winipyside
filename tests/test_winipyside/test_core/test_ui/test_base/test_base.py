@@ -9,33 +9,6 @@ from pytest_mock import MockerFixture
 from winipyside.core.ui.base.base import Base, QABCLoggingMeta
 
 
-class TestQABCLoggingMeta:
-    """Test class for QABCLoggingMeta."""
-
-    def test_metaclass_inheritance(self) -> None:
-        """Test that QABCImplementationLoggingMeta has correct inheritance."""
-        # Test that it's a metaclass that combines the expected functionality
-        assert issubclass(QABCLoggingMeta, type(QObject)), (
-            "QABCLoggingMeta should inherit from QObject's metaclass"
-        )
-
-        # Create a test class using the metaclass
-        class TestClass(metaclass=QABCLoggingMeta):
-            @abstractmethod
-            def abstract_method(self) -> None:
-                """Abstract method for testing."""
-
-            @final
-            def concrete_method(self) -> str:
-                """Concrete method for testing."""
-                return "test"
-
-        # Verify the class uses the correct metaclass
-        assert type(TestClass) is QABCLoggingMeta, (
-            "TestClass should use QABCLoggingMeta"
-        )
-
-
 class TestBase:
     """Test class for Base."""
 
@@ -389,4 +362,31 @@ class TestBase:
         # Test that it's a classmethod
         assert isinstance(Base.__dict__["get_page_static"], classmethod), (
             "get_page_static should be a classmethod"
+        )
+
+
+class TestQABCLoggingMeta:
+    """Test class for QABCLoggingMeta."""
+
+    def test_metaclass_inheritance(self) -> None:
+        """Test that QABCImplementationLoggingMeta has correct inheritance."""
+        # Test that it's a metaclass that combines the expected functionality
+        assert issubclass(QABCLoggingMeta, type(QObject)), (
+            "QABCLoggingMeta should inherit from QObject's metaclass"
+        )
+
+        # Create a test class using the metaclass
+        class TestClass(metaclass=QABCLoggingMeta):
+            @abstractmethod
+            def abstract_method(self) -> None:
+                """Abstract method for testing."""
+
+            @final
+            def concrete_method(self) -> str:
+                """Concrete method for testing."""
+                return "test"
+
+        # Verify the class uses the correct metaclass
+        assert type(TestClass) is QABCLoggingMeta, (
+            "TestClass should use QABCLoggingMeta"
         )
