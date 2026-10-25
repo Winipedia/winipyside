@@ -11,14 +11,6 @@ from pytestqt.qtbot import QtBot
 from winipyside.core.ui.widgets.browser import Browser
 
 
-@pytest.fixture
-def parent_layout(qtbot: QtBot) -> QVBoxLayout:
-    """Create parent layout for browser."""
-    widget = QWidget()
-    qtbot.addWidget(widget)
-    return QVBoxLayout(widget)
-
-
 class TestBrowser:
     """Test class for Browser."""
 
@@ -430,3 +422,11 @@ class TestBrowser:
         assert result is test_httpcookies, "Should return converted cookies"
         mock_get_domain.assert_called_once_with("example.com")
         mock_convert.assert_called_once_with(test_qcookies)
+
+
+@pytest.fixture
+def parent_layout(qtbot: QtBot) -> QVBoxLayout:
+    """Create parent layout for browser."""
+    widget = QWidget()
+    qtbot.addWidget(widget)
+    return QVBoxLayout(widget)
