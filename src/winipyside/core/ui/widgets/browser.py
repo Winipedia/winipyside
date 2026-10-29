@@ -62,6 +62,115 @@ class Browser(QWebEngineView):
         self.connect_signals()
         self.load_first_url()
 
+    def get_domain_http_cookies(self, domain: str) -> list[Cookie]:
+        """Get all tracked cookies for a specific domain in http.cookiejar format.
+
+        Retrieves domain cookies and converts them to Python's standard http.cookiejar
+        format, useful for exporting to requests, urllib, or other HTTP libraries.
+
+        Args:
+            domain: The domain to retrieve cookies for (e.g., 'github.com').
+
+        Returns:
+            List of http.cookiejar.Cookie objects for the specified domain.
+        """
+        cookies = self.get_domain_cookies(domain)
+        return self.qcookies_to_httpcookies(cookies)
+
+    @property
+    def http_cookies(self) -> dict[str, list[Cookie]]:
+        """Get all tracked cookies converted to http.cookiejar.Cookie format.
+
+        Provides cookies in Python's standard http.cookiejar.Cookie format, suitable
+        for use with the requests library, urllib, or other Python HTTP clients.
+        This is useful for exporting cookies
+        from the browser for external HTTP operations.
+
+        Returns:
+            Dictionary mapping domain strings to lists of http.cookiejar.Cookie objects.
+        """
+        return {
+            domain: self.qcookies_to_httpcookies(qcookies)
+            for domain, qcookies in self.cookies.items()
+        }
+
+    def connect_signals(self) -> None:
+        """Connect browser signals to their corresponding handler methods.
+
+        Establishes connections for:
+        - Page load completion (updates address bar with new URL)
+        - Cookie addition (tracks new cookies by domain)
+        """
+        self.connect_load_finished_signal()
+        self.connect_on_cookie_added_signal()
+
+    def get_domain_cookies(self, domain: str) -> list[QNetworkCookie]:
+        """Get all tracked cookies for a specific domain in Qt format.
+
+        Args:
+            domain: The domain to retrieve cookies for (e.g., 'github.com').
+
+        Returns:
+            List of QNetworkCookie objects for the specified domain.
+        """
+        return self.cookies[domain]
+
+    def load_first_url(self) -> None:
+        """Load the default homepage when the browser initializes.
+
+        Loads Google's homepage (https://www.google.com/) as the initial page,
+        providing a familiar starting point for users.
+        """
+        self.load(QUrl("https://www.google.com/"))
+
+    def make_widget(self) -> None:
+        """Create the complete browser widget and add it to the parent layout.
+
+        Constructs the visual hierarchy:
+        - QWidget container (browser_widget)
+          - QVBoxLayout
+            - Address bar (horizontal layout with buttons and input)
+            - QWebEngineView (actual browser)
+
+        Sets appropriate size policies
+        and adds the complete widget to the parent layout.
+        """
+        self.browser_widget = QWidget()
+        self.browser_layout = QVBoxLayout(self.browser_widget)
+        self.set_size_policy()
+        self.make_address_bar()
+        self.browser_layout.addWidget(self)
+        self.parent_layout.addWidget(self.browser_widget)
+
+    def qcookies_to_httpcookies(self, qcookies: list[QNetworkCookie]) -> list[Cookie]:
+        """Convert a list of Qt network cookies to Python http.cookiejar cookies.
+
+        Args:
+            qcookies: List of QNetworkCookie objects to convert.
+
+        Returns:
+            List of equivalent http.cookiejar.Cookie objects preserving all attributes.
+        """
+        return [self.qcookie_to_httpcookie(q_cookie) for q_cookie in qcookies]
+
+    def connect_load_finished_signal(self) -> None:
+        """Connect the page load completion signal to the handler.
+
+        Connects QWebEngineView's loadFinished signal to update the address bar
+        when a page finishes loading.
+        """
+        self.loadFinished.connect(self.on_load_finished)
+
+    def connect_on_cookie_added_signal(self) -> None:
+        """Initialize cookie tracking and connect the cookie added signal.
+
+        Creates the cookies dictionary (defaulting empty lists per domain) and
+        connects the QWebEngineCookieStore's cookieAdded signal to the handler.
+        Call this during initialization to enable automatic cookie tracking.
+        """
+        self.cookies: dict[str, list[QNetworkCookie]] = defaultdict(list)
+        self.page().profile().cookieStore().cookieAdded.connect(self.on_cookie_added)
+
     def make_address_bar(self) -> None:
         """Create the navigation bar with back, forward, address input, and go button.
 
@@ -102,138 +211,6 @@ class Browser(QWebEngineView):
         self.address_bar_layout.addWidget(self.go_button)
 
         self.browser_layout.addLayout(self.address_bar_layout)
-
-    def navigate_to_url(self) -> None:
-        """Load the URL currently entered in the address bar.
-
-        Retrieves the text from the address bar and loads it as the browser's
-        current URL. Called when the user presses Enter in the address bar or
-        clicks the Go button.
-        """
-        url = self.address_bar.text()
-        self.load(QUrl(url))
-
-    def make_widget(self) -> None:
-        """Create the complete browser widget and add it to the parent layout.
-
-        Constructs the visual hierarchy:
-        - QWidget container (browser_widget)
-          - QVBoxLayout
-            - Address bar (horizontal layout with buttons and input)
-            - QWebEngineView (actual browser)
-
-        Sets appropriate size policies
-        and adds the complete widget to the parent layout.
-        """
-        self.browser_widget = QWidget()
-        self.browser_layout = QVBoxLayout(self.browser_widget)
-        self.set_size_policy()
-        self.make_address_bar()
-        self.browser_layout.addWidget(self)
-        self.parent_layout.addWidget(self.browser_widget)
-
-    def set_size_policy(self) -> None:
-        """Set the browser to expand and fill available space.
-
-        Configures the size policy to expand in both horizontal and vertical directions,
-        allowing the browser to grow with the parent widget.
-        """
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-
-    def connect_signals(self) -> None:
-        """Connect browser signals to their corresponding handler methods.
-
-        Establishes connections for:
-        - Page load completion (updates address bar with new URL)
-        - Cookie addition (tracks new cookies by domain)
-        """
-        self.connect_load_finished_signal()
-        self.connect_on_cookie_added_signal()
-
-    def connect_load_finished_signal(self) -> None:
-        """Connect the page load completion signal to the handler.
-
-        Connects QWebEngineView's loadFinished signal to update the address bar
-        when a page finishes loading.
-        """
-        self.loadFinished.connect(self.on_load_finished)
-
-    def on_load_finished(self, _ok: bool) -> None:  # noqa: FBT001
-        """Handle page load completion and update the address bar.
-
-        Called when a page finishes loading (successfully or not). Updates the
-        address bar to reflect the current URL of the loaded page.
-
-        Args:
-            _ok: Boolean indicating successful page
-                load (unused, kept for signal compatibility).
-        """
-        self.update_address_bar(self.url())
-
-    def update_address_bar(self, url: QUrl) -> None:
-        """Update the address bar to display the given URL.
-
-        Args:
-            url: The QUrl to display in the address bar text field.
-        """
-        self.address_bar.setText(url.toString())
-
-    def connect_on_cookie_added_signal(self) -> None:
-        """Initialize cookie tracking and connect the cookie added signal.
-
-        Creates the cookies dictionary (defaulting empty lists per domain) and
-        connects the QWebEngineCookieStore's cookieAdded signal to the handler.
-        Call this during initialization to enable automatic cookie tracking.
-        """
-        self.cookies: dict[str, list[QNetworkCookie]] = defaultdict(list)
-        self.page().profile().cookieStore().cookieAdded.connect(self.on_cookie_added)
-
-    def on_cookie_added(self, cookie: Any) -> None:  # noqa: ANN401
-        """Handle new cookie added to the store and track it by domain.
-
-        Called automatically when a cookie is set during web browsing. Stores the
-        cookie in the cookies dictionary using the cookie's domain as the key.
-
-        Args:
-            cookie: The QNetworkCookie that was added to the cookie store.
-        """
-        self.cookies[cookie.domain()].append(cookie)
-
-    def load_first_url(self) -> None:
-        """Load the default homepage when the browser initializes.
-
-        Loads Google's homepage (https://www.google.com/) as the initial page,
-        providing a familiar starting point for users.
-        """
-        self.load(QUrl("https://www.google.com/"))
-
-    @property
-    def http_cookies(self) -> dict[str, list[Cookie]]:
-        """Get all tracked cookies converted to http.cookiejar.Cookie format.
-
-        Provides cookies in Python's standard http.cookiejar.Cookie format, suitable
-        for use with the requests library, urllib, or other Python HTTP clients.
-        This is useful for exporting cookies
-        from the browser for external HTTP operations.
-
-        Returns:
-            Dictionary mapping domain strings to lists of http.cookiejar.Cookie objects.
-        """
-        return {
-            domain: self.qcookies_to_httpcookies(qcookies)
-            for domain, qcookies in self.cookies.items()
-        }
-
-    def qcookies_to_httpcookies(self, qcookies: list[QNetworkCookie]) -> list[Cookie]:
-        """Convert a list of Qt network cookies to Python http.cookiejar cookies.
-
-        Args:
-            qcookies: List of QNetworkCookie objects to convert.
-
-        Returns:
-            List of equivalent http.cookiejar.Cookie objects preserving all attributes.
-        """
-        return [self.qcookie_to_httpcookie(q_cookie) for q_cookie in qcookies]
 
     def qcookie_to_httpcookie(self, qcookie: QNetworkCookie) -> Cookie:
         """Convert a single Qt network cookie to a Python http.cookiejar cookie.
@@ -278,28 +255,51 @@ class Browser(QWebEngineView):
             rfc2109=False,
         )
 
-    def get_domain_cookies(self, domain: str) -> list[QNetworkCookie]:
-        """Get all tracked cookies for a specific domain in Qt format.
+    def set_size_policy(self) -> None:
+        """Set the browser to expand and fill available space.
+
+        Configures the size policy to expand in both horizontal and vertical directions,
+        allowing the browser to grow with the parent widget.
+        """
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+
+    def navigate_to_url(self) -> None:
+        """Load the URL currently entered in the address bar.
+
+        Retrieves the text from the address bar and loads it as the browser's
+        current URL. Called when the user presses Enter in the address bar or
+        clicks the Go button.
+        """
+        url = self.address_bar.text()
+        self.load(QUrl(url))
+
+    def on_cookie_added(self, cookie: Any) -> None:  # noqa: ANN401
+        """Handle new cookie added to the store and track it by domain.
+
+        Called automatically when a cookie is set during web browsing. Stores the
+        cookie in the cookies dictionary using the cookie's domain as the key.
 
         Args:
-            domain: The domain to retrieve cookies for (e.g., 'github.com').
-
-        Returns:
-            List of QNetworkCookie objects for the specified domain.
+            cookie: The QNetworkCookie that was added to the cookie store.
         """
-        return self.cookies[domain]
+        self.cookies[cookie.domain()].append(cookie)
 
-    def get_domain_http_cookies(self, domain: str) -> list[Cookie]:
-        """Get all tracked cookies for a specific domain in http.cookiejar format.
+    def on_load_finished(self, _ok: bool) -> None:  # noqa: FBT001
+        """Handle page load completion and update the address bar.
 
-        Retrieves domain cookies and converts them to Python's standard http.cookiejar
-        format, useful for exporting to requests, urllib, or other HTTP libraries.
+        Called when a page finishes loading (successfully or not). Updates the
+        address bar to reflect the current URL of the loaded page.
 
         Args:
-            domain: The domain to retrieve cookies for (e.g., 'github.com').
-
-        Returns:
-            List of http.cookiejar.Cookie objects for the specified domain.
+            _ok: Boolean indicating successful page
+                load (unused, kept for signal compatibility).
         """
-        cookies = self.get_domain_cookies(domain)
-        return self.qcookies_to_httpcookies(cookies)
+        self.update_address_bar(self.url())
+
+    def update_address_bar(self, url: QUrl) -> None:
+        """Update the address bar to display the given URL.
+
+        Args:
+            url: The QUrl to display in the address bar text field.
+        """
+        self.address_bar.setText(url.toString())

@@ -6,7 +6,7 @@ This module contains the player page class for the VideoVault application.
 from abc import abstractmethod
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any
+from typing import Any, override
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
@@ -36,6 +36,7 @@ class Player(BasePage):
             position: The position to start playback from in milliseconds.
         """
 
+    @override
     def setup(self) -> None:
         """Initialize the player page with a media player widget.
 
@@ -43,6 +44,46 @@ class Player(BasePage):
         enabling video playback with full controls.
         """
         self.media_player = MediaPlayer(self.v_layout)
+
+    def play_encrypted_file(
+        self,
+        path: Path,
+        aes_gcm: AESGCM,
+        position: int = 0,
+    ) -> None:
+        """Play an AES-GCM encrypted video file with transparent decryption.
+
+        Switches to the player page and starts playback of the encrypted file.
+        The file is decrypted on-the-fly during playback without extracting
+        temporary files, providing secure playback of protected content.
+
+        Args:
+            path: The file path to the encrypted video file to play.
+            aes_gcm: The AES-GCM cipher instance initialized with the decryption key.
+            position: The position to start playback from in milliseconds (default 0).
+        """
+        self.play_file_from_func(
+            self.media_player.play_encrypted_file,
+            path=path,
+            position=position,
+            aes_gcm=aes_gcm,
+        )
+
+    def play_file(self, path: Path, position: int = 0) -> None:
+        """Play a regular (unencrypted) video file.
+
+        Switches to the player page and starts playback of the specified file.
+        Delegates to play_file_from_func with the MediaPlayer's play_file method.
+
+        Args:
+            path: The file path to the video file to play.
+            position: The position to start playback from in milliseconds (default 0).
+        """
+        self.play_file_from_func(
+            self.media_player.play_file,
+            path=path,
+            position=position,
+        )
 
     def play_file_from_func(
         self,
@@ -69,43 +110,3 @@ class Player(BasePage):
         self.set_current_page(self.__class__)
         # Stop current playback and clean up resources
         play_func(path=path, position=position, **kwargs)
-
-    def play_file(self, path: Path, position: int = 0) -> None:
-        """Play a regular (unencrypted) video file.
-
-        Switches to the player page and starts playback of the specified file.
-        Delegates to play_file_from_func with the MediaPlayer's play_file method.
-
-        Args:
-            path: The file path to the video file to play.
-            position: The position to start playback from in milliseconds (default 0).
-        """
-        self.play_file_from_func(
-            self.media_player.play_file,
-            path=path,
-            position=position,
-        )
-
-    def play_encrypted_file(
-        self,
-        path: Path,
-        aes_gcm: AESGCM,
-        position: int = 0,
-    ) -> None:
-        """Play an AES-GCM encrypted video file with transparent decryption.
-
-        Switches to the player page and starts playback of the encrypted file.
-        The file is decrypted on-the-fly during playback without extracting
-        temporary files, providing secure playback of protected content.
-
-        Args:
-            path: The file path to the encrypted video file to play.
-            aes_gcm: The AES-GCM cipher instance initialized with the decryption key.
-            position: The position to start playback from in milliseconds (default 0).
-        """
-        self.play_file_from_func(
-            self.media_player.play_encrypted_file,
-            path=path,
-            position=position,
-            aes_gcm=aes_gcm,
-        )

@@ -3,7 +3,7 @@
 All subclasses of ConfigFile in the configs package are automatically called.
 """
 
-from typing import Any
+from typing import Any, override
 
 from pyrig.core.subprocesses import Args
 from pyrig.rig.configs.base.workflow import (  # deptry: ignore[DEP004]
@@ -24,10 +24,11 @@ class PySideWorkflowConfigFileMixin(PyrigWorkflowConfigFile):
     GitHub Actions headless Linux environments.
     """
 
+    @override
     def steps_core_installed_setup(
         self,
-        *args: Any,  # noqa: ANN401
-        **kwargs: Any,  # noqa: ANN401
+        *args: Any,
+        **kwargs: Any,
     ) -> list[dict[str, Any]]:
         """Get the core installed setup steps.
 
@@ -74,6 +75,7 @@ class HealthCheckWorkflowConfigFile(
     environment.
     """
 
+    @override
     def step_run_tests(self) -> dict[str, Any]:
         """Get the pre-commit step.
 

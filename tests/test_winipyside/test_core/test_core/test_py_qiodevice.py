@@ -44,37 +44,62 @@ class TestEncryptedPyQFile:
         )
         mock_qfile_class.assert_called_once_with(test_path)
 
-    def test_readData(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for readData."""
-        test_path = Path("test.txt")
-        test_key = AESGCM.generate_key(bit_length=256)
-        aes_gcm = AESGCM(test_key)
+    def test_chunk_generator(self) -> None:
+        """Test method for chunk_generator."""
+        # Test with unencrypted data
+        test_data = b"a" * 200000  # 200KB of data
+        chunks = list(EncryptedPyQFile.chunk_generator(test_data, is_encrypted=False))
 
-        mocker.patch(py_qiodevice.__name__ + ".QFile")
-        mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
-        encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
-
-        # Mock all the methods used in readData
-        mocker.patch.object(encrypted_file, "pos", return_value=0)
-        mocker.patch.object(encrypted_file, "get_encrypted_pos", return_value=12)
-        mocker.patch.object(encrypted_file, "get_chunk_start", return_value=0)
-        mocker.patch.object(encrypted_file, "get_chunk_end", return_value=65564)
-        mocker.patch.object(encrypted_file, "seek")
-        mocker.patch.object(encrypted_file, "get_decrypted_pos", return_value=0)
-        mocker.patch.object(
-            encrypted_file,
-            "decrypt_data",
-            return_value=b"decrypted test data",
+        expected_chunk_count = (
+            len(test_data) + EncryptedPyQFile.CIPHER_SIZE - 1
+        ) // EncryptedPyQFile.CIPHER_SIZE
+        assert len(chunks) == expected_chunk_count, (
+            f"Should generate {expected_chunk_count} chunks for unencrypted data"
         )
 
-        # Mock the parent readData method
-        mocker.patch.object(PyQFile, "readData", return_value=b"encrypted data")
-        result = encrypted_file.readData(10)
+        # Check first chunk size
+        assert len(chunks[0]) == EncryptedPyQFile.CIPHER_SIZE, (
+            f"First chunk should be {EncryptedPyQFile.CIPHER_SIZE} bytes"
+        )
 
-        assert result == b"decrypted ", "readData should return decrypted data slice"
+        # Test with encrypted data
+        encrypted_data = b"b" * 200000
+        encrypted_chunks = list(
+            EncryptedPyQFile.chunk_generator(encrypted_data, is_encrypted=True),
+        )
 
-    def test_writeData(self, mocker: MockerFixture) -> None:  # noqa: N802
-        """Test method for writeData."""
+        expected_count = (
+            len(encrypted_data) + EncryptedPyQFile.CHUNK_SIZE - 1
+        ) // EncryptedPyQFile.CHUNK_SIZE
+        encrypted_msg = f"Should generate {expected_count} chunks for encrypted data"
+        assert len(encrypted_chunks) == expected_count, encrypted_msg
+
+    def test_decrypt_chunk_static(self, mocker: MockerFixture) -> None:
+        """Test method for decrypt_chunk_static."""
+        # Create test encrypted chunk (nonce + cipher_and_tag)
+        nonce = b"test_nonce12"
+        cipher_and_tag = b"encrypted_content_with_tag"
+        encrypted_chunk = nonce + cipher_and_tag
+
+        # Create a mock AES-GCM object
+        mock_aes_gcm = mocker.MagicMock()
+        decrypted_content = b"decrypted content"
+        mock_aes_gcm.decrypt.return_value = decrypted_content
+
+        result = EncryptedPyQFile.decrypt_chunk_static(encrypted_chunk, mock_aes_gcm)
+
+        expected_msg = (
+            f"decrypt_chunk_static should return content {decrypted_content!r}"
+        )
+        assert result == decrypted_content, expected_msg
+        mock_aes_gcm.decrypt.assert_called_once_with(
+            nonce,
+            cipher_and_tag,
+            b"EncryptedPyQFile",
+        )
+
+    def test_decrypt_data(self, mocker: MockerFixture) -> None:
+        """Test method for decrypt_data."""
         test_path = Path("test.txt")
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
@@ -83,55 +108,188 @@ class TestEncryptedPyQFile:
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
-        # Mock encrypt_data and parent writeData
+        # Mock the static method
+        encrypted_data = b"encrypted data"
+        expected_decrypted = b"decrypted data"
+        mock_static = mocker.patch.object(
+            EncryptedPyQFile,
+            "decrypt_data_static",
+            return_value=expected_decrypted,
+        )
+        result = encrypted_file.decrypt_data(encrypted_data)
+
+        assert result == expected_decrypted, (
+            "decrypt_data should return result from static method"
+        )
+        mock_static.assert_called_once_with(encrypted_data, aes_gcm)
+
+    def test_decrypt_data_static(self, mocker: MockerFixture) -> None:
+        """Test method for decrypt_data_static."""
+        test_key = AESGCM.generate_key(bit_length=256)
+        aes_gcm = AESGCM(test_key)
+        encrypted_data = b"encrypted data for decryption"
+
+        # Mock chunk_generator and decrypt_chunk_static
+        mock_chunks = [b"enc_chunk1", b"enc_chunk2"]
+        decrypted_chunks = [b"dec_chunk1", b"dec_chunk2"]
+        expected_chunk_count = len(mock_chunks)
+
+        mock_generator = mocker.patch.object(
+            EncryptedPyQFile,
+            "chunk_generator",
+            return_value=mock_chunks,
+        )
+        mock_decrypt_chunk = mocker.patch.object(
+            EncryptedPyQFile,
+            "decrypt_chunk_static",
+            side_effect=decrypted_chunks,
+        )
+        result = EncryptedPyQFile.decrypt_data_static(encrypted_data, aes_gcm)
+
+        expected = b"dec_chunk1dec_chunk2"
+        assert result == expected, (
+            f"decrypt_data_static should return joined decrypted chunks {expected!r}"
+        )
+        mock_generator.assert_called_once_with(encrypted_data, is_encrypted=True)
+        assert mock_decrypt_chunk.call_count == expected_chunk_count, (
+            "decrypt_chunk_static should be called for each chunk"
+        )
+
+    def test_encrypt_chunk_static(self, mocker: MockerFixture) -> None:
+        """Test method for encrypt_chunk_static."""
+        test_data = b"test chunk data"
+        nonce_size = EncryptedPyQFile.NONCE_SIZE
+
+        # Mock os.urandom to get predictable nonce
+        mock_urandom = mocker.patch("os.urandom", return_value=b"test_nonce12")
+
+        # Create a mock AES-GCM object
+        mock_aes_gcm = mocker.MagicMock()
+        encrypted_content = b"encrypted_content"
+        mock_aes_gcm.encrypt.return_value = encrypted_content
+
+        result = EncryptedPyQFile.encrypt_chunk_static(test_data, mock_aes_gcm)
+
+        expected = b"test_nonce12" + encrypted_content
+        expected_msg = (
+            f"encrypt_chunk_static should return nonce + encrypted content {expected!r}"
+        )
+        assert result == expected, expected_msg
+        mock_urandom.assert_called_once_with(nonce_size)
+        mock_aes_gcm.encrypt.assert_called_once_with(
+            b"test_nonce12",
+            test_data,
+            b"EncryptedPyQFile",
+        )
+
+    def test_encrypt_data(self, mocker: MockerFixture) -> None:
+        """Test method for encrypt_data."""
+        test_path = Path("test.txt")
+        test_key = AESGCM.generate_key(bit_length=256)
+        aes_gcm = AESGCM(test_key)
+
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
+        mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
+        encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
+
+        # Mock the static method
         test_data = b"test data"
-        encrypted_data = b"encrypted test data"
-        mocker.patch.object(encrypted_file, "encrypt_data", return_value=encrypted_data)
-
-        mock_parent_write = mocker.patch.object(
-            PyQFile,
-            "writeData",
-            return_value=len(encrypted_data),
+        expected_encrypted = b"encrypted data"
+        mock_static = mocker.patch.object(
+            EncryptedPyQFile,
+            "encrypt_data_static",
+            return_value=expected_encrypted,
         )
-        result = encrypted_file.writeData(test_data, len(test_data))
+        result = encrypted_file.encrypt_data(test_data)
 
-        assert result == len(encrypted_data), (
-            f"writeData should return {len(encrypted_data)}"
+        assert result == expected_encrypted, (
+            "encrypt_data should return result from static method"
         )
-        mock_parent_write.assert_called_once_with(encrypted_data, len(encrypted_data))
+        mock_static.assert_called_once_with(test_data, aes_gcm)
 
-    def test_size(self, mocker: MockerFixture) -> None:
-        """Test method for size."""
+    def test_encrypt_data_static(self, mocker: MockerFixture) -> None:
+        """Test method for encrypt_data_static."""
+        test_key = AESGCM.generate_key(bit_length=256)
+        aes_gcm = AESGCM(test_key)
+        test_data = b"test data for encryption"
+
+        # Mock chunk_generator and encrypt_chunk_static
+        mock_chunks = [b"chunk1", b"chunk2"]
+        encrypted_chunks = [b"enc_chunk1", b"enc_chunk2"]
+
+        mock_generator = mocker.patch.object(
+            EncryptedPyQFile,
+            "chunk_generator",
+            return_value=mock_chunks,
+        )
+        mock_encrypt_chunk = mocker.patch.object(
+            EncryptedPyQFile,
+            "encrypt_chunk_static",
+            side_effect=encrypted_chunks,
+        )
+        result = EncryptedPyQFile.encrypt_data_static(test_data, aes_gcm)
+
+        expected = b"enc_chunk1enc_chunk2"
+        assert result == expected, (
+            f"encrypt_data_static should return joined encrypted chunks {expected!r}"
+        )
+        mock_generator.assert_called_once_with(test_data, is_encrypted=False)
+        expected_chunk_count = len(mock_chunks)
+        assert mock_encrypt_chunk.call_count == expected_chunk_count, (
+            "encrypt_chunk_static should be called for each chunk"
+        )
+
+    def test_get_chunk_end(self, mocker: MockerFixture) -> None:
+        """Test method for get_chunk_end."""
         test_path = Path("test.txt")
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
 
         mocker.patch(py_qiodevice.__name__ + ".QFile")
-        # Don't mock size during initialization for this test
-        mocker.patch.object(PyQFile, "size", return_value=131100)  # Mock parent size
+        mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
-        # Test the size calculation
-        result = encrypted_file.size()
-
-        # Expected calculation: enc_size=131100, num_chunks=131100//65564+1=2
-        # dec_size=2*65536=131072
-        expected_enc_size = 131100
-        expected_num_chunks = (
-            expected_enc_size // EncryptedPyQFile.CHUNK_SIZE + 1
-        )  # 131100//65564+1=2
-        expected_dec_size = (
-            expected_num_chunks * EncryptedPyQFile.CIPHER_SIZE
-        )  # 2*65536=131072
-
-        assert result == expected_dec_size, (
-            f"size should return calculated decrypted size {expected_dec_size}"
+        # Test small read from start
+        result = encrypted_file.get_chunk_end(0, 100)
+        chunk_size = EncryptedPyQFile.CHUNK_SIZE
+        assert result == chunk_size, (
+            f"Small read should return one chunk end {chunk_size}"
         )
-        assert encrypted_file.enc_size == expected_enc_size, (
-            "enc_size should be set from parent size"
+
+        # Test read spanning multiple chunks
+        result = encrypted_file.get_chunk_end(0, chunk_size + 1000)
+        expected = 2 * chunk_size
+        assert result == expected, f"Read spanning chunks should return {expected}"
+
+    def test_get_chunk_start(self, mocker: MockerFixture) -> None:
+        """Test method for get_chunk_start."""
+        test_path = Path("test.txt")
+        test_key = AESGCM.generate_key(bit_length=256)
+        aes_gcm = AESGCM(test_key)
+
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
+        mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
+        encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
+
+        # Test position at start of chunk
+        result = encrypted_file.get_chunk_start(0)
+        assert result == 0, "Position 0 should return chunk start 0"
+
+        # Test position in middle of first chunk
+        result = encrypted_file.get_chunk_start(1000)
+        assert result == 0, "Position 1000 should return chunk start 0"
+
+        # Test position at start of second chunk
+        chunk_size = EncryptedPyQFile.CHUNK_SIZE
+        result = encrypted_file.get_chunk_start(chunk_size)
+        assert result == chunk_size, (
+            f"Position {chunk_size} should return chunk start {chunk_size}"
         )
-        assert encrypted_file.num_chunks == expected_num_chunks, (
-            "num_chunks should be calculated correctly"
+
+        # Test position in middle of second chunk
+        result = encrypted_file.get_chunk_start(chunk_size + 1000)
+        assert result == chunk_size, (
+            f"Position {chunk_size + 1000} should return chunk start {chunk_size}"
         )
 
     def test_get_decrypted_pos(self, mocker: MockerFixture) -> None:
@@ -199,8 +357,8 @@ class TestEncryptedPyQFile:
             "Position beyond dec_size should return enc_size"
         )
 
-    def test_get_chunk_start(self, mocker: MockerFixture) -> None:
-        """Test method for get_chunk_start."""
+    def test_readData(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for readData."""
         test_path = Path("test.txt")
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
@@ -209,29 +367,61 @@ class TestEncryptedPyQFile:
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
-        # Test position at start of chunk
-        result = encrypted_file.get_chunk_start(0)
-        assert result == 0, "Position 0 should return chunk start 0"
-
-        # Test position in middle of first chunk
-        result = encrypted_file.get_chunk_start(1000)
-        assert result == 0, "Position 1000 should return chunk start 0"
-
-        # Test position at start of second chunk
-        chunk_size = EncryptedPyQFile.CHUNK_SIZE
-        result = encrypted_file.get_chunk_start(chunk_size)
-        assert result == chunk_size, (
-            f"Position {chunk_size} should return chunk start {chunk_size}"
+        # Mock all the methods used in readData
+        mocker.patch.object(encrypted_file, "pos", return_value=0)
+        mocker.patch.object(encrypted_file, "get_encrypted_pos", return_value=12)
+        mocker.patch.object(encrypted_file, "get_chunk_start", return_value=0)
+        mocker.patch.object(encrypted_file, "get_chunk_end", return_value=65564)
+        mocker.patch.object(encrypted_file, "seek")
+        mocker.patch.object(encrypted_file, "get_decrypted_pos", return_value=0)
+        mocker.patch.object(
+            encrypted_file,
+            "decrypt_data",
+            return_value=b"decrypted test data",
         )
 
-        # Test position in middle of second chunk
-        result = encrypted_file.get_chunk_start(chunk_size + 1000)
-        assert result == chunk_size, (
-            f"Position {chunk_size + 1000} should return chunk start {chunk_size}"
+        # Mock the parent readData method
+        mocker.patch.object(PyQFile, "readData", return_value=b"encrypted data")
+        result = encrypted_file.readData(10)
+
+        assert result == b"decrypted ", "readData should return decrypted data slice"
+
+    def test_size(self, mocker: MockerFixture) -> None:
+        """Test method for size."""
+        test_path = Path("test.txt")
+        test_key = AESGCM.generate_key(bit_length=256)
+        aes_gcm = AESGCM(test_key)
+
+        mocker.patch(py_qiodevice.__name__ + ".QFile")
+        # Don't mock size during initialization for this test
+        mocker.patch.object(PyQFile, "size", return_value=131100)  # Mock parent size
+        encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
+
+        # Test the size calculation
+        result = encrypted_file.size()
+
+        # Expected calculation: enc_size=131100, num_chunks=131100//65564+1=2
+        # dec_size=2*65536=131072
+        expected_enc_size = 131100
+        expected_num_chunks = (
+            expected_enc_size // EncryptedPyQFile.CHUNK_SIZE + 1
+        )  # 131100//65564+1=2
+        expected_dec_size = (
+            expected_num_chunks * EncryptedPyQFile.CIPHER_SIZE
+        )  # 2*65536=131072
+
+        assert result == expected_dec_size, (
+            f"size should return calculated decrypted size {expected_dec_size}"
+        )
+        assert encrypted_file.enc_size == expected_enc_size, (
+            "enc_size should be set from parent size"
+        )
+        assert encrypted_file.num_chunks == expected_num_chunks, (
+            "num_chunks should be calculated correctly"
         )
 
-    def test_get_chunk_end(self, mocker: MockerFixture) -> None:
-        """Test method for get_chunk_end."""
+    def test_writeData(self, mocker: MockerFixture) -> None:  # noqa: N802
+        """Test method for writeData."""
         test_path = Path("test.txt")
         test_key = AESGCM.generate_key(bit_length=256)
         aes_gcm = AESGCM(test_key)
@@ -240,212 +430,22 @@ class TestEncryptedPyQFile:
         mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
         encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
 
-        # Test small read from start
-        result = encrypted_file.get_chunk_end(0, 100)
-        chunk_size = EncryptedPyQFile.CHUNK_SIZE
-        assert result == chunk_size, (
-            f"Small read should return one chunk end {chunk_size}"
-        )
-
-        # Test read spanning multiple chunks
-        result = encrypted_file.get_chunk_end(0, chunk_size + 1000)
-        expected = 2 * chunk_size
-        assert result == expected, f"Read spanning chunks should return {expected}"
-
-    def test_chunk_generator(self) -> None:
-        """Test method for chunk_generator."""
-        # Test with unencrypted data
-        test_data = b"a" * 200000  # 200KB of data
-        chunks = list(EncryptedPyQFile.chunk_generator(test_data, is_encrypted=False))
-
-        expected_chunk_count = (
-            len(test_data) + EncryptedPyQFile.CIPHER_SIZE - 1
-        ) // EncryptedPyQFile.CIPHER_SIZE
-        assert len(chunks) == expected_chunk_count, (
-            f"Should generate {expected_chunk_count} chunks for unencrypted data"
-        )
-
-        # Check first chunk size
-        assert len(chunks[0]) == EncryptedPyQFile.CIPHER_SIZE, (
-            f"First chunk should be {EncryptedPyQFile.CIPHER_SIZE} bytes"
-        )
-
-        # Test with encrypted data
-        encrypted_data = b"b" * 200000
-        encrypted_chunks = list(
-            EncryptedPyQFile.chunk_generator(encrypted_data, is_encrypted=True),
-        )
-
-        expected_count = (
-            len(encrypted_data) + EncryptedPyQFile.CHUNK_SIZE - 1
-        ) // EncryptedPyQFile.CHUNK_SIZE
-        encrypted_msg = f"Should generate {expected_count} chunks for encrypted data"
-        assert len(encrypted_chunks) == expected_count, encrypted_msg
-
-    def test_encrypt_data(self, mocker: MockerFixture) -> None:
-        """Test method for encrypt_data."""
-        test_path = Path("test.txt")
-        test_key = AESGCM.generate_key(bit_length=256)
-        aes_gcm = AESGCM(test_key)
-
-        mocker.patch(py_qiodevice.__name__ + ".QFile")
-        mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
-        encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
-
-        # Mock the static method
+        # Mock encrypt_data and parent writeData
         test_data = b"test data"
-        expected_encrypted = b"encrypted data"
-        mock_static = mocker.patch.object(
-            EncryptedPyQFile,
-            "encrypt_data_static",
-            return_value=expected_encrypted,
+        encrypted_data = b"encrypted test data"
+        mocker.patch.object(encrypted_file, "encrypt_data", return_value=encrypted_data)
+
+        mock_parent_write = mocker.patch.object(
+            PyQFile,
+            "writeData",
+            return_value=len(encrypted_data),
         )
-        result = encrypted_file.encrypt_data(test_data)
+        result = encrypted_file.writeData(test_data, len(test_data))
 
-        assert result == expected_encrypted, (
-            "encrypt_data should return result from static method"
+        assert result == len(encrypted_data), (
+            f"writeData should return {len(encrypted_data)}"
         )
-        mock_static.assert_called_once_with(test_data, aes_gcm)
-
-    def test_encrypt_data_static(self, mocker: MockerFixture) -> None:
-        """Test method for encrypt_data_static."""
-        test_key = AESGCM.generate_key(bit_length=256)
-        aes_gcm = AESGCM(test_key)
-        test_data = b"test data for encryption"
-
-        # Mock chunk_generator and encrypt_chunk_static
-        mock_chunks = [b"chunk1", b"chunk2"]
-        encrypted_chunks = [b"enc_chunk1", b"enc_chunk2"]
-
-        mock_generator = mocker.patch.object(
-            EncryptedPyQFile,
-            "chunk_generator",
-            return_value=mock_chunks,
-        )
-        mock_encrypt_chunk = mocker.patch.object(
-            EncryptedPyQFile,
-            "encrypt_chunk_static",
-            side_effect=encrypted_chunks,
-        )
-        result = EncryptedPyQFile.encrypt_data_static(test_data, aes_gcm)
-
-        expected = b"enc_chunk1enc_chunk2"
-        assert result == expected, (
-            f"encrypt_data_static should return joined encrypted chunks {expected!r}"
-        )
-        mock_generator.assert_called_once_with(test_data, is_encrypted=False)
-        expected_chunk_count = len(mock_chunks)
-        assert mock_encrypt_chunk.call_count == expected_chunk_count, (
-            "encrypt_chunk_static should be called for each chunk"
-        )
-
-    def test_encrypt_chunk_static(self, mocker: MockerFixture) -> None:
-        """Test method for encrypt_chunk_static."""
-        test_data = b"test chunk data"
-        nonce_size = EncryptedPyQFile.NONCE_SIZE
-
-        # Mock os.urandom to get predictable nonce
-        mock_urandom = mocker.patch("os.urandom", return_value=b"test_nonce12")
-
-        # Create a mock AES-GCM object
-        mock_aes_gcm = mocker.MagicMock()
-        encrypted_content = b"encrypted_content"
-        mock_aes_gcm.encrypt.return_value = encrypted_content
-
-        result = EncryptedPyQFile.encrypt_chunk_static(test_data, mock_aes_gcm)
-
-        expected = b"test_nonce12" + encrypted_content
-        expected_msg = (
-            f"encrypt_chunk_static should return nonce + encrypted content {expected!r}"
-        )
-        assert result == expected, expected_msg
-        mock_urandom.assert_called_once_with(nonce_size)
-        mock_aes_gcm.encrypt.assert_called_once_with(
-            b"test_nonce12",
-            test_data,
-            b"EncryptedPyQFile",
-        )
-
-    def test_decrypt_data(self, mocker: MockerFixture) -> None:
-        """Test method for decrypt_data."""
-        test_path = Path("test.txt")
-        test_key = AESGCM.generate_key(bit_length=256)
-        aes_gcm = AESGCM(test_key)
-
-        mocker.patch(py_qiodevice.__name__ + ".QFile")
-        mocker.patch.object(EncryptedPyQFile, "size", return_value=1024)
-        encrypted_file = EncryptedPyQFile(test_path, aes_gcm)
-
-        # Mock the static method
-        encrypted_data = b"encrypted data"
-        expected_decrypted = b"decrypted data"
-        mock_static = mocker.patch.object(
-            EncryptedPyQFile,
-            "decrypt_data_static",
-            return_value=expected_decrypted,
-        )
-        result = encrypted_file.decrypt_data(encrypted_data)
-
-        assert result == expected_decrypted, (
-            "decrypt_data should return result from static method"
-        )
-        mock_static.assert_called_once_with(encrypted_data, aes_gcm)
-
-    def test_decrypt_data_static(self, mocker: MockerFixture) -> None:
-        """Test method for decrypt_data_static."""
-        test_key = AESGCM.generate_key(bit_length=256)
-        aes_gcm = AESGCM(test_key)
-        encrypted_data = b"encrypted data for decryption"
-
-        # Mock chunk_generator and decrypt_chunk_static
-        mock_chunks = [b"enc_chunk1", b"enc_chunk2"]
-        decrypted_chunks = [b"dec_chunk1", b"dec_chunk2"]
-        expected_chunk_count = len(mock_chunks)
-
-        mock_generator = mocker.patch.object(
-            EncryptedPyQFile,
-            "chunk_generator",
-            return_value=mock_chunks,
-        )
-        mock_decrypt_chunk = mocker.patch.object(
-            EncryptedPyQFile,
-            "decrypt_chunk_static",
-            side_effect=decrypted_chunks,
-        )
-        result = EncryptedPyQFile.decrypt_data_static(encrypted_data, aes_gcm)
-
-        expected = b"dec_chunk1dec_chunk2"
-        assert result == expected, (
-            f"decrypt_data_static should return joined decrypted chunks {expected!r}"
-        )
-        mock_generator.assert_called_once_with(encrypted_data, is_encrypted=True)
-        assert mock_decrypt_chunk.call_count == expected_chunk_count, (
-            "decrypt_chunk_static should be called for each chunk"
-        )
-
-    def test_decrypt_chunk_static(self, mocker: MockerFixture) -> None:
-        """Test method for decrypt_chunk_static."""
-        # Create test encrypted chunk (nonce + cipher_and_tag)
-        nonce = b"test_nonce12"
-        cipher_and_tag = b"encrypted_content_with_tag"
-        encrypted_chunk = nonce + cipher_and_tag
-
-        # Create a mock AES-GCM object
-        mock_aes_gcm = mocker.MagicMock()
-        decrypted_content = b"decrypted content"
-        mock_aes_gcm.decrypt.return_value = decrypted_content
-
-        result = EncryptedPyQFile.decrypt_chunk_static(encrypted_chunk, mock_aes_gcm)
-
-        expected_msg = (
-            f"decrypt_chunk_static should return content {decrypted_content!r}"
-        )
-        assert result == decrypted_content, expected_msg
-        mock_aes_gcm.decrypt.assert_called_once_with(
-            nonce,
-            cipher_and_tag,
-            b"EncryptedPyQFile",
-        )
+        mock_parent_write.assert_called_once_with(encrypted_data, len(encrypted_data))
 
 
 class TestPyQFile:

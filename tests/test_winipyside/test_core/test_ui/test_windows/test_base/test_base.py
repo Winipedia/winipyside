@@ -1,6 +1,6 @@
 """Tests for Base window class."""
 
-from typing import final
+from typing import final, override
 
 from pytest_mock import MockFixture
 
@@ -12,66 +12,23 @@ from winipyside.core.ui.windows.base.base import Base
 class TestBase:
     """Test class for Base."""
 
-    def test_get_start_page_cls(self) -> None:
-        """Test method for get_start_page_cls."""
+    def test_add_page(self, mocker: MockFixture) -> None:
+        """Test method for add_page."""
 
         # Create a mock page class
         class MockPage(BasePage):
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
-            def post_setup(self) -> None:
-                pass
-
-        # Create a concrete test class that implements the abstract methods
-        class TestWindow(Base):
-            @classmethod
-            @final
-            def get_all_page_classes(cls) -> list[type[BasePage]]:
-                return [MockPage]
-
-            @classmethod
-            @final
-            def get_start_page_cls(cls) -> type[BasePage]:
-                return MockPage
-
-            @final
-            def setup(self) -> None:
-                pass
-
-            @final
-            def pre_setup(self) -> None:
-                pass
-
-            @final
-            def post_setup(self) -> None:
-                pass
-
-        # Test that the method returns the expected page class
-        assert TestWindow.get_start_page_cls() is MockPage, (
-            "get_start_page_cls should return the expected page class"
-        )
-
-    def test_base_setup(self, mocker: MockFixture) -> None:
-        """Test method for base_setup."""
-
-        # Create a mock page class
-        class MockPage(BasePage):
-            @final
-            def setup(self) -> None:
-                pass
-
-            @final
-            def pre_setup(self) -> None:
-                pass
-
-            @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -79,23 +36,92 @@ class TestBase:
         class TestWindow(Base):
             @classmethod
             @final
+            @override
             def get_all_page_classes(cls) -> list[type[BasePage]]:
                 return [MockPage]
 
             @classmethod
             @final
+            @override
             def get_start_page_cls(cls) -> type[BasePage]:
                 return MockPage
 
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
+            def post_setup(self) -> None:
+                pass
+
+        # Mock Qt components
+        mocker.patch("PySide6.QtWidgets.QMainWindow.__init__")
+        mock_stack = mocker.MagicMock()
+        mock_page = mocker.MagicMock()
+
+        # Create window instance
+        window = TestWindow.__new__(TestWindow)
+        window.stack = mock_stack
+
+        # Test add_page functionality
+        window.add_page(mock_page)
+
+        # Verify page was added to stack
+        mock_stack.addWidget.assert_called_once_with(mock_page)
+
+    def test_base_setup(self, mocker: MockFixture) -> None:
+        """Test method for base_setup."""
+
+        # Create a mock page class
+        class MockPage(BasePage):
+            @final
+            @override
+            def setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def pre_setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def post_setup(self) -> None:
+                pass
+
+        # Create a concrete test class
+        class TestWindow(Base):
+            @classmethod
+            @final
+            @override
+            def get_all_page_classes(cls) -> list[type[BasePage]]:
+                return [MockPage]
+
+            @classmethod
+            @final
+            @override
+            def get_start_page_cls(cls) -> type[BasePage]:
+                return MockPage
+
+            @final
+            @override
+            def setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def pre_setup(self) -> None:
+                pass
+
+            @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -129,76 +155,23 @@ class TestBase:
         # Verify stack attribute is created
         assert hasattr(window, "stack"), "base_setup should create stack attribute"
 
-    def test_add_page(self, mocker: MockFixture) -> None:
-        """Test method for add_page."""
-
-        # Create a mock page class
-        class MockPage(BasePage):
-            @final
-            def setup(self) -> None:
-                pass
-
-            @final
-            def pre_setup(self) -> None:
-                pass
-
-            @final
-            def post_setup(self) -> None:
-                pass
-
-        # Create a concrete test class
-        class TestWindow(Base):
-            @classmethod
-            @final
-            def get_all_page_classes(cls) -> list[type[BasePage]]:
-                return [MockPage]
-
-            @classmethod
-            @final
-            def get_start_page_cls(cls) -> type[BasePage]:
-                return MockPage
-
-            @final
-            def setup(self) -> None:
-                pass
-
-            @final
-            def pre_setup(self) -> None:
-                pass
-
-            @final
-            def post_setup(self) -> None:
-                pass
-
-        # Mock Qt components
-        mocker.patch("PySide6.QtWidgets.QMainWindow.__init__")
-        mock_stack = mocker.MagicMock()
-        mock_page = mocker.MagicMock()
-
-        # Create window instance
-        window = TestWindow.__new__(TestWindow)
-        window.stack = mock_stack
-
-        # Test add_page functionality
-        window.add_page(mock_page)
-
-        # Verify page was added to stack
-        mock_stack.addWidget.assert_called_once_with(mock_page)
-
     def test_get_all_page_classes(self) -> None:
         """Test method for get_all_page_classes."""
 
         # Create a mock page class
         class MockPage(BasePage):
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -206,23 +179,28 @@ class TestBase:
         class TestWindow(Base):
             @classmethod
             @final
+            @override
             def get_all_page_classes(cls) -> list[type[BasePage]]:
                 return [MockPage]
 
             @classmethod
             @final
+            @override
             def get_start_page_cls(cls) -> type[BasePage]:
                 return MockPage
 
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -235,20 +213,77 @@ class TestBase:
             "get_all_page_classes should return the expected page class"
         )
 
+    def test_get_start_page_cls(self) -> None:
+        """Test method for get_start_page_cls."""
+
+        # Create a mock page class
+        class MockPage(BasePage):
+            @final
+            @override
+            def setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def pre_setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def post_setup(self) -> None:
+                pass
+
+        # Create a concrete test class that implements the abstract methods
+        class TestWindow(Base):
+            @classmethod
+            @final
+            @override
+            def get_all_page_classes(cls) -> list[type[BasePage]]:
+                return [MockPage]
+
+            @classmethod
+            @final
+            @override
+            def get_start_page_cls(cls) -> type[BasePage]:
+                return MockPage
+
+            @final
+            @override
+            def setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def pre_setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def post_setup(self) -> None:
+                pass
+
+        # Test that the method returns the expected page class
+        assert TestWindow.get_start_page_cls() is MockPage, (
+            "get_start_page_cls should return the expected page class"
+        )
+
     def test_make_pages(self, mocker: MockFixture) -> None:
         """Test method for make_pages."""
 
         # Create a simple mock page class
         class MockPage(BasePage):
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -256,23 +291,28 @@ class TestBase:
         class TestWindow(Base):
             @classmethod
             @final
+            @override
             def get_all_page_classes(cls) -> list[type[BasePage]]:
                 return [MockPage]
 
             @classmethod
             @final
+            @override
             def get_start_page_cls(cls) -> type[BasePage]:
                 return MockPage
 
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -294,14 +334,17 @@ class TestBase:
         # Create a mock page class
         class MockPage(BasePage):
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -309,23 +352,28 @@ class TestBase:
         class TestWindow(Base):
             @classmethod
             @final
+            @override
             def get_all_page_classes(cls) -> list[type[BasePage]]:
                 return [MockPage]
 
             @classmethod
             @final
+            @override
             def get_start_page_cls(cls) -> type[BasePage]:
                 return MockPage
 
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 

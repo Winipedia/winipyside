@@ -60,34 +60,6 @@ class TestNotification:
         mock_set_title.assert_called_once_with(custom_title)
         mock_set_text.assert_called_once_with(custom_text)
 
-    def test_set_title(self, mocker: MockFixture) -> None:
-        """Test method for set_title."""
-        # Mock all dependencies first
-        mocker.patch("pyqttoast.Toast.__init__")
-        mocker.patch(notification.__name__ + ".QApplication.activeWindow")
-        mocker.patch.object(Notification, "setDuration")
-        mocker.patch.object(Notification, "setIcon")
-
-        # Mock the methods we want to test
-        mock_str_to_half_window_width = mocker.patch.object(
-            Notification,
-            "str_to_half_window_width",
-        )
-        mock_set_title_qt = mocker.patch.object(Notification, "setTitle")
-
-        # Create notification instance
-        notification_new = Notification.__new__(Notification)
-
-        # Test set_title functionality
-        test_title = "Test Title"
-        truncated_title = "Test Ti..."
-        mock_str_to_half_window_width.return_value = truncated_title
-
-        notification_new.set_title(test_title)
-
-        mock_str_to_half_window_width.assert_called_once_with(test_title)
-        mock_set_title_qt.assert_called_once_with(truncated_title)
-
     def test_set_text(self, mocker: MockFixture) -> None:
         """Test method for set_text."""
         # Mock all dependencies first
@@ -115,6 +87,34 @@ class TestNotification:
 
         mock_str_to_half_window_width.assert_called_once_with(test_text)
         mock_set_text_qt.assert_called_once_with(truncated_text)
+
+    def test_set_title(self, mocker: MockFixture) -> None:
+        """Test method for set_title."""
+        # Mock all dependencies first
+        mocker.patch("pyqttoast.Toast.__init__")
+        mocker.patch(notification.__name__ + ".QApplication.activeWindow")
+        mocker.patch.object(Notification, "setDuration")
+        mocker.patch.object(Notification, "setIcon")
+
+        # Mock the methods we want to test
+        mock_str_to_half_window_width = mocker.patch.object(
+            Notification,
+            "str_to_half_window_width",
+        )
+        mock_set_title_qt = mocker.patch.object(Notification, "setTitle")
+
+        # Create notification instance
+        notification_new = Notification.__new__(Notification)
+
+        # Test set_title functionality
+        test_title = "Test Title"
+        truncated_title = "Test Ti..."
+        mock_str_to_half_window_width.return_value = truncated_title
+
+        notification_new.set_title(test_title)
+
+        mock_str_to_half_window_width.assert_called_once_with(test_title)
+        mock_set_title_qt.assert_called_once_with(truncated_title)
 
     def test_str_to_half_window_width(self, mocker: MockFixture) -> None:
         """Test method for str_to_half_window_width."""

@@ -53,6 +53,18 @@ class Notification(Toast):
         self.set_title(title)
         self.set_text(text)
 
+    def set_text(self, text: str) -> None:
+        """Set the notification body text and truncate if necessary.
+
+        Truncates the text to fit within half the active window width before displaying.
+        This prevents excessively long messages from making the notification too wide.
+
+        Args:
+            text: The notification text to set (may be longer than the window).
+        """
+        text = self.str_to_half_window_width(text)
+        self.setText(text)
+
     def set_title(self, title: str) -> None:
         """Set the notification title and truncate if necessary.
 
@@ -65,18 +77,6 @@ class Notification(Toast):
         """
         title = self.str_to_half_window_width(title)
         self.setTitle(title)
-
-    def set_text(self, text: str) -> None:
-        """Set the notification body text and truncate if necessary.
-
-        Truncates the text to fit within half the active window width before displaying.
-        This prevents excessively long messages from making the notification too wide.
-
-        Args:
-            text: The notification text to set (may be longer than the window).
-        """
-        text = self.str_to_half_window_width(text)
-        self.setText(text)
 
     def str_to_half_window_width(self, string: str) -> str:
         """Truncate a string to fit within half the active window width.

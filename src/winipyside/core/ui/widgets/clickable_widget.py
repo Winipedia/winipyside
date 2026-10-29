@@ -4,7 +4,7 @@ This module provides custom Qt widgets
 that emit clicked signals for interactive UI elements.
 """
 
-from typing import Any
+from typing import Any, override
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtMultimediaWidgets import QVideoWidget
@@ -24,7 +24,8 @@ class ClickableVideoWidget(QVideoWidget):
 
     clicked = Signal()
 
-    def mousePressEvent(self, event: Any) -> None:  # noqa: ANN401, N802
+    @override
+    def mousePressEvent(self, event: Any) -> None:
         """Handle left mouse button press on video and emit clicked signal.
 
         Emits the clicked signal
@@ -52,7 +53,8 @@ class ClickableWidget(QWidget):
 
     clicked = Signal()
 
-    def mousePressEvent(self, event: Any) -> None:  # noqa: ANN401, N802
+    @override
+    def mousePressEvent(self, event: Any) -> None:
         """Handle left mouse button press and emit clicked signal.
 
         Emits the clicked signal when the left mouse button is pressed on the widget,

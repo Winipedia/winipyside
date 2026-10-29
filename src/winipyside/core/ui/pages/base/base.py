@@ -4,7 +4,7 @@ This module contains the base page class for the VideoVault application.
 """
 
 from functools import partial
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, override
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -49,6 +49,7 @@ class Base(BaseUI, QWidget):
         self.base_window = base_window
         super().__init__(*args, **kwargs)
 
+    @override
     def base_setup(self) -> None:
         """Initialize the page structure with vertical and horizontal layouts.
 
@@ -70,33 +71,6 @@ class Base(BaseUI, QWidget):
 
         self.add_menu_dropdown_button()
         self.base_window.add_page(self)
-
-    def add_menu_dropdown_button(self) -> None:
-        """Create and configure the page navigation menu button.
-
-        Creates a dropdown menu button in the top-left corner that lists all available
-        pages as menu actions. Clicking an action switches to that page. The menu
-        auto-populates with all page subclasses from the window.
-
-        The menu uses SVG icons for a modern appearance and is aligned to the top-left
-        of the navigation bar.
-        """
-        self.menu_button = QPushButton("Menu")
-        self.menu_button.setIcon(self.get_svg_icon("menu_icon"))
-        self.menu_button.setSizePolicy(
-            QSizePolicy.Policy.Minimum,
-            QSizePolicy.Policy.Minimum,
-        )
-        self.h_layout.addWidget(
-            self.menu_button,
-            alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
-        )
-        self.menu_dropdown = QMenu(self.menu_button)
-        self.menu_button.setMenu(self.menu_dropdown)
-
-        for page_cls in self.base_window.get_all_page_classes():
-            action = self.menu_dropdown.addAction(page_cls.get_display_name())
-            action.triggered.connect(partial(self.set_current_page, page_cls))
 
     def add_to_page_button(
         self,
@@ -126,3 +100,30 @@ class Base(BaseUI, QWidget):
         layout.addWidget(button)
 
         return button
+
+    def add_menu_dropdown_button(self) -> None:
+        """Create and configure the page navigation menu button.
+
+        Creates a dropdown menu button in the top-left corner that lists all available
+        pages as menu actions. Clicking an action switches to that page. The menu
+        auto-populates with all page subclasses from the window.
+
+        The menu uses SVG icons for a modern appearance and is aligned to the top-left
+        of the navigation bar.
+        """
+        self.menu_button = QPushButton("Menu")
+        self.menu_button.setIcon(self.get_svg_icon("menu_icon"))
+        self.menu_button.setSizePolicy(
+            QSizePolicy.Policy.Minimum,
+            QSizePolicy.Policy.Minimum,
+        )
+        self.h_layout.addWidget(
+            self.menu_button,
+            alignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
+        )
+        self.menu_dropdown = QMenu(self.menu_button)
+        self.menu_button.setMenu(self.menu_dropdown)
+
+        for page_cls in self.base_window.get_all_page_classes():
+            action = self.menu_dropdown.addAction(page_cls.get_display_name())
+            action.triggered.connect(partial(self.set_current_page, page_cls))

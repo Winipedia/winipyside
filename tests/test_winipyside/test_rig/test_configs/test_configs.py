@@ -24,6 +24,11 @@ class TestHealthCheckWorkflowConfigFile:
 class TestPySideWorkflowConfigFileMixin:
     """Test class for PySide6WorkflowConfigFileMixin."""
 
+    def test_step_install_pyside_system_dependencies(self) -> None:
+        """Test method for step_install_pyside_system_dependencies."""
+        step = HealthCheckWorkflowConfigFile().step_install_pyside_system_dependencies()
+        assert "run" in step, "Step should have run command"
+
     def test_steps_core_installed_setup(self) -> None:
         """Test method for steps_core_matrix_setup."""
         steps = HealthCheckWorkflowConfigFile().steps_core_installed_setup()
@@ -33,11 +38,6 @@ class TestPySideWorkflowConfigFileMixin:
             steps[-1]
             == HealthCheckWorkflowConfigFile().step_install_pyside_system_dependencies()
         ), "Last step should be pyside6 dependencies step"
-
-    def test_step_install_pyside_system_dependencies(self) -> None:
-        """Test method for step_install_pyside_system_dependencies."""
-        step = HealthCheckWorkflowConfigFile().step_install_pyside_system_dependencies()
-        assert "run" in step, "Step should have run command"
 
 
 class TestReleaseWorkflowConfigFile:

@@ -10,26 +10,6 @@ from winipyside.core.ui.pages.browser import Browser
 class TestBrowser:
     """Test class for Browser."""
 
-    def test_setup(self, mocker: MockerFixture) -> None:
-        """Test method for setup."""
-        # Mock the Browser class methods to avoid abstract class issues
-        mock_add_browser = mocker.patch.object(Browser, "add_browser")
-
-        # Create a mock instance
-        mock_browser = mocker.MagicMock(spec=Browser)
-        mock_browser.add_browser = mock_add_browser
-
-        # Call setup method directly on the class
-        Browser.setup(mock_browser)
-
-        # Verify add_browser was called
-        mock_add_browser.assert_called_once()
-        assert mock_add_browser.called, "setup should call add_browser method"
-
-        # Test that setup method exists and is final
-        assert hasattr(Browser, "setup"), "Browser should have setup method"
-        assert callable(Browser.setup), "setup should be callable"
-
     def test_add_browser(self, mocker: MockerFixture) -> None:
         """Test method for add_browser."""
         # Mock the BrowserWidget class
@@ -61,3 +41,23 @@ class TestBrowser:
         assert "add_browser" in Browser.__dict__, (
             "add_browser should be defined in Browser class"
         )
+
+    def test_setup(self, mocker: MockerFixture) -> None:
+        """Test method for setup."""
+        # Mock the Browser class methods to avoid abstract class issues
+        mock_add_browser = mocker.patch.object(Browser, "add_browser")
+
+        # Create a mock instance
+        mock_browser = mocker.MagicMock(spec=Browser)
+        mock_browser.add_browser = mock_add_browser
+
+        # Call setup method directly on the class
+        Browser.setup(mock_browser)
+
+        # Verify add_browser was called
+        mock_add_browser.assert_called_once()
+        assert mock_add_browser.called, "setup should call add_browser method"
+
+        # Test that setup method exists and is final
+        assert hasattr(Browser, "setup"), "Browser should have setup method"
+        assert callable(Browser.setup), "setup should be callable"

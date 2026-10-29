@@ -1,6 +1,6 @@
 """Tests for Base page class."""
 
-from typing import final
+from typing import final, override
 
 from pytest_mock import MockFixture
 
@@ -19,14 +19,17 @@ class TestBase:
         # Create test page class
         class TestPage(Base):
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -53,51 +56,6 @@ class TestBase:
         mock_setup.assert_called_once()
         mock_post_setup.assert_called_once()
 
-    def test_base_setup(self, mocker: MockFixture) -> None:
-        """Test method for base_setup."""
-        # Mock Qt components to avoid creating real widgets
-        mock_qvboxlayout = mocker.patch(base.__name__ + ".QVBoxLayout")
-        mock_qhboxlayout = mocker.patch(base.__name__ + ".QHBoxLayout")
-
-        # Create test page class
-        class TestPage(Base):
-            @final
-            def setup(self) -> None:
-                pass
-
-            @final
-            def pre_setup(self) -> None:
-                pass
-
-            @final
-            def post_setup(self) -> None:
-                pass
-
-        # Mock methods to avoid Qt operations
-        mock_set_layout = mocker.patch.object(TestPage, "setLayout")
-        mock_add_menu = mocker.patch.object(TestPage, "add_menu_dropdown_button")
-
-        # Create mock base window
-        mock_base_window = mocker.MagicMock()
-
-        # Create page instance
-        page = TestPage.__new__(TestPage)
-        page.base_window = mock_base_window
-        page.base_setup()
-
-        # Verify Qt components were created and configured
-        mock_qvboxlayout.assert_called_once()
-        mock_qhboxlayout.assert_called_once()
-        mock_set_layout.assert_called_once()
-        mock_add_menu.assert_called_once()
-
-        # Verify base_window.add_page was called
-        mock_base_window.add_page.assert_called_once_with(page)
-
-        # Verify layouts are set as attributes
-        assert hasattr(page, "v_layout"), "Should create v_layout attribute"
-        assert hasattr(page, "h_layout"), "Should create h_layout attribute"
-
     def test_add_menu_dropdown_button(self, mocker: MockFixture) -> None:
         """Test method for add_menu_dropdown_button."""
         # Mock Qt components
@@ -107,14 +65,17 @@ class TestBase:
         # Create test page class
         class TestPage(Base):
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -147,27 +108,33 @@ class TestBase:
         # Create test page classes
         class TestPage(Base):
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
         class TargetPage(Base):
             @final
+            @override
             def setup(self) -> None:
                 pass
 
             @final
+            @override
             def pre_setup(self) -> None:
                 pass
 
             @final
+            @override
             def post_setup(self) -> None:
                 pass
 
@@ -193,3 +160,51 @@ class TestBase:
 
         # Verify return value
         assert result is mock_button_instance, "Should return button instance"
+
+    def test_base_setup(self, mocker: MockFixture) -> None:
+        """Test method for base_setup."""
+        # Mock Qt components to avoid creating real widgets
+        mock_qvboxlayout = mocker.patch(base.__name__ + ".QVBoxLayout")
+        mock_qhboxlayout = mocker.patch(base.__name__ + ".QHBoxLayout")
+
+        # Create test page class
+        class TestPage(Base):
+            @final
+            @override
+            def setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def pre_setup(self) -> None:
+                pass
+
+            @final
+            @override
+            def post_setup(self) -> None:
+                pass
+
+        # Mock methods to avoid Qt operations
+        mock_set_layout = mocker.patch.object(TestPage, "setLayout")
+        mock_add_menu = mocker.patch.object(TestPage, "add_menu_dropdown_button")
+
+        # Create mock base window
+        mock_base_window = mocker.MagicMock()
+
+        # Create page instance
+        page = TestPage.__new__(TestPage)
+        page.base_window = mock_base_window
+        page.base_setup()
+
+        # Verify Qt components were created and configured
+        mock_qvboxlayout.assert_called_once()
+        mock_qhboxlayout.assert_called_once()
+        mock_set_layout.assert_called_once()
+        mock_add_menu.assert_called_once()
+
+        # Verify base_window.add_page was called
+        mock_base_window.add_page.assert_called_once_with(page)
+
+        # Verify layouts are set as attributes
+        assert hasattr(page, "v_layout"), "Should create v_layout attribute"
+        assert hasattr(page, "h_layout"), "Should create h_layout attribute"

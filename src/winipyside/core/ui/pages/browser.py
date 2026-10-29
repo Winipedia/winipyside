@@ -4,6 +4,8 @@ This module contains the Browser page class
 for displaying web content within the application.
 """
 
+from typing import override
+
 from winipyside.core.ui.pages.base.base import Base as BasePage
 from winipyside.core.ui.widgets.browser import Browser as BrowserWidget
 
@@ -17,6 +19,7 @@ class Browser(BasePage):
     tracking for web interactions.
     """
 
+    @override
     def setup(self) -> None:
         """Initialize the browser page with a web browser widget.
 
