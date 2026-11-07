@@ -16,7 +16,7 @@
       "actions": "read"  # required
       "contents": "read"
       "security-events": "write"  # required
-    "uses": "$/.github/workflows/health_check.yml"
+    "uses": "$/.github/workflows/health-check.yml"
   "publish":
     "name": "Publish"
     "permissions":
@@ -51,11 +51,11 @@
         "id": "create-release"
         "run": |-
           gh \
-          release \
-          create \
-          "${VERSION}" \
-          --title="${VERSION}" \
-          --generate-notes
+            release \
+            create \
+            "${VERSION}" \
+            --title="${VERSION}" \
+            --generate-notes
         "env":
           "GH_TOKEN": "${{ secrets.GITHUB_TOKEN }}"
           "VERSION": "${{ steps.extract-version.outputs.version }}"

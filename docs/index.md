@@ -1,7 +1,7 @@
 # Home
 
 <!-- project-status -->
-[![CI](https://img.shields.io/github/actions/workflow/status/Winipedia/winipyside/health_check.yml?label=CI&logo=github)](https://github.com/Winipedia/winipyside/actions/workflows/health_check.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/Winipedia/winipyside/health-check.yml?label=CI&logo=github)](https://github.com/Winipedia/winipyside/actions/workflows/health-check.yml)
 [![CD](https://img.shields.io/github/actions/workflow/status/Winipedia/winipyside/release.yml?label=CD&logo=github)](https://github.com/Winipedia/winipyside/actions/workflows/release.yml)
 [![ProjectTester](https://img.shields.io/badge/coverage-%3E%3D90%25-hsl(108,80%25,45%25)?logo=codecov&logoColor=white)](https://pytest.org)
 <!-- code-quality -->

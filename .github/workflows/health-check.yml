@@ -57,13 +57,13 @@
         "id": "check-alerts"
         "run": |-
           gh \
-          api \
-          "repos/${GITHUB_REPOSITORY}/code-scanning/alerts" \
-          --method=GET \
-          --raw-field="ref=${GITHUB_REF}" \
-          --raw-field=state=open \
-          --raw-field=tool_name=CodeQL \
-          --jq='if . != [] then error("Alerts found") end'
+            api \
+            "repos/${GITHUB_REPOSITORY}/code-scanning/alerts" \
+            --method=GET \
+            --raw-field="ref=${GITHUB_REF}" \
+            --raw-field=state=open \
+            --raw-field=tool_name=CodeQL \
+            --jq='if . != [] then error("Alerts found") end'
         "env":
           "GH_TOKEN": "${{ secrets.GITHUB_TOKEN }}"
   "health-checks":
@@ -101,15 +101,15 @@
         "if": "runner.os == 'Linux'"
         "run": |-
           sudo \
-          apt-get \
-          update \
-          && \
-          sudo \
-          apt-get \
-          install \
-          -y \
-          libegl1 \
-          libpulse0
+            apt-get \
+            update \
+            && \
+            sudo \
+            apt-get \
+            install \
+            -y \
+            libegl1 \
+            libpulse0
       -
         "name": "Run Version Control Hooks"
         "id": "run-version-control-hooks"
@@ -161,15 +161,15 @@
         "if": "runner.os == 'Linux'"
         "run": |-
           sudo \
-          apt-get \
-          update \
-          && \
-          sudo \
-          apt-get \
-          install \
-          -y \
-          libegl1 \
-          libpulse0
+            apt-get \
+            update \
+            && \
+            sudo \
+            apt-get \
+            install \
+            -y \
+            libegl1 \
+            libpulse0
       -
         "name": "Run Tests"
         "id": "run-tests"
@@ -179,9 +179,9 @@
           "QTWEBENGINE_DISABLE_SANDBOX": "1"
           "QTWEBENGINE_CHROMIUM_FLAGS": |-
             --no-sandbox \
-            --disable-gpu \
-            --disable-software-rasterizer \
-            --disable-dev-shm-usage
+              --disable-gpu \
+              --disable-software-rasterizer \
+              --disable-dev-shm-usage
   "health-check":
     "name": "Health Check"
     "needs":
