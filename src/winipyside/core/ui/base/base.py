@@ -3,13 +3,13 @@
 This module contains the base UI class for the VideoVault application.
 """
 
+import re
 import sys
 from abc import abstractmethod
 from types import ModuleType
 from typing import TYPE_CHECKING, Any, Self, cast
 
 from pyrig.core.resources import resource_path
-from pyrig.core.strings import split_on_uppercase
 from pyrig_runtime.core.introspection.classes import (
     discover_subclasses,
     filter_leaf_classes,
@@ -116,7 +116,7 @@ class Base(metaclass=QABCLoggingMeta):
         Returns:
             The human-readable display name derived from the class name.
         """
-        return " ".join(split_on_uppercase(cls.__name__))
+        return " ".join(s for s in re.split(r"(?=[A-Z])", cls.__name__) if s)
 
     @classmethod
     def get_page_static[T: "BasePage"](cls, page_cls: type[T]) -> T:
