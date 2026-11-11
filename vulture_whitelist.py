@@ -20,7 +20,7 @@ _QT_OVERRIDES = (
     QIODevice.readLineData,
     QIODevice.skipData,
 )
-_UI_ATTRIBUTES = (BrowserPage.browser,)  # ty: ignore[unresolved-attribute]
+_UI_ATTRIBUTES = (BrowserPage.browser,)  # ty: ignore[missing-attribute]
 _UI_CLASSES = (
     BrowserPage,
     ClickableWidget,
