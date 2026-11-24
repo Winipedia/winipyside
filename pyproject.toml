@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "4.15.100"
+version = "4.15.106"
 description = "A utilities package for PySide6"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
@@ -138,6 +138,9 @@ strict = true
 ALL = "enable"
 key-ordering = "disable"
 yaml-directive = "disable"
+
+[tool.ty.rules]
+all = "error"
 
 [tool.typos.default]
 extend-ignore-re = [
