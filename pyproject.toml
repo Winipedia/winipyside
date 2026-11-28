@@ -1,6 +1,6 @@
 [project]
 name = "winipyside"
-version = "4.15.119"
+version = "4.16.8"
 description = "A utilities package for PySide6"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
@@ -27,10 +27,10 @@ classifiers = [
 dependencies = [
   "cryptography>=50.0.2",
   "pyqt-toast-notification>=1.3.3",
-  "pyrig>=19.51.0",
-  "pyrig-runtime>=3.27.115",
+  "pyrig>=19.57.0",
+  "pyrig-runtime>=3.28.0",
   "pyside6>=6.12.0",
-  "winiutils>=4.15.114",
+  "winiutils>=4.16.0",
 ]
 
 [project.urls]
@@ -55,10 +55,10 @@ dev = [
   "pre-commit-hooks>=6.0.0",
   "prek>=0.5.12",
   "pyflakes>=4.1.0",
-  "pyorder>=1.0.81",
-  "pyrig-codeql>=3.2.0",
-  "pyrig-public>=1.5.4",
-  "pyrig-pypi>=4.1.4",
+  "pyorder>=1.1.0",
+  "pyrig-codeql>=3.3.0",
+  "pyrig-public>=1.6.0",
+  "pyrig-pypi>=4.2.0",
   "pytest>=9.2.0",
   "pytest-cov>=7.1.0",
   "pytest-mock>=3.17.0",

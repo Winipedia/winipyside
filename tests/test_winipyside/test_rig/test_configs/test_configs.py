@@ -30,14 +30,13 @@ class TestPySideWorkflowConfigFileMixin:
         assert "run" in step, "Step should have run command"
 
     def test_steps_core_installed_setup(self) -> None:
-        """Test method for steps_core_matrix_setup."""
-        steps = HealthCheckWorkflowConfigFile().steps_core_installed_setup()
-        assert isinstance(steps, list), "Steps should be a list"
-        # assert last step is the pyside6 dependencies step
-        assert (
-            steps[-1]
-            == HealthCheckWorkflowConfigFile().step_install_pyside_system_dependencies()
-        ), "Last step should be pyside6 dependencies step"
+        """Test method for steps_core_installed_setup."""
+        workflow = HealthCheckWorkflowConfigFile()
+        steps = workflow.steps_core_installed_setup()
+        assert isinstance(steps, tuple), "Steps should be a tuple"
+        assert steps[-1] == workflow.step_install_pyside_system_dependencies, (
+            "Last step should be pyside6 dependencies step"
+        )
 
 
 class TestReleaseWorkflowConfigFile:

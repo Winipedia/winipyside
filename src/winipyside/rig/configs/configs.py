@@ -3,6 +3,7 @@
 All subclasses of ConfigFile in the configs package are automatically called.
 """
 
+from collections.abc import Callable
 from typing import Any, override
 
 from pyrig.core.subprocesses import Args
@@ -27,27 +28,24 @@ class PySideWorkflowConfigFileMixin(PyrigWorkflowConfigFile):
     @override
     def steps_core_installed_setup(
         self,
-        *args: Any,
-        **kwargs: Any,
-    ) -> list[dict[str, Any]]:
+        *,
+        python_version: str | None = None,
+        update_dependencies: bool = False,
+    ) -> tuple[Callable[[], dict[str, Any]], ...]:
         """Get the core installed setup steps.
 
         We need to install additional system dependencies for pyside6.
         """
         steps = super().steps_core_installed_setup(
-            *args,
-            **kwargs,
+            python_version=python_version,
+            update_dependencies=update_dependencies,
         )
 
-        steps.append(
-            self.step_install_pyside_system_dependencies(),
-        )
-        return steps
+        return (*steps, self.step_install_pyside_system_dependencies)
 
     def step_install_pyside_system_dependencies(self) -> dict[str, Any]:
         """Get the step to install PySide6 dependencies."""
         return self.step(
-            self.step_install_pyside_system_dependencies,
             run=Args(
                 "sudo",
                 "apt-get",
@@ -70,14 +68,14 @@ class HealthCheckWorkflowConfigFile(
 ):
     """Health check workflow.
 
-    Extends winiutils health check workflow to add additional steps.
+    Extends pyrig health check workflow to add additional steps.
     This is necessary to make pyside6 work on github actions which is a headless linux
     environment.
     """
 
     @override
     def step_run_tests(self) -> dict[str, Any]:
-        """Get the pre-commit step.
+        """Get the test step.
 
         We need to add some env vars
         so QtWebEngine doesn't try to use GPU acceleration etc.
@@ -104,7 +102,7 @@ class ReleaseWorkflowConfigFile(
 ):
     """Release workflow.
 
-    Extends winiutils release workflow to add additional steps.
+    Extends pyrig release workflow to add additional steps.
     This is necessary to make pyside6 work on github actions which is a headless linux
     environment.
     """

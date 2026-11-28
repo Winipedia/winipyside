@@ -151,9 +151,9 @@
   "health-check":
     "name": "Health Check"
     "needs":
+      - "code-analysis"
       - "health-checks"
       - "matrix-health-checks"
-      - "code-analysis"
     "runs-on": "ubuntu-latest"
     "timeout-minutes": 1
     "steps":
